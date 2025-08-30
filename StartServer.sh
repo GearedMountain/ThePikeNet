@@ -5,7 +5,7 @@ yes | sudo apt install python3-venv > /dev/null 2>&1
 # Optional: create virtual environment if it doesn't exist
 if [ ! -d "venv" ]; then
     echo "Creating virtual environment..."
-    python3 -m venv venv
+    sudo python3 -m venv venv
 fi
 
 
@@ -44,11 +44,11 @@ echo "Preparing postgres..."
 mkdir -p $HOME/$APPNAME/pgsql
 if [ ! -f postgresql-16.2.tar.gz ]; then
 echo "Downloading postgres..."
-curl -O https://ftp.postgresql.org/pub/source/v16.2/postgresql-16.2.tar.gz
+sudo curl -O https://ftp.postgresql.org/pub/source/v16.2/postgresql-16.2.tar.gz
 else
 echo "Postgresq already downloaded"
 fi
-tar -xf postgresql-16.2.tar.gz
+sudo tar -xf postgresql-16.2.tar.gz
 
 # Readline is required for any psql interaction ( terminal database editing )
 yes | sudo apt install libreadline-dev
