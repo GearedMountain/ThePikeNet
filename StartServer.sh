@@ -78,4 +78,4 @@ echo "Database already created, skipping step..."
 fi
 # Run Flask app
 echo "Starting web application..."
-python3 PikeNet.py
+python3 ThePikeNet.py
