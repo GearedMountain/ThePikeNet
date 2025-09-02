@@ -63,19 +63,31 @@ cd ..
 else
 echo "Postgres already installed"
 fi
+
 if [ ! -d "~/$APPNAME/local/data" ]; then
-echo "Initializing first database..."
-~/$APPNAME/pgsql/bin/initdb -D ~/$APPNAME/local/data
-~/$APPNAME/pgsql/bin/pg_ctl -D ~/$APPNAME/local/data -l ~/$APPNAME/logfile start -o "-p 5433"
+	echo "Initializing first database..."
+	~/$APPNAME/pgsql/bin/initdb -D ~/$APPNAME/local/data
+	~/$APPNAME/pgsql/bin/pg_ctl -D ~/$APPNAME/local/data -l ~/$APPNAME/logfile start -o "-p 5433"
+	
+	~/$APPNAME/pgsql/bin/createuser -p 5433 pikenet-database-owner
+	~/$APPNAME/pgsql/bin/createdb -p 5433 pikenet-database -O pikenet-database-owner
 
-~/$APPNAME/pgsql/bin/createuser -p 5433 pikenet-database-owner
-~/$APPNAME/pgsql/bin/createdb -p 5433 pikenet-database -O pikenet-database-owner
+	#IDK IF THIS WORKS
+	~/$APPNAME/pgsql/bin/psql -p 5433 -d pikenet-database -c "ALTER USER \"pikenet-database-owner\" WITH PASSWORD 'your_password_here';"
 
-#IDK IF THIS WORKS
-~/$APPNAME/pgsql/bin/psql -p 5433 -d pikenet-database -c "ALTER USER \"pikenet-database-owner\" WITH PASSWORD 'your_password_here';"
+	echo "Creating 'users' table..."
+~/$APPNAME/pgsql/bin/psql -h localhost -p 5433 -U pikenet-database-owner -d pikenet-database <<EOF
+CREATE TABLE IF NOT EXISTS users (
+    id SERIAL PRIMARY KEY,
+    username VARCHAR(100) UNIQUE NOT NULL,
+    email VARCHAR(120) UNIQUE NOT NULL,
+    password VARCHAR(200) NOT NULL
+);
+EOF
 else
-echo "Database already created, skipping step..."
+	echo "Database already created, skipping step..."
 fi
+
 # Run Flask app
 echo "Starting web application..."
 python3 ThePikeNet.py
