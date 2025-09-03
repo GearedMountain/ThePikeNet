@@ -13,34 +13,34 @@ function showPopup(status, message, decay) {
        if(status === 0){
 
          errorPopup.classList.add('bg-red-500', 'text-white', 'p-4',
-'rounded-md', 'shadow-md', 'max-w-sm', 'absolute', 'bottom-6',
-'right-6', 'fade-in-popup');
+            'rounded-md', 'shadow-md', 'max-w-sm', 'absolute', 'bottom-6',
+            'right-6', 'fade-in-popup');
          closeButton.classList.add('absolute', 'top-2', 'right-2',
-'text-white', 'text-xl');
+            'text-white', 'text-xl');
 
        } else if (status === 1){
 
          errorPopup.classList.add('bg-green-500', 'text-white', 'p-4',
-'rounded-md', 'shadow-md', 'max-w-sm', 'absolute', 'bottom-6',
-'right-6', 'fade-in-popup');
+            'rounded-md', 'shadow-md', 'max-w-sm', 'absolute', 'bottom-6',
+            'right-6', 'fade-in-popup');
          closeButton.classList.add('absolute', 'top-2', 'right-2',
-'text-white', 'text-xl');
+            'text-white', 'text-xl');
 
        } else if (status === 2){
 
          errorPopup.classList.add('bg-gray-500', 'text-white', 'p-4',
-'rounded-md', 'shadow-md', 'max-w-sm', 'absolute', 'bottom-6',
-'right-6', 'fade-in-popup');
+            'rounded-md', 'shadow-md', 'max-w-sm', 'absolute', 'bottom-6',
+            'right-6', 'fade-in-popup');
          closeButton.classList.add('absolute', 'top-2', 'right-2',
-'text-white', 'text-xl');
+            'text-white', 'text-xl');
 
        } else{
 
          errorPopup.classList.add('bg-yellow-500', 'text-white', 'p-4',
-'rounded-md', 'shadow-md', 'max-w-sm', 'absolute', 'bottom-6',
-'right-6', 'fade-in-popup');
+            'rounded-md', 'shadow-md', 'max-w-sm', 'absolute', 'bottom-6',
+            'right-6', 'fade-in-popup');
          closeButton.classList.add('absolute', 'top-2', 'right-2',
-'text-white', 'text-xl');
+            'text-white', 'text-xl');
 
        }
          closeButton.innerHTML = '&times;'; // Close icon
@@ -61,7 +61,6 @@ function showPopup(status, message, decay) {
 
        // Append the error popup to the body of the document
        document.body.appendChild(errorPopup);
-
 
        if(decay){
          setTimeout(() => {
