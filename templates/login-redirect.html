@@ -1,0 +1,35 @@
+<!doctype html>
+<html>
+
+<head>
+    <script src="{{ url_for('static', filename='Popups.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Fonts.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='SimpleAnimations.css') }}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        rel="stylesheet">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<h1>This page will redirect to login in <span id="countdown">5</span></h1>
+<script>
+    async function beginCountdown() {
+        var timer = 5;
+        while (timer > 0) {
+            await sleep(1000);
+            timer--;
+            document.getElementById("countdown").innerHTML = timer;
+
+        }
+
+        window.location.href = "http://127.0.0.1:5000/"
+    }
+
+    beginCountdown();
+</script>
+
+</html>

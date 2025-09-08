@@ -101,5 +101,11 @@ function attentionElement(status, name, decayType) {
     if(decayType === "Long"){
         setTimeout(() => {
           element.classList.remove(newClass)
-        }, 4000);}
+        }, 4000);
+    }
+}
+
+// Helper function to sleep
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }

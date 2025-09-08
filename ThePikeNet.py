@@ -1,13 +1,15 @@
 pikenetVersion = 1.0
-from flask import Flask, request, send_from_directory, render_template, session, Response, redirect, url_for, jsonify
+from flask import Flask, request, send_from_directory, session, render_template, Response, redirect, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy 
 from sqlalchemy import text
 from datetime import datetime, timezone
 import secrets
+import hashlib
 from dotenv import load_dotenv
 from logic.Routing import basic_routing  # import the Blueprint
 from logic.AdminRouting import admin_routing  # import the Blueprint
-from logic.Email import sendAuthCode, configureEmail # import email service
+from logic.Email import sendAuthCheck, configureEmail # import email service
+from logic.Authenticator import isLoggedIn, createSession
 import bcrypt
 import os 
 import random
@@ -35,25 +37,28 @@ if database_url.startswith("DATABASE_URL="):
   
 app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 
+# Set flask session key to env var key, this is used to sign cookies
+app.secret_key = secret_key
+
 # Helper functions for bcrypt
+def sha1Hash(message: str) -> str:
+    # Encode the string to bytes, then hash it
+    sha1 = hashlib.sha1()
+    sha1.update(message.encode('utf-8'))
+    return sha1.hexdigest()
 
 # Helper functions for email interaction
 currentAuthorizationChecks = {}
-def createAuthCode(email: str):
+def createAuthCheck(username: str, email: str, password: str, hash: str):
     
-    epochTime = int(datetime.now(timezone.utc).timestamp())
-    sendCode = f"{secrets.randbelow(10**6):06}"
+    epochTime = int(datetime.now(timezone.utc).timestamp())    
+    currentAuthorizationChecks[hash] = (username, email, password, epochTime, False)
     
-    currentAuthorizationChecks[email] = (sendCode, epochTime)
-    
-    sendAuthCode(
-        to_address="brandon917@icloud.com",
-        code=sendCode
+    sendAuthCheck(
+        to_address=email,
+        code=hash
     )
     print(f"Creating new authorization request: {currentAuthorizationChecks}")
-
-def validateAuthCode():
-    print("check code")
 
 
 # REMOVE THIS ----------------------------------------------------------------------------
@@ -105,11 +110,14 @@ def loginSubmit():
         return "Field is empty or invalid"
         
     # Parameterize the SQL
-    sql = text("SELECT * FROM users WHERE username = :username")
-    result = db.session.execute(sql, {"username": username})
-    user = result.fetchone()
+    sql = text("SELECT id FROM users WHERE username = :username AND password = :password")
+    result = db.session.execute(sql, {"username": username, "password": password})
+    userId = result.fetchone()
+    if userId == None:
+        return "Incorrect"
+    createSession(userId)
     # Process data or return a response
-    return f"Received: {user}"
+    return redirect('dashboard')
 
 # Registering new user
 @app.route('/register-account-submit', methods=['POST'])
@@ -120,23 +128,92 @@ def registerAccountSubmit():
     password = data.get('password')
     try:
         sql = text("""
-            INSERT INTO users (username, email, password)
-            VALUES (:username, :email, :password)
+            SELECT COUNT(*) as count FROM users
+            WHERE username = :username OR email = :email
         """)
 
-        db.session.execute(sql, {
+        result = db.session.execute(sql, {
             "username": username,
             "email": email,
             "password": password
         })
-        result = db.session.commit()
-        createAuthCode(email)
-        return jsonify({"message": "Success"}), 200
-    except Exception as e:
-        return jsonify({"message": "Error"}), 403
- # Username or email already taken
-    
+        
+        if result.scalar() > 0:
+            return jsonify({"message": "Not unique"}), 400
+            
+        # If valid and unique, start verification process before officially adding it to the database    
+        hashValue = sha1Hash(username + email + password); 
 
+        # Sanitize for illegal characters or spaces before
+
+        # No spaces or special characters in username
+        if not username.isalnum():
+            return jsonify({"message": "Invalid characters in username"}), 400 
+        
+        # Password must be 8 characters
+        if not len(password) >= 8:
+            return jsonify({"message": "Password not long enough"}), 400
+        
+        # No spaces or illegal characters in email
+        email = email.replace(" ", "")
+
+        createAuthCheck(username, email, password, hashValue)
+        return jsonify({"message": "WaitToValidate", "hashValue": hashValue}), 200
+        
+    except Exception as e:
+        return jsonify({"message": "Error"}), 400
+
+@app.route('/register-account-verification-check', methods=['POST'])
+def checkVerificationStatus():
+        data = request.get_json() 
+        received_hash = data.get('hash')
+        response = currentAuthorizationChecks[received_hash][4]
+        if currentAuthorizationChecks[received_hash][4]:
+            del currentAuthorizationChecks[received_hash]
+        return jsonify({"message": response}), 200
+
+@app.route('/verify-registration')
+def verifyRegistration():
+    # Get the 'id' parameter from the URL query string
+    hashValue = request.args.get('val')
+
+    if hashValue not in currentAuthorizationChecks:
+        print("Fake or expired validation link")
+        return render_template('login-redirect.html'), 200
+
+    else:
+        oldTuple = currentAuthorizationChecks[hashValue]
+        newTuple = oldTuple[:4] + (True,) + oldTuple[5:]
+        currentAuthorizationChecks[hashValue] = newTuple
+        result = registerUserIntoDatabase(currentAuthorizationChecks[hashValue][0],currentAuthorizationChecks[hashValue][1],currentAuthorizationChecks[hashValue][2])
+        print(f"new list: {currentAuthorizationChecks}")
+        return render_template('login-redirect.html'), 200
+
+# Registering account helper functions
+def registerUserIntoDatabase(username, email, password):
+    try:
+        insert_sql = text("""
+            INSERT INTO users (username, email, password)
+            VALUES (:username, :email, :password)
+        """)
+        db.session.execute(insert_sql, {
+            "username": username,
+            "email": email,
+            "password": password
+        })
+        db.session.commit()
+        return True
+    except Exception as e:
+        db.session.rollback()
+    return False
+
+# Authentication management, probably move to another file soon
+def isLoggedIn():
+    user_id = session.get('user_id')
+    if user_id == None:
+        return False
+    else:
+        return True
 
 # @@@@@@@@@@@@@@@@@@@@@@@@ SERVING IMAGES @@@@@@@@@@@@@@@@@@@@@@@@
 # Serve images from the 'images/official' folder
