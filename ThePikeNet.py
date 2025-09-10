@@ -115,7 +115,7 @@ def loginSubmit():
     userId = result.fetchone()
     if userId == None:
         return "Incorrect"
-    createSession(userId)
+    createSession(userId, username)
     # Process data or return a response
     return redirect('dashboard')
 

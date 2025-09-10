@@ -1,0 +1,37 @@
+<!doctype html>
+
+<html>
+
+<head>
+    <script src="{{ url_for('static', filename='Popups.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='Fonts.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='SimpleAnimations.css') }}">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        rel="stylesheet">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+</head>
+
+<body class="bg-black">
+    <main>
+        <h1 class="text-white space-mono-bold">intel stack logo</h1>
+        <h1>Welcome {{ username }}</h1>
+        <!-- Hide this section and dont allow entries if youre not authenticated-->
+        <div id="quick-add-section" class="max-w-[100%] bg-white flex">
+            <input
+                class="space-mono-regular bg-[#171717] border-2 border-[#B3B3B3] rounded-lg p-1 mx-auto  flex-row align-center focus:bg-[#3d3d3d]"
+                id="username" name="username" placeholder="Username" required />
+        </div>
+
+
+        <h2 class="text-white space-mono-bold">Recent additions</h2>
+        <h2 class="text-white space-mono-bold">Searh by tag</h2>
+        <h2 class="text-white space-mono-bold">Quiz by tag</h2>
+    </main>
+</body>
+
+</html>

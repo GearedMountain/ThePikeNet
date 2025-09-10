@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template
-from logic.Authenticator import isLoggedIn
+from logic.Authenticator import isLoggedIn, getUsername
 
 basic_routing = Blueprint('basic_routing', __name__)
 
@@ -9,7 +9,14 @@ def index():
     if isLoggedIn():
         return render_template('Dashboard/index.html')
     return render_template('index.html', pikenetVersion=1.0)
-    
+
+# Login Page
+@basic_routing.route('/intelstack')
+def intelIndex():
+    if isLoggedIn():
+        return render_template('IntelStack/index.html', username=getUsername())
+    return render_template('index.html', pikenetVersion=1.0)
+
 # Register Page
 @basic_routing.route('/register-account')
 def registerAccount():
