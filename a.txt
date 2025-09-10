@@ -1,2 +1,0 @@
-SECRET_KEY=9d93e78165b150460fc2b4b553f7d57ca8c94cb3
-DATABASE_URL=DATABASE_URL=postgresql://pikenet-database-owner@localhost:5433/pikenet-database
