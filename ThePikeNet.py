@@ -1,7 +1,5 @@
 pikenetVersion = 1.0
 from flask import Flask, request, send_from_directory, session, render_template, Response, redirect, url_for, jsonify
-from flask_sqlalchemy import SQLAlchemy 
-from sqlalchemy import text
 from datetime import datetime, timezone
 import secrets
 import hashlib
@@ -9,7 +7,9 @@ from dotenv import load_dotenv
 from logic.Routing import basic_routing  # import the Blueprint
 from logic.AdminRouting import admin_routing  # import the Blueprint
 from logic.Email import sendAuthCheck, configureEmail # import email service
-from logic.Authenticator import isLoggedIn, createSession
+from logic.Authenticator import *
+from logic.Database import configureDB
+from logic.AuthenticationDB import *
 import bcrypt
 import os 
 import random
@@ -60,9 +60,9 @@ def createAuthCheck(username: str, email: str, password: str, hash: str):
     )
     print(f"Creating new authorization request: {currentAuthorizationChecks}")
 
-
+configureDB(app)
 # REMOVE THIS ----------------------------------------------------------------------------
-db = SQLAlchemy(app)
+
 @app.route('/test_db')
 def test_db_connection():
     try:
@@ -110,11 +110,9 @@ def loginSubmit():
         return "Field is empty or invalid"
         
     # Parameterize the SQL
-    sql = text("SELECT id FROM users WHERE username = :username AND password = :password")
-    result = db.session.execute(sql, {"username": username, "password": password})
-    userId = result.fetchone()
-    if userId == None:
-        return "Incorrect"
+    userId = checkLoginCredentials(username, password)
+    if not userId:
+        return "incorrect"
     createSession(userId, username)
     # Process data or return a response
     return redirect('dashboard')
@@ -127,16 +125,7 @@ def registerAccountSubmit():
     email = data.get('email') 
     password = data.get('password')
     try:
-        sql = text("""
-            SELECT COUNT(*) as count FROM users
-            WHERE username = :username OR email = :email
-        """)
-
-        result = db.session.execute(sql, {
-            "username": username,
-            "email": email,
-            "password": password
-        })
+        result = checkAccountUnique(username, email, password)
         
         if result.scalar() > 0:
             return jsonify({"message": "Not unique"}), 400
@@ -208,12 +197,6 @@ def registerUserIntoDatabase(username, email, password):
     return False
 
 # Authentication management, probably move to another file soon
-def isLoggedIn():
-    user_id = session.get('user_id')
-    if user_id == None:
-        return False
-    else:
-        return True
 
 # @@@@@@@@@@@@@@@@@@@@@@@@ SERVING IMAGES @@@@@@@@@@@@@@@@@@@@@@@@
 # Serve images from the 'images/official' folder

@@ -77,12 +77,41 @@ if [ ! -d "~/$APPNAME/local/data" ]; then
 
 	echo "Creating 'users' table..."
 ~/$APPNAME/pgsql/bin/psql -h localhost -p 5433 -U pikenet-database-owner -d pikenet-database <<EOF
+-- Create the users table
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(100) UNIQUE NOT NULL,
     email VARCHAR(120) UNIQUE NOT NULL,
     password VARCHAR(200) NOT NULL
 );
+
+-- Create the notes table
+CREATE TABLE IF NOT EXISTS notes (
+    id SERIAL PRIMARY KEY,
+    title VARCHAR(255) NOT NULL,
+    description TEXT,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Create the tags table
+CREATE TABLE IF NOT EXISTS tags (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(50) UNIQUE NOT NULL
+);
+
+-- Create the join table to link notes and tags
+CREATE TABLE IF NOT EXISTS note_tags (
+    note_id INT NOT NULL,
+    tag_id INT NOT NULL,
+    
+    PRIMARY KEY (note_id, tag_id),
+    
+    FOREIGN KEY (note_id) REFERENCES notes(id) ON DELETE CASCADE,
+    FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
+);
+
+EOF
+
 EOF
 else
 	echo "Database already created, skipping step..."

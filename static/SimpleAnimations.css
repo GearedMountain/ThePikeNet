@@ -3,6 +3,7 @@
     opacity: 0;
     transform: translateY(20px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
@@ -22,6 +23,7 @@
     opacity: 1;
     transform: translateY(0);
   }
+
   100% {
     opacity: 0;
     transform: translateY(20px);
@@ -30,4 +32,41 @@
 
 .fade-out-popup {
   animation: fade-out-popup 0.6s ease-out both;
+}
+
+.input-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.input-wrapper input {
+  width: 100%;
+  padding: 8px 4px;
+  border: none;
+  border-bottom: 0px solid #ccc;
+  outline: none;
+  font-size: 16px;
+}
+
+/* Animated bottom border using scaleX */
+.input-wrapper::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background: #9ca7ab;
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform 0.3s ease-out;
+  pointer-events: none;
+}
+
+.input-wrapper:focus-within::after {
+  transform: scaleX(1);
+}
+
+.no-scroll {
+  overflow: hidden;
 }
