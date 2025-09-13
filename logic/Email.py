@@ -38,7 +38,7 @@ def sendAuthCheck(to_address: str, code: str):
         <body style="background-color:white; max-width:500px; margin-left:auto; margin-right:auto;">
             <h1 style="color: #355b67; text-align: center;">Hello from PikeNet!</h1>
             <h2 style="text-align: center;color:black;">Here is your one use verification link:</h2>
-            <a href="http://127.0.0.1:5000/verify-registration?val={code}">
+            <a href="https://192.168.50.210/verify-registration?val={code}">
                 <h2 style="text-align: center; text-decoration: underline; color:#5898ad;">Verify Account</h2>
             </a>
             <h2 style="text-align: center;color:black;">After clicking the link, feel free to return to your original page to continue the process.</h2>
