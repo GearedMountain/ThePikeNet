@@ -61,41 +61,6 @@ def createAuthCheck(username: str, email: str, password: str, hash: str):
     print(f"Creating new authorization request: {currentAuthorizationChecks}")
 
 configureDB(app)
-# REMOVE THIS ----------------------------------------------------------------------------
-
-@app.route('/test_db')
-def test_db_connection():
-    try:
-        # Try to execute a basic query to test the connection
-        result = db.session.execute(text("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';")) 
-        rows = result.fetchall()
-        rows_dict = [{"table_name": row[0]} for row in rows]
-        print(rows[0])
-        return jsonify(rows_dict), 200
-
-    except Exception as e:
-        return f"Error connecting to the database: {str(e)}", 500
-        
-@app.route('/see_db')
-def see_db_users():
-    try:
-        # Try to execute a basic query to test the connection
-        result = db.session.execute(text("SELECT * FROM users")) 
-        user = result.fetchone()
-        return f"{user}", 200
-    except Exception as e:
-        return f"Error connecting to the database: {str(e)}", 500
-        
-@app.route('/delete_db')
-def delete_db_users():
-    try:
-        # Try to execute a basic query to test the connection
-        result = db.session.execute(text("DELETE FROM users")) 
-        db.session.commit() # Have to run commit for something like a deletion
-        return f"{result.rowcount}", 200
-    except Exception as e:
-        return f"Error connecting to the database: {str(e)}", 500
-# REMOVE THIS ----------------------------------------------------------------------------
 
 # Track current users with a session
 SET_ACTIVESESSIONS = set()

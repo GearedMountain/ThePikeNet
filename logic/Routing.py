@@ -71,7 +71,7 @@ def loginRedirect():
 @basic_routing.route('/dashboard')
 def dashboardIndex():
     if isLoggedIn():
-        return render_template('Dashboard/index.html')
+        return render_template('Dashboard/index.html', authenticated=getUsername())
     else:
-        return "unauthenticated"
+        return render_template('Dashboard/index.html',authenticated=None)
     
