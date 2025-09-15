@@ -104,6 +104,26 @@ def wakePC():
         print("stdout:", res.stdout)
         print("stderr:", res.stderr)
 
+@app.route('/kill-pc')
+def killPC():
+    try:
+        if isLoggedIn():
+            res = subprocess.run(
+                "/usr/local/bin/stopBrandonsPc.sh",    
+                capture_output=True,   
+                text=True,            
+                timeout=30              
+            )
+            return "worked"
+        else:
+            return "no"
+    except subprocess.TimeoutExpired:
+        print("Script timed out")
+    else:
+        print("returncode:", res.returncode)
+        print("stdout:", res.stdout)
+        print("stderr:", res.stderr)
+
 # Registering new user
 @app.route('/register-account-submit', methods=['POST'])
 def registerAccountSubmit():
