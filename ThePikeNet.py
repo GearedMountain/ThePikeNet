@@ -2,6 +2,7 @@ pikenetVersion = 1.0
 from flask import Flask, request, send_from_directory, session, render_template, Response, redirect, url_for, jsonify
 from datetime import datetime, timezone
 import secrets
+import subprocess
 import hashlib
 from dotenv import load_dotenv
 from logic.Routing import basic_routing  # import the Blueprint
@@ -81,6 +82,27 @@ def loginSubmit():
     createSession(userId, username)
     # Process data or return a response
     return redirect('dashboard')
+
+# TEMPORARY TO TEST SUBPROCESS USE
+@app.route('/wake-pc')
+def wakePC():
+    try:
+        if isLoggedIn():
+            res = subprocess.run(
+                "/usr/local/bin/startBrandonsPc.sh",    
+                capture_output=True,   
+                text=True,            
+                timeout=30              
+            )
+            return "worked"
+        else:
+            return "no"
+    except subprocess.TimeoutExpired:
+        print("Script timed out")
+    else:
+        print("returncode:", res.returncode)
+        print("stdout:", res.stdout)
+        print("stderr:", res.stderr)
 
 # Registering new user
 @app.route('/register-account-submit', methods=['POST'])
