@@ -127,7 +127,7 @@ def killPC():
 
 @app.route('/fetch-snacks')
 def fetchsnacks():
-    runSnackboxAPI()
+    return runSnackboxAPI()
 
 
 # Registering new user

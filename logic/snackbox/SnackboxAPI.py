@@ -114,3 +114,4 @@ def runSnackboxAPI():
     print(f"\nThis months country: {country}")
     print(f"Found {len(snacks)} snacks. Downloading images...")
     save_images(snacks, country)
+    return "success"
