@@ -168,7 +168,8 @@ def fetchsnacks():
         <div class="snack-grid">
             {% for snack in snacks %}
             <div class="snack-item">
-                <img src="{{ snack['image_url'] }}" alt="{{ snack['name'] }}">
+                
+                <img src="{{ snack }}" alt="{{ snack['name'] }}">
                 <p>{{ snack['name'] }}</p>
             </div>
             {% endfor %}
