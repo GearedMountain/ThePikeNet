@@ -79,10 +79,10 @@ def loginSubmit():
         return "Field is empty or invalid"
         
     # Parameterize the SQL
-    userId = checkLoginCredentials(username, password)
+    userId, auth_level = checkLoginCredentials(username, password)
     if not userId:
         return "incorrect"
-    createSession(userId, username)
+    createSession(userId, username, auth_level)
     # Process data or return a response
     return redirect('dashboard')
 
