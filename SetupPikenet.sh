@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS users (
 );
 
 -- Create default admin
-INSERT INTO users (username, email, password, auth_level)
+INSERT INTO users (username, email, password, auth_value)
 VALUES ('pikemin', NULL, 'pikemin', 0)
 ON CONFLICT (username) DO NOTHING;
 
