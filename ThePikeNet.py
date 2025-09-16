@@ -144,7 +144,7 @@ def show_snackbox():
 
     # There should only be one country in your current API
     country, snacks = list(snack_data.items())[0]
-    
+    print(snack_data)
     html_template = """
     <!DOCTYPE html>
     <html>
