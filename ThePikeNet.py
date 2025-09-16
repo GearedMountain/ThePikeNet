@@ -42,6 +42,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 # Set flask session key to env var key, this is used to sign cookies
 app.secret_key = secret_key
 
+# Create new folder named dynamic for all uploads / server file writing
+os.makedirs("dynamic", exist_ok=True)
+
 # Helper functions for bcrypt
 def sha1Hash(message: str) -> str:
     # Encode the string to bytes, then hash it
