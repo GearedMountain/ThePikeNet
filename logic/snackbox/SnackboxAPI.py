@@ -81,6 +81,10 @@ def save_images(snacks, country, base_folder=OUTPUT_DIR):
             ext = '.jpg'
 
         filepath = os.path.join(folder, filename + ext)
+
+        if os.path.exists(filepath):
+            print(f"Image already exists, skipping: {filepath}")
+            continue
         try:
             response = requests.get(img_url, stream=True, timeout=10)
             response.raise_for_status()
