@@ -79,12 +79,14 @@ def loginSubmit():
         return "Field is empty or invalid"
         
     # Parameterize the SQL
-    userId, auth_value = checkLoginCredentials(username, password)
-    if not userId:
+    result = checkLoginCredentials(username, password)
+    if result:
+        userId, auth_value = result
+        createSession(userId, username, auth_value)
+        # Process data or return a response
+         return redirect('dashboard')
+    else:
         return "incorrect"
-    createSession(userId, username, auth_value)
-    # Process data or return a response
-    return redirect('dashboard')
 
 # TEMPORARY TO TEST SUBPROCESS USE
 @app.route('/wake-pc')
