@@ -126,18 +126,16 @@ chown -R www-data:www-data dynamic
 # Give read/write/execute permissions to owner and group
 chmod -R 775 dynamic
 
+# Add sticky bit so child folders inherit permissions
+chmod chmod g+s dynamic
+
 # Now enter the new dynamic folder and make subfolders
 cd dynamic
 mkdir -p snack_images
-chown -R www-data:www-data snack_images
-chmod -R 775 snack_images
+
 
 # Exit back to root directory
 cd ..
-if [ "$(id -u)" -eq 0 ]; then
-    echo "Restarting as non-root..."
-    exec runuser -l gamer -c "$0 $*"
-fi
 
 # Run Flask app
 echo "Starting web application..."
