@@ -19,9 +19,10 @@
 <body class="bg-black">
   <main>
     <div class="text-white space-mono-bold">
-    {% if auth_level == 0 %}
+      <p>Auth value: {{auth_value}}</p>
+    {% if auth_value == 0 %}
       <p>You have administrative privileges.</p>
-    {% elif auth_level == 1 %}
+    {% elif auth_value == 1 %}
       <p>You are a moderator.</p>
     {% else %}
       <p>You are a regular user.</p>
