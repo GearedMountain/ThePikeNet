@@ -2,7 +2,7 @@ from flask import Flask, session
 
 
 def createSession(userId, username, auth_level):
-    session['user_id'] = userId[0]
+    session['user_id'] = userId
     session['username'] = username
     session['auth_level'] = auth_level
     
