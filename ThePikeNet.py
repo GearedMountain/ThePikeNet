@@ -136,7 +136,7 @@ def sanitize_snack_name(snack_name):
     return name
 
 # Example route to display the snackbox page
-@app.route('/snackbox')
+@app.route('/fetch-snacks')
 def show_snackbox():
     snack_data = runSnackboxAPI()
     if not snack_data:
