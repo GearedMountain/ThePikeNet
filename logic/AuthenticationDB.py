@@ -9,7 +9,7 @@ def checkLoginCredentials(username, password):
             return False
         else:
             return userId, auth_value
-    else:
+    except:
         return False
     
 def checkAccountUnique(username, email, password):
