@@ -18,6 +18,7 @@
 
 <body class="bg-black">
   <main>
+    <div class="text-white space-mono-bold">
     {% if auth_level == 0 %}
       <p>You have administrative privileges.</p>
     {% elif auth_level == 1 %}
@@ -25,6 +26,7 @@
     {% else %}
       <p>You are a regular user.</p>
     {% endif %}
+    </div>
     <h1 class="text-white space-mono-bold">This is the dashboard</h1>
     <h1 class="text-white space-mono-regular">youll still be allowed here as a guest, but nothing will be saved and you
       cant access certain things</h1>
