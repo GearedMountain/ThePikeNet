@@ -6,7 +6,7 @@ from urllib.parse import urljoin
 import requests
 
 BASE_URL = "https://www.universalyums.com/"
-OUTPUT_DIR = "snack_images"
+OUTPUT_DIR = "logic/snackbox/snack_images"
 
 def fetch_html_with_curl(url):
     try:
