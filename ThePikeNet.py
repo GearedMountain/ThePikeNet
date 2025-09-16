@@ -127,40 +127,33 @@ def killPC():
         print("stdout:", res.stdout)
         print("stderr:", res.stderr)
 
-@app.route('/fetch-snacks')
-def fetchsnacks():
+@app.template_filter('sanitize')
+def sanitize_snack_name(snack_name):
+    name = snack_name.strip().lower()
+    name = re.sub(r'\s*image\s*$', '', name, flags=re.I)
+    name = re.sub(r"[^\w\-_.]+", '_', name)  # remove non-alphanum chars
+    name = name.replace("'", "")
+    return name
+
+# Example route to display the snackbox page
+@app.route('/snackbox')
+def show_snackbox():
     snack_data = runSnackboxAPI()
     if not snack_data:
-        return "<h1>Failed to fetch snack data</h1>"
-    
-    # snack_data looks like: { "Mexico": ["Chips", "Candy", ...] }
-    country, snacks = list(snack_data.items())[0]
-    print(snack_data)
+        return "No snack data available."
 
+    # There should only be one country in your current API
+    country, snacks = list(snack_data.items())[0]
+    
     html_template = """
     <!DOCTYPE html>
     <html>
     <head>
-        <title>Snackbox - {{ country }}</title>
+        <title>Snackbox: {{ country }}</title>
         <style>
-            body { font-family: Arial, sans-serif; text-align: center; }
-            h1 { color: #333; }
-            .snack-grid {
-                display: grid;
-                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-                gap: 20px;
-                padding: 20px;
-            }
-            .snack-item {
-                border: 1px solid #ccc;
-                border-radius: 10px;
-                padding: 10px;
-                background: #f9f9f9;
-            }
-            .snack-item img {
-                max-width: 100%;
-                border-radius: 8px;
-            }
+            .snack-grid { display: flex; flex-wrap: wrap; gap: 10px; }
+            .snack-item { width: 150px; text-align: center; }
+            .snack-item img { width: 100%; height: auto; }
         </style>
     </head>
     <body>
@@ -168,19 +161,10 @@ def fetchsnacks():
         <div class="snack-grid">
             {% for snack in snacks %}
             <div class="snack-item">
-              <img src="{{ url_for('static', filename='dynamic/snack_images/' 
-       + country|lower|replace(' ', '_') 
-       + '/' 
-       + snack|lower
-              |replace(' ', '_')
-              |replace("'", "")
-              |replace('&', '_')
-              |replace('!', '_')
-              |replace('@', '_') 
-       + '.jpg') }}" 
-     alt="{{ snack }}">
-
-
+                <img src="{{ url_for('snack_images',
+                                      country=country|lower|replace(' ', '_'),
+                                      filename=(snack|sanitize) + '.jpg') }}"
+                     alt="{{ snack }}">
                 <p>{{ snack }}</p>
             </div>
             {% endfor %}
@@ -188,9 +172,7 @@ def fetchsnacks():
     </body>
     </html>
     """
-
     return render_template_string(html_template, country=country, snacks=snacks)
-
 
 # Registering new user
 @app.route('/register-account-submit', methods=['POST'])
