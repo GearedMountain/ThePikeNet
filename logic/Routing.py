@@ -8,8 +8,8 @@ basic_routing = Blueprint('basic_routing', __name__)
 @basic_routing.route('/')
 def index():
     if isLoggedIn():
-        return redirect ("dashboard")
-    return redirect ("login")
+        return redirect("dashboard")
+    return redirect("login")
 
 ##################### Routing for Intel Stack ###########################
 
