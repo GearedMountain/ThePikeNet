@@ -127,7 +127,7 @@ chown -R www-data:www-data dynamic
 chmod -R 775 dynamic
 
 # Add sticky bit so child folders inherit permissions
-chmod chmod g+s dynamic
+chmod g+s dynamic
 
 # Now enter the new dynamic folder and make subfolders
 cd dynamic
