@@ -169,8 +169,11 @@ def fetchsnacks():
             {% for snack in snacks %}
             <div class="snack-item">
                 
-                <img src="dynamic/snack_images/{{ country|lower|replace(' ', '_') }}/{{ snack|lower|replace(' ', '_') }}.jpg" 
+                <img src="{{ url_for('snack_images',
+                     country=country|lower|replace(' ', '_'),
+                     filename=snack|lower|replace(' ', '_') + '.jpg') }}"
                  alt="{{ snack }}">
+
                 <p>{{ snack }}</p>
             </div>
             {% endfor %}
@@ -270,6 +273,12 @@ def get_official_image(filename):
     # Define the path to the 'images/official' folder
     image_folder = os.path.join(app.root_path, 'images', 'official')
     return send_from_directory(image_folder, filename)
+
+# Serve images for snackbox
+@app.route('/snack_images/<country>/<filename>')
+def snack_images(country, filename):
+    folder = os.path.join("dynamic/snack_images", country)
+    return send_from_directory(folder, filename)
 
 @app.errorhandler(404)
 def page_not_found(e):
