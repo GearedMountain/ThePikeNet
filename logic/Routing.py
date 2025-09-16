@@ -8,10 +8,8 @@ basic_routing = Blueprint('basic_routing', __name__)
 @basic_routing.route('/')
 def index():
     if isLoggedIn():
-        auth_v = getAuthValue()
-        print(f"fetched value: {auth_v}")
-        return render_template('Dashboard/index.html', auth_value=auth_v)
-    return render_template('index.html', pikenetVersion=1.0)
+        return redirect ("dashboard")
+    return redirect ("login")
 
 ##################### Routing for Intel Stack ###########################
 
@@ -73,7 +71,7 @@ def loginRedirect():
 @basic_routing.route('/dashboard')
 def dashboardIndex():
     if isLoggedIn():
-        return render_template('Dashboard/index.html', authenticated=getUsername())
+        return render_template('Dashboard/index.html', auth_value=getAuthValue())
     else:
-        return render_template('Dashboard/index.html',authenticated=None)
+        return render_template('Dashboard/index.html',auth_value=getAuthValue())
     
