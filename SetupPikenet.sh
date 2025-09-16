@@ -81,9 +81,16 @@ if [ ! -d "~/$APPNAME/local/data" ]; then
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(100) UNIQUE NOT NULL,
-    email VARCHAR(120) UNIQUE NOT NULL,
+    email VARCHAR(120) UNIQUE,
     password VARCHAR(200) NOT NULL,
     auth_value INTEGER NOT NULL DEFAULT 2
+);
+
+-- Create default admin
+INSERT INTO users (username, email, password, auth_level)
+SELECT 'pikemin', '', 'pikemin', 0
+WHERE NOT EXISTS (
+    SELECT 1 FROM users WHERE username = 'pikemin'
 );
 
 -- Create the notes table
