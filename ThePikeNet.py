@@ -1,5 +1,5 @@
 pikenetVersion = 1.0
-from flask import Flask, request, send_from_directory, session, render_template, Response, redirect, url_for, jsonify
+from flask import Flask, request, send_from_directory, session, render_template, Response, redirect, url_for, jsonify, render_template_string
 from datetime import datetime, timezone
 from logic.snackbox.SnackboxAPI import *
 import secrets
@@ -129,7 +129,56 @@ def killPC():
 
 @app.route('/fetch-snacks')
 def fetchsnacks():
-    return runSnackboxAPI()
+    snack_data = runSnackboxAPI()
+    if not snack_data:
+        return "<h1>Failed to fetch snack data</h1>"
+    
+    # snack_data looks like: { "Mexico": ["Chips", "Candy", ...] }
+    country, snacks = list(snack_data.items())[0]
+    print(snacks)
+    print(snacks['name'])
+
+    html_template = """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>Snackbox - {{ country }}</title>
+        <style>
+            body { font-family: Arial, sans-serif; text-align: center; }
+            h1 { color: #333; }
+            .snack-grid {
+                display: grid;
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+                gap: 20px;
+                padding: 20px;
+            }
+            .snack-item {
+                border: 1px solid #ccc;
+                border-radius: 10px;
+                padding: 10px;
+                background: #f9f9f9;
+            }
+            .snack-item img {
+                max-width: 100%;
+                border-radius: 8px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Snackbox: {{ country }}</h1>
+        <div class="snack-grid">
+            {% for snack in snacks %}
+            <div class="snack-item">
+                <img src="{{ snack['image_url'] }}" alt="{{ snack['name'] }}">
+                <p>{{ snack['name'] }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </body>
+    </html>
+    """
+
+    return render_template_string(html_template, country=country, snacks=snacks)
 
 
 # Registering new user
