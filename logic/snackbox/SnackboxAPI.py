@@ -116,3 +116,4 @@ def runAPI():
     save_images(snacks, country)
 
 
+runAPI()
