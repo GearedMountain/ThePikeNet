@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, jsonify
-from logic.Authenticator import isLoggedIn, getUsername
+from logic.Authenticator import *
 from .IntelStackDB import *
 
 basic_routing = Blueprint('basic_routing', __name__)
@@ -8,7 +8,7 @@ basic_routing = Blueprint('basic_routing', __name__)
 @basic_routing.route('/')
 def index():
     if isLoggedIn():
-        return render_template('Dashboard/index.html')
+        return render_template('Dashboard/index.html', auth_value=getAuthValue())
     return render_template('index.html', pikenetVersion=1.0)
 
 ##################### Routing for Intel Stack ###########################

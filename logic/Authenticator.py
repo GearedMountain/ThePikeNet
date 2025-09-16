@@ -1,11 +1,11 @@
 from flask import Flask, session
 
 
-def createSession(userId, username, auth_level):
-    print(f"creating session for {userId}: {username} AUTH {auth_level}")
+def createSession(userId, username, auth_value):
+    print(f"creating session for {userId}: {username} AUTH {auth_value}")
     session['user_id'] = userId
     session['username'] = username
-    session['auth_level'] = auth_level
+    session['auth_value'] = auth_value
     
 def isLoggedIn():
     userId = session.get('user_id')
@@ -16,3 +16,6 @@ def isLoggedIn():
     
 def getUsername():
     return session.get('username')
+
+def getAuthValue():
+    return session.get('auth_value')
