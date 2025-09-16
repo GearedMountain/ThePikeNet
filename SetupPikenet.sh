@@ -126,6 +126,12 @@ chown -R www-data:www-data dynamic
 # Give read/write/execute permissions to owner and group
 chmod -R 775 dynamic
 
+# Now enter the new dynamic folder and make subfolders
+cd dynamic
+mkdir -p snack_images
+chown -R www-data:www-data snack_images
+chmod -R 775 snack_images
+
 # Run Flask app
 echo "Starting web application..."
 python3 ThePikeNet.py
