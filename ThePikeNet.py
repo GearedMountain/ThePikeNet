@@ -168,11 +168,10 @@ def fetchsnacks():
         <div class="snack-grid">
             {% for snack in snacks %}
             <div class="snack-item">
-                
-                <img src="{{ url_for('snack_images',
-                     country=country|lower|replace(' ', '_'),
-                     filename=snack|lower|replace(' ', '_') + '.jpg') }}"
-                 alt="{{ snack }}">
+              <img src="{{ url_for('static', filename='dynamic/snack_images/' + 
+                     country|lower|replace(' ', '_') + '/' + 
+                     snack|lower|replace(' ', '_')|replace("'", "") + '.jpg') }}" 
+                alt="{{ snack }}">
 
                 <p>{{ snack }}</p>
             </div>
