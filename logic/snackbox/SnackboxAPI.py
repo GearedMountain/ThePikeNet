@@ -30,7 +30,6 @@ def sanitize_filename(name):
 
 def parse_snacks_and_country(html):
     soup = BeautifulSoup(html, 'html.parser')
-    
     container_div = soup.find('div', class_='slider-wrap')
     if not container_div:
         print("Could not find div with class 'slider-wrap'")
@@ -47,10 +46,7 @@ def parse_snacks_and_country(html):
     else:
         h4_text = h4.get_text(strip=True)
         match = re.search(r"inside the (.+?) box", h4_text, re.I)
-        if match:
-            country = match.group(1)
-        else:
-            country = "Unknown Country"
+        country = match.group(1) if match else "Unknown Country"
 
     snacks = []
     for img in container_div.find_all('img'):
@@ -63,9 +59,12 @@ def parse_snacks_and_country(html):
         if any(x in alt_lower for x in ['logo', 'universal yums', 'facebook', 'instagram', 'box']):
             continue
 
+        clean_name = re.sub(r'\s*image\s*$', '', alt, flags=re.I).strip()
         full_url = urljoin(BASE_URL, src)
-        snacks.append({'name': alt, 'image_url': full_url})
+        snacks.append({'name': clean_name, 'image_url': full_url})
+
     return country, snacks
+
 
 def save_images(snacks, country, base_folder=OUTPUT_DIR):
     safe_country = country.strip().replace(" ", "_").lower()
