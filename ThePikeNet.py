@@ -84,7 +84,7 @@ def loginSubmit():
         userId, auth_value = result
         createSession(userId, username, auth_value)
         # Process data or return a response
-         return redirect('dashboard')
+        return redirect('dashboard')
     else:
         return "incorrect"
 
