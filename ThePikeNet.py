@@ -127,14 +127,6 @@ def killPC():
         print("stdout:", res.stdout)
         print("stderr:", res.stderr)
 
-@app.template_filter('sanitize')
-def sanitize_snack_name(snack_name):
-    name = snack_name.strip().lower()
-    name = re.sub(r'\s*image\s*$', '', name, flags=re.I)
-    name = re.sub(r"[^\w\-_.']+", '_', name)  # keep apostrophes for now
-    name = name.replace("'", "")  # remove apostrophes
-    return name
-
 # Example route to display the snackbox page
 @app.route('/fetch-snacks')
 def show_snackbox():
@@ -145,6 +137,17 @@ def show_snackbox():
     # There should only be one country in your current API
     country, snacks = list(snack_data.items())[0]
     
+    def sanitize(name):
+        name = name.strip().lower()
+        name = re.sub(r'\s*image\s*$', '', name, flags=re.I)
+        name = re.sub(r"[^\w\-_.']+", '_', name)
+        name = name.replace("'", "")  # remove apostrophes
+        return name
+
+    # Prepare a list of sanitized filenames
+    sanitized_snacks = [(snack, sanitize(snack)) for snack in snacks]
+
+
     html_template = """
     <!DOCTYPE html>
     <html>
@@ -159,11 +162,11 @@ def show_snackbox():
     <body>
         <h1>Snackbox: {{ country }}</h1>
         <div class="snack-grid">
-            {% for snack in snacks %}
+            {% for snack, filename in sanitized_snacks %}
             <div class="snack-item">
                 <img src="{{ url_for('snack_images',
                                       country=country|lower|replace(' ', '_'),
-                                      filename=(snack|sanitize) + '.jpg') }}"
+                                      filename=filename + '.jpg') }}"
                      alt="{{ snack }}">
                 <p>{{ snack }}</p>
             </div>
