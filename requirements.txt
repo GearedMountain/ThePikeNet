@@ -5,4 +5,4 @@ dotenv
 psycopg2-binary
 bcrypt
 secure-smtplib
-
+bs4
