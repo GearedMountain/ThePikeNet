@@ -132,10 +132,10 @@ def fetchsnacks():
     snack_data = runSnackboxAPI()
     if not snack_data:
         return "<h1>Failed to fetch snack data</h1>"
-    print(snack_data)
+    
     # snack_data looks like: { "Mexico": ["Chips", "Candy", ...] }
     country, snacks = list(snack_data.items())[0]
-
+    print(snacks)
     html_template = """
     <!DOCTYPE html>
     <html>
