@@ -118,13 +118,13 @@ else
 fi
 
 # Create new dynamic folder for server to write to
-mkdir -p /var/www/html/dynamic
+mkdir -p dynamic
 
 # Change ownership to the Apache user and group
-chown -R www-data:www-data /var/www/html/dynamic
+chown -R www-data:www-data dynamic
 
 # Give read/write/execute permissions to owner and group
-chmod -R 775 /var/www/html/dynamic
+chmod -R 775 dynamic
 
 # Run Flask app
 echo "Starting web application..."
