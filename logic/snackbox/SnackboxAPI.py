@@ -100,7 +100,7 @@ def save_images(snacks, country, base_folder="snack_images"):
         except Exception as e:
             print(f"Failed to download image for {name}: {e}")
 
-def runAPI():
+def runSnackboxAPI():
     html = fetch_html_with_curl(BASE_URL)
     if not html:
         print("Failed to fetch HTML.")
@@ -114,6 +114,3 @@ def runAPI():
     print(f"\nThis months country: {country}")
     print(f"Found {len(snacks)} snacks. Downloading images...")
     save_images(snacks, country)
-
-
-runAPI()

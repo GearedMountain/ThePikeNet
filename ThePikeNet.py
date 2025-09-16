@@ -1,6 +1,7 @@
 pikenetVersion = 1.0
 from flask import Flask, request, send_from_directory, session, render_template, Response, redirect, url_for, jsonify
 from datetime import datetime, timezone
+from logic.snackbox.SnackboxAPI import *
 import secrets
 import subprocess
 import hashlib
@@ -123,6 +124,11 @@ def killPC():
         print("returncode:", res.returncode)
         print("stdout:", res.stdout)
         print("stderr:", res.stderr)
+
+@app.roite('/fetch-snacks')
+def fetchsnacks():
+    runSnackboxAPI()
+
 
 # Registering new user
 @app.route('/register-account-submit', methods=['POST'])
