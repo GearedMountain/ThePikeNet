@@ -1,5 +1,5 @@
 pikenetVersion = 1.0
-from flask import Flask, request, send_from_directory, session, render_template, Response, redirect, url_for, jsonify
+from flask import Flask, request, send_from_directory, session, render_template, Response, redirect, url_for, jsonify, render_template_string
 from datetime import datetime, timezone
 from logic.snackbox.SnackboxAPI import *
 import secrets
