@@ -43,7 +43,6 @@ app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 app.secret_key = secret_key
 
 # Create new folder named dynamic for all uploads / server file writing
-os.makedirs("dynamic", exist_ok=True)
 
 # Helper functions for bcrypt
 def sha1Hash(message: str) -> str:
