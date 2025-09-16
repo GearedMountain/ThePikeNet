@@ -132,6 +132,8 @@ mkdir -p snack_images
 chown -R www-data:www-data snack_images
 chmod -R 775 snack_images
 
+# Exit back to root directory
+cd ..
 # Run Flask app
 echo "Starting web application..."
 python3 ThePikeNet.py
