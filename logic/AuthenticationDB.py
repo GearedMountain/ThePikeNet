@@ -3,14 +3,11 @@ from .Database import db, text
 def checkLoginCredentials(username, password):
     sql = text("SELECT id, auth_value FROM users WHERE username = :username AND password = :password")
     result = db.session.execute(sql, {"username": username, "password": password})
-    try:
-        userId, auth_value = result.fetchone()
-        if userId == None:
-            return False
-        else:
-            return userId, auth_value
-    finally:
-        return False
+    userId, auth_value = result.fetchone()
+    if userId == None:
+        return None
+    else:
+        return userId, auth_value
     
 def checkAccountUnique(username, email, password):
     sql = text("""
