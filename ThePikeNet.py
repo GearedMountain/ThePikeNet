@@ -131,8 +131,8 @@ def killPC():
 def sanitize_snack_name(snack_name):
     name = snack_name.strip().lower()
     name = re.sub(r'\s*image\s*$', '', name, flags=re.I)
-    name = re.sub(r"[^\w\-_.]+", '_', name)  # remove non-alphanum chars
-    name = name.replace("'", "")
+    name = re.sub(r"[^\w\-_.']+", '_', name)  # keep apostrophes for now
+    name = name.replace("'", "")  # remove apostrophes
     return name
 
 # Example route to display the snackbox page
