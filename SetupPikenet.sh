@@ -134,6 +134,11 @@ chmod -R 775 snack_images
 
 # Exit back to root directory
 cd ..
+if [ "$(id -u)" -eq 0 ]; then
+    echo "Restarting as non-root..."
+    exec runuser -l gamer -c "$0 $*"
+fi
+
 # Run Flask app
 echo "Starting web application..."
 python3 ThePikeNet.py
