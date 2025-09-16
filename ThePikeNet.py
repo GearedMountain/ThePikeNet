@@ -125,7 +125,7 @@ def killPC():
         print("stdout:", res.stdout)
         print("stderr:", res.stderr)
 
-@app.roite('/fetch-snacks')
+@app.route('/fetch-snacks')
 def fetchsnacks():
     runSnackboxAPI()
 
