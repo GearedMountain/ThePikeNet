@@ -88,7 +88,7 @@ CREATE TABLE IF NOT EXISTS users (
 
 -- Create default admin
 INSERT INTO users (username, email, password, auth_value)
-VALUES ('pikemin', NULL, 'pikemin', 0)
+VALUES ('pikemin', NULL, 'pikeminpikemin', 0)
 ON CONFLICT (username) DO NOTHING;
 
 -- Create the notes table
