@@ -135,8 +135,7 @@ def fetchsnacks():
     
     # snack_data looks like: { "Mexico": ["Chips", "Candy", ...] }
     country, snacks = list(snack_data.items())[0]
-    print(snacks)
-    print(snacks['name'])
+    print(snacks_data)
 
     html_template = """
     <!DOCTYPE html>
