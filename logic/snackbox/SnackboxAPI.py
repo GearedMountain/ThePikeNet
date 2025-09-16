@@ -75,7 +75,7 @@ def parse_snacks_and_country(html):
         snacks.append({'name': alt, 'image_url': full_url})
     return country, snacks
 
-def save_images(snacks, country, base_folder="snack_images"):
+def save_images(snacks, country, base_folder=OUTPUT_DIR):
     safe_country = country.strip().replace(" ", "_").lower()
     folder = os.path.join(base_folder, safe_country)
     os.makedirs(folder, exist_ok=True)
