@@ -1,5 +1,6 @@
 from flask import render_template, request, redirect, url_for, session
 from pikenet.utils.decorators import login_required, role_required
+from .models import checkLoginCredentials
 from . import bp
 
 @bp.route('/')
@@ -16,9 +17,7 @@ def login():
         username = request.form.get('username')
         password = request.form.get('password')
         email = request.form.get('email')
-        if username == 'admin' and password == 'adminadmin':
-            session['user_id'] = 1
-            session['auth_level'] = 0
+        checkLoginCredentials(username, password)
             return redirect(url_for('main.index'))
         return render_template('login.html', error="Invalid credentials")
 
