@@ -21,7 +21,7 @@ def login():
         if response == None:
             return render_template('login.html', error="Invalid credentials")
         else:
-            userId, authLevel = response
+            userId, authValue = response
             session['user_id'] = userId
             session['username'] = username
             session['auth_value'] = authValue
