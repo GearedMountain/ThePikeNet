@@ -126,25 +126,6 @@ else
 	echo "Database already created, skipping step..."
 fi
 
-# Create new dynamic folder for server to write to
-mkdir -p dynamic
-
-# Change ownership to the Apache user and group
-chown -R www-data:www-data dynamic
-
-# Give read/write/execute permissions to owner and group
-chmod -R 775 dynamic
-
-# Add sticky bit so child folders inherit permissions
-chmod g+s dynamic
-
-# Now enter the new dynamic folder and make subfolders
-cd dynamic
-mkdir -p snack_images
-
-
-# Exit back to root directory
-cd ..
 
 # Run Flask app
 echo "Starting web application..."
