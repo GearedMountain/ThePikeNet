@@ -73,5 +73,6 @@ def dashboardIndex():
     if isLoggedIn():
         return render_template('Dashboard/index.html', auth_value=getAuthValue())
     else:
+        # Theyre a guest
         return render_template('Dashboard/index.html',auth_value=getAuthValue())
     

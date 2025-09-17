@@ -1,0 +1,10 @@
+flask
+flask_sqlalchemy
+sqlalchemy
+dotenv
+psycopg2-binary
+bcrypt
+secure-smtplib
+
+bs4
+requests
