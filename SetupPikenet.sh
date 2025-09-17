@@ -91,6 +91,7 @@ INSERT INTO users (username, email, password, auth_value)
 VALUES ('pikemin', NULL, 'pikeminpikemin', 0)
 ON CONFLICT (username) DO NOTHING;
 
+-- INTEL STACK DATABASES
 -- Create the notes table
 CREATE TABLE IF NOT EXISTS notes (
     id SERIAL PRIMARY KEY,
@@ -115,6 +116,8 @@ CREATE TABLE IF NOT EXISTS note_tags (
     FOREIGN KEY (note_id) REFERENCES notes(id) ON DELETE CASCADE,
     FOREIGN KEY (tag_id) REFERENCES tags(id) ON DELETE CASCADE
 );
+
+-- SNACKBOX DATABASES
 
 EOF
 
