@@ -1,2 +1,0 @@
-systemctl start thepikenet.service
-# apparently ExecStart=/var/www/ThePikeNet/venv/bin/python /var/www/ThePikeNet/ThePikeNet.py in the system services folder is all you need to make the python environment execute the server
