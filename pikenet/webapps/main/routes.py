@@ -17,8 +17,9 @@ def login():
         username = request.form.get('username')
         password = request.form.get('password')
         email = request.form.get('email')
-        checkLoginCredentials(username, password)
-            return redirect(url_for('main.index'))
-        return render_template('login.html', error="Invalid credentials")
+        response = checkLoginCredentials(username, password)
+        if response == None:
+            return render_template('login.html', error="Invalid credentials")
+        return redirect(url_for('main.index'))
 
     return render_template('login.html')
