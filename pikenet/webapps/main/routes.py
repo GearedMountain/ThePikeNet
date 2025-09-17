@@ -20,6 +20,11 @@ def login():
         response = checkLoginCredentials(username, password)
         if response == None:
             return render_template('login.html', error="Invalid credentials")
+        else
+            userId, authLevel = response
+            session['user_id'] = userId
+            session['username'] = username
+            session['auth_value'] = authValue
         return redirect(url_for('main.index'))
 
     return render_template('login.html')

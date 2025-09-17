@@ -7,10 +7,7 @@ def checkLoginCredentials(username, password):
     result = db.session.execute(sql, {"username": username, "password": password})
     row = result.fetchone()
     if row:
-        userId, auth_value = row
-        session['user_id'] = userId
-        session['username'] = username
-        session['auth_value'] = auth_value
-        return "Success"
+        userId, authValue = row
+        return userId, authValue
     else:
         return None
