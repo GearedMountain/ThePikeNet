@@ -1,4 +1,5 @@
 from pikenet.utils.database import db
+from sqlalchemy import text
 
 # See if the username and password provided are valid
 def checkLoginCredentials(username, password):
