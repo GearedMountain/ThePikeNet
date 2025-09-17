@@ -148,4 +148,4 @@ cd ..
 
 # Run Flask app
 echo "Starting web application..."
-python3 ThePikeNet.py
+python3 PikeNet.py
