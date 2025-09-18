@@ -3,7 +3,9 @@
 {% block content %}
 <body class="bg-black">
   <main>
-    <img class="max-w-45 mx-auto md:mx-0" src="{{ url_for('static', filename='images/PikeNetLogo.png') }}">
+    <img class="hidden max-w-45 mx-auto md:mx-0 md:flex" src="{{ url_for('static', filename='images/PikeNetLogo.png') }}">
+    <img class="max-w-45 mx-auto md:mx-0 md:hidden" src="{{ url_for('static', filename='images/PikeNetLogoFlat.png') }}">
+
     <form action="/login" method="POST" id="login-menu"
       class="mx-auto max-w-[90%]  flex flex-col space-y-4 md:max-w-200 text-[#B3B3B3]">
       <h1 class="space-mono-bold text-3xl text-center" id="login-title">Welcome to the PikeNet</h1>
