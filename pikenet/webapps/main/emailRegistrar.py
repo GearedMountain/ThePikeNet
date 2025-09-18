@@ -8,7 +8,7 @@ from datetime import datetime, timezone
 import os
 
 EMAIL_ADDRESS = 'noreply@gearedmountain.com'
-EMAIL_PASSWORDD = os.getenv("EMAIL_PASS")
+EMAIL_PASSWORD = os.getenv("EMAIL_PASS")
 display_name = "PikeNet"
 email_address = EMAIL_ADDRESS
 
