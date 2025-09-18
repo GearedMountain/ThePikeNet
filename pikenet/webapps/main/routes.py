@@ -76,3 +76,9 @@ def verifyRegistration():
     hashValue = request.args.get('val')
     verifyRegistrationHash(hash)
     return render_template('login-redirect.html'), 200
+
+def sha1Hash(message: str) -> str:
+    # Encode the string to bytes, then hash it
+    sha1 = hashlib.sha1()
+    sha1.update(message.encode('utf-8'))
+    return sha1.hexdigest()
