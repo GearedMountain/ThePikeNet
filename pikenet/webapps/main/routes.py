@@ -1,6 +1,7 @@
 from flask import render_template, request, redirect, url_for, session
 from pikenet.utils.decorators import login_required, role_required
 from .models import checkLoginCredentials, isAccountUnique, registerAccount
+import hashlib
 from .emailRegistrar import registerValidated
 from . import bp
 
