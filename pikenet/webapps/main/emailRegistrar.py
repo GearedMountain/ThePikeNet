@@ -48,6 +48,7 @@ def sendAuthCheck(to_address: str, code: str):
     msg_alt.attach(MIMEText(html, "html"))
 
     # Attach the image file
+    print(f"current location: {os.getcwd()}")
     with open("PikeNetLogo.png", "rb") as img_file:
         img = MIMEImage(img_file.read())
         img.add_header("Content-ID", "<logo_image>")
