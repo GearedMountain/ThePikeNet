@@ -4,6 +4,7 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.image import MIMEImage
 from email.utils import formataddr
+from datetime import datetime, timezone
 import os
 
 EMAIL_ADDRESS = 'noreply@gearedmountain.com'
