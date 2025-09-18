@@ -1,4 +1,4 @@
-from flask import render_template, request, redirect, url_for, session
+from flask import render_template, request, redirect, url_for, session, jsonify
 from pikenet.utils.decorators import login_required, role_required
 from .models import checkLoginCredentials, isAccountUnique, registerAccount
 import hashlib
