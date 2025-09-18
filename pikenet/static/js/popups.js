@@ -67,3 +67,53 @@ function showPopup(status, message, decay) {
            errorPopup.classList.add('fade-out-popup');
          }, 6000);}
        }
+
+function attentionElement(status, name, decayType) {
+
+    const element = document.getElementById(name);
+
+    var newClass = ""
+    if (status === 0){
+        newClass = "border-red-500";
+    } else{
+        newClass = "border-yellow-500";
+    }
+
+    element.classList.add("transition-colors") 
+    element.classList.add("duration-200")     
+    element.classList.add(newClass)   
+    
+    // decay has 3 types:
+    // 0 = none
+    // 1 = flicker ( 300 ms )
+    // 2 = long ( 4000 ms )
+    
+    
+    
+    if(decayType === "Flicker"){
+        setTimeout(() => {
+          element.classList.remove(newClass)
+        }, 300);}
+        
+    // Basically a double flicker
+    if(decayType === "Pulse"){
+        setTimeout(() => { 
+          element.classList.remove(newClass)
+          setTimeout(() => {
+            element.classList.add(newClass)
+            setTimeout(() => {
+                element.classList.remove(newClass)
+            }, 300);
+            }, 300);
+        }, 300);}
+    if(decayType === "Long"){
+        setTimeout(() => {
+          element.classList.remove(newClass)
+        }, 4000);
+    }
+}
+
+// Helper function to sleep
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}

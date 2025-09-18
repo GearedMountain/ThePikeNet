@@ -81,14 +81,14 @@ if [ ! -d "~/$APPNAME/local/data" ]; then
 CREATE TABLE IF NOT EXISTS users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(100) UNIQUE NOT NULL,
-    email VARCHAR(120) UNIQUE,
+    email VARCHAR(120) UNIQUE NOT NULL,
     password VARCHAR(200) NOT NULL,
     auth_value INTEGER NOT NULL DEFAULT 2
 );
 
 -- Create default admin
 INSERT INTO users (username, email, password, auth_value)
-VALUES ('pikemin', NULL, 'pikeminpikemin', 0)
+VALUES ('pikemin', 'noreply@gearedmountain.com', 'pikeminpikemin', 0)
 ON CONFLICT (username) DO NOTHING;
 
 -- INTEL STACK DATABASES

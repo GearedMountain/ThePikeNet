@@ -1,6 +1,7 @@
 from flask import render_template, request, redirect, url_for, session
 from pikenet.utils.decorators import login_required, role_required
-from .models import checkLoginCredentials
+from .models import checkLoginCredentials, isAccountUnique, registerAccount
+from .emailRegistrar import registerValidated, 
 from . import bp
 
 @bp.route('/')
@@ -28,3 +29,50 @@ def login():
         return redirect(url_for('main.index'))
 
     return render_template('login.html')
+
+@bp.route('/register', methods=['GET', 'POST'])
+#@role_required(0)
+def register():
+    if request.method == 'POST':
+        # fake login example
+        username = request.form.get('username')
+        password = request.form.get('password')
+        email = request.form.get('email')
+
+        result = isAccountUnique(username, password, email)
+        
+        if not result:
+            return jsonify({"message": "Not unique"}), 400
+            
+        # If valid and unique, start verification process before officially adding it to the database    
+        hashValue = sha1Hash(username + email + password); 
+        if not username.isalnum():
+            return jsonify({"message": "Invalid characters in username"}), 400 
+        
+        # Password must be 8 characters
+        if not len(password) >= 8:
+            return jsonify({"message": "Password not long enough"}), 400
+        
+        # No spaces or illegal characters in email
+        email = email.replace(" ", "")
+
+        createAuthCheck(username, password, email, hashValue)
+        return jsonify({"message": "WaitToValidate", "hashValue": hashValue}), 200
+
+        registerAccount(username, password, email)    
+    return render_template('register.html')
+    
+@bp.route('/register-check', methods=['POST'])
+def registerCheck():
+        data = request.get_json() 
+        receivedHash = data.get('hash')
+
+        response = registerValidated(receivedHash)
+        return jsonify({"message": response}), 200
+
+@bp.route('/verify-registration')
+def verifyRegistration():
+    # Get the 'id' parameter from the URL query string
+    hashValue = request.args.get('val')
+    verifyRegistrationHash(hash)
+    return render_template('login-redirect.html'), 200
