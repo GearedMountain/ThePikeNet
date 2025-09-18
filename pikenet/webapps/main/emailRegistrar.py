@@ -1,16 +1,13 @@
 import smtplib
+from flask import current_app
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.image import MIMEImage
 from email.utils import formataddr
+import os
 
-EMAIL_ADDRESS = current_app.config['INFO_EMAIL_ADDRESS']
-EMAIL_PASSWORD = current_app.config['INFO_EMAIL_PASSWORD']
-
-def configureEmail(password):
-    global EMAIL_PASSWORD
-    EMAIL_PASSWORD = password
-
+EMAIL_ADDRESS = 'noreply@gearedmountain.com'
+EMAIL_PASSWORDD = os.getenv("EMAIL_PASS")
 display_name = "PikeNet"
 email_address = EMAIL_ADDRESS
 
@@ -81,8 +78,8 @@ def createAuthCheck(username: str, password: str, email: str, hash: str):
 
 def registerValidated(receivedHash):
     response = currentAuthorizationChecks[receivedHash][4]
-        if currentAuthorizationChecks[receivedHash][4]:
-            del currentAuthorizationChecks[receivedHash]
+    if currentAuthorizationChecks[receivedHash][4]:
+        del currentAuthorizationChecks[receivedHash]
     return response
 
 def verifyRegistrationHash(hashValue):
