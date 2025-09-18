@@ -35,9 +35,10 @@ def login():
 def register():
     if request.method == 'POST':
         # fake login example
-        username = request.form.get('username')
-        password = request.form.get('password')
-        email = request.form.get('email')
+        data = request.get_json() 
+        username = data.get('username')
+        email = data.get('email') 
+        password = data.get('password')
 
         result = isAccountUnique(username, password, email)
         
