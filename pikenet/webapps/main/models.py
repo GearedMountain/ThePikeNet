@@ -46,4 +46,3 @@ def isAccountUnique(username, password, email):
     if result.scalar() > 0:
         return False
     return True    
-
