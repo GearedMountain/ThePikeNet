@@ -35,6 +35,7 @@ def login():
 #@role_required(0)
 def register():
     if request.method == 'POST':
+        print("tf")
         # fake login example
         data = request.get_json() 
         username = data.get('username')
