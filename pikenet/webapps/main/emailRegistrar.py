@@ -1,6 +1,5 @@
 import smtplib
 from flask import current_app
-from .models import registerAccount
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from email.mime.image import MIMEImage
@@ -92,5 +91,5 @@ def verifyRegistrationHash(hashValue):
         oldTuple = currentAuthorizationChecks[hashValue]
         newTuple = oldTuple[:4] + (True,) + oldTuple[5:]
         currentAuthorizationChecks[hashValue] = newTuple
-        result = registerAccount(currentAuthorizationChecks[hashValue][0],currentAuthorizationChecks[hashValue][1],currentAuthorizationChecks[hashValue][2])
-        print(f"new list: {currentAuthorizationChecks}")
+        return [currentAuthorizationChecks[hashValue][0],currentAuthorizationChecks[hashValue][1],currentAuthorizationChecks[hashValue][2]]
+
