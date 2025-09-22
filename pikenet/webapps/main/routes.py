@@ -45,7 +45,7 @@ def register():
         
         if not result:
             print("Username Taken")
-            return jsonify({"message": "Not unique"}), 400
+            return jsonify({"message": "Not unique"}), 200
             
         # If valid and unique, start verification process before officially adding it to the database    
         hashValue = sha1Hash(username + email + password); 
