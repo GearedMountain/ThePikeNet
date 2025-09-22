@@ -126,6 +126,16 @@ else
 	echo "Database already created, skipping step..."
 fi
 
+mkdir -p pikenet/webapps/snackbox/dynamic
+
+# Change ownership to the Apache user and group
+chown -R gamer:gamer pikenet/webapps/snackbox/dynamic
+
+# Give read/write/execute permissions to owner and group
+chmod -R 775 pikenet/webapps/snackbox/dynamic
+
+# Add sticky bit so child folders inherit permissions
+chmod g+s pikenet/webapps/snackbox/dynamic
 
 # Run Flask app
 echo "Starting web application..."
