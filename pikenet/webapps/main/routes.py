@@ -33,6 +33,12 @@ def login():
         return redirect(url_for('main.index'))
     return render_template('login.html')
 
+@bp.route('/logout', methods=['POST'])
+def logout():
+    session.clear()
+    return redirect(url_for('main.login'))
+
+
 #################################### Registering a new account ####################################
 
 @bp.route('/register', methods=['GET', 'POST'])
