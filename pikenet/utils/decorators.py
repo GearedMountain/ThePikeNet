@@ -25,7 +25,7 @@ def role_required(*roles):
         def wrapped_view(*args, **kwargs):
             auth_value = session.get('auth_value')
             if auth_value not in roles:
-                return "unauthorized", 500  # Or another 'unauthorized' page
+                return "unauthorized", 401  # Or another 'unauthorized' page
             return view_func(*args, **kwargs)
         return wrapped_view
     return decorator
