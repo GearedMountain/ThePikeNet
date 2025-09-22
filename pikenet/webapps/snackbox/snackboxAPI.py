@@ -6,7 +6,7 @@ from urllib.parse import urljoin
 import requests
 
 BASE_URL = "https://www.universalyums.com/"
-OUTPUT_DIR = "dynamic"
+OUTPUT_DIR = "pikenet/webapps/snackbox/dynamic"
 
 def fetchHtmlWithCurl(url):
     try:
