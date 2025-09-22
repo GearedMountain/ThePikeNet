@@ -81,6 +81,7 @@ def createAuthCheck(username: str, password: str, email: str, hash: str):
 def registerValidated(receivedHash):
     response = currentAuthorizationChecks[receivedHash][4]
     if currentAuthorizationChecks[receivedHash][4]:
+        print("email validated")
         del currentAuthorizationChecks[receivedHash]
     return response
 
