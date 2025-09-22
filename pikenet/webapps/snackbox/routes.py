@@ -1,0 +1,10 @@
+from flask import render_template, request, redirect, url_for, session, jsonify
+from pikenet.utils.decorators import login_required, role_required
+from .snackBoxAPI import runSnackboxAPI
+from . import bp
+
+@bp.route('/snackboxApi')
+def index():
+    result = runSnackboxAPI()
+    print(result)
+    return "running"
