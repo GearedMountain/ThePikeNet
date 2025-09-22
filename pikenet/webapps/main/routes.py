@@ -29,7 +29,8 @@ def login():
             session['username'] = username
             session['auth_value'] = authValue
         return redirect(url_for('main.index'))
-
+    if session.get("user_id") not None:
+        return redirect(url_for('/'))
     return render_template('login.html')
 
 #################################### Registering a new account ####################################
