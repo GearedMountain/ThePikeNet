@@ -57,10 +57,11 @@ def register():
         
         # No spaces or illegal characters in email
         email = email.replace(" ", "")
-
-        createAuthCheck(username, password, email, hashValue)
-        print("request made")
-        return jsonify({"message": "WaitToValidate", "hashValue": hashValue}), 200  
+        try:
+            createAuthCheck(username, password, email, hashValue)
+            return jsonify({"message": "WaitToValidate", "hashValue": hashValue}), 200  
+        except Exception as e:
+            print(f"Failed to start auth check: {e}")
     return render_template('register.html')
     
 @bp.route('/register-check', methods=['POST'])
