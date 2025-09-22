@@ -59,6 +59,7 @@ def register():
         email = email.replace(" ", "")
 
         createAuthCheck(username, password, email, hashValue)
+        print("request made")
         return jsonify({"message": "WaitToValidate", "hashValue": hashValue}), 200  
     return render_template('register.html')
     
