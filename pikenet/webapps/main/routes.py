@@ -59,9 +59,7 @@ def register():
         email = email.replace(" ", "")
 
         createAuthCheck(username, password, email, hashValue)
-        return jsonify({"message": "WaitToValidate", "hashValue": hashValue}), 200
-
-        registerAccount(username, password, email)    
+        return jsonify({"message": "WaitToValidate", "hashValue": hashValue}), 200  
     return render_template('register.html')
     
 @bp.route('/register-check', methods=['POST'])
