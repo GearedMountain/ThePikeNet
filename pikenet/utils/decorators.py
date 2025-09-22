@@ -25,8 +25,7 @@ def role_required(*roles):
         def wrapped_view(*args, **kwargs):
             auth_value = session.get('auth_value')
             if auth_value not in roles:
-                flash("You do not have permission to view this page.", "danger")
-                return redirect(url_for('main.index'))  # Or another 'unauthorized' page
+                return "unauthorized"  # Or another 'unauthorized' page
             return view_func(*args, **kwargs)
         return wrapped_view
     return decorator
