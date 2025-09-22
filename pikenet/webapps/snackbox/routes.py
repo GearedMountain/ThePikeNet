@@ -4,6 +4,7 @@ from .snackboxAPI import runSnackboxAPI
 from . import bp
 
 @bp.route('/snackbox-api')
+@role_required(0)
 def index():
     result = runSnackboxAPI()
     print(result)
