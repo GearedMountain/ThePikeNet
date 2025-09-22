@@ -3,7 +3,7 @@ from pikenet.utils.decorators import login_required, role_required
 from .snackBoxAPI import runSnackboxAPI
 from . import bp
 
-@bp.route('/snackboxApi')
+@bp.route('/snackbox-api')
 def index():
     result = runSnackboxAPI()
     print(result)

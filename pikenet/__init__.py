@@ -10,8 +10,14 @@ def create_app():
     db.init_app(app)
 
     # Register blueprints
+    
+    # Main - Dashboard / Login 
     from pikenet.webapps.main import bp as main_bp
     app.register_blueprint(main_bp)
+
+    # SnackBox
+    from pikenet.webapps.snackbox import bp as snackbox_bp
+    app.register_blueprint(snackbox_bp)
 
     # If you have more addons, register them here
     # from app.addons.blog import bp as blog_bp
