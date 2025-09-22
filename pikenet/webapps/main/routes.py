@@ -76,7 +76,7 @@ def registerCheck():
 def verifyRegistration():
     # Get the 'id' parameter from the URL query string
     hashValue = request.args.get('val')
-    verifyRegistrationHash(hash)
+    verifyRegistrationHash(hashValue)
     return render_template('login-redirect.html'), 200
 
 def sha1Hash(message: str) -> str:
