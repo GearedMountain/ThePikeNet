@@ -7,9 +7,10 @@ from . import bp
 
 @bp.route('/')
 def index():
-    print(session.get('auth_level'))
-    return render_template('index.html')
+    print(session.get('auth_value'))
+    return render_template('index.html', username=session.get('username'), auth_value=session.get('auth_value'))
 
+#################################### Authenticating ####################################
 
 @bp.route('/login', methods=['GET', 'POST'])
 #@role_required(0)
@@ -30,6 +31,8 @@ def login():
         return redirect(url_for('main.index'))
 
     return render_template('login.html')
+
+#################################### Registering a new account ####################################
 
 @bp.route('/register', methods=['GET', 'POST'])
 #@role_required(0)
@@ -65,14 +68,15 @@ def register():
             print(f"Failed to start auth check: {e}")
     return render_template('register.html')
     
+# Repeated ping by client
 @bp.route('/register-check', methods=['POST'])
 def registerCheck():
         data = request.get_json() 
         receivedHash = data.get('hash')
-
         response = registerValidated(receivedHash)
         return jsonify({"message": response}), 200
 
+# Clicking confirmation link in email
 @bp.route('/verify-registration')
 def verifyRegistration():
     # Get the 'id' parameter from the URL query string
@@ -81,8 +85,10 @@ def verifyRegistration():
     registerAccount(informationArray[0], informationArray[1], informationArray[2])
     return render_template('login.html'), 200
 
+# Registration helper function
 def sha1Hash(message: str) -> str:
-    # Encode the string to bytes, then hash it
     sha1 = hashlib.sha1()
     sha1.update(message.encode('utf-8'))
     return sha1.hexdigest()
+
+#################################### Dashboard handling ####################################
