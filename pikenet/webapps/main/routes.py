@@ -35,7 +35,6 @@ def login():
 #@role_required(0)
 def register():
     if request.method == 'POST':
-        print("tf")
         # fake login example
         data = request.get_json() 
         username = data.get('username')
@@ -45,6 +44,7 @@ def register():
         result = isAccountUnique(username, password, email)
         
         if not result:
+            print("Username Taken")
             return jsonify({"message": "Not unique"}), 400
             
         # If valid and unique, start verification process before officially adding it to the database    
