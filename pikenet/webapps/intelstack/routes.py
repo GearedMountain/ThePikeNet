@@ -1,6 +1,6 @@
 from flask import render_template, request, redirect, url_for, session, jsonify
 from pikenet.utils.decorators import login_required, role_required
-from .models import addNote
+from .models import addNote, getMostRecent
 from . import bp
 
 @bp.route('/intelstack')
@@ -15,3 +15,9 @@ def addNoteSubmit():
     title = data.get('title')
     result = addNote(title)
     return str(result)
+
+@basic_routing.route('/get-most-recent')
+@role_required(0)
+def getMostRecentRequest():
+    result = getMostRecent()
+    return jsonify(result)
