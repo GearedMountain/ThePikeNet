@@ -12,17 +12,21 @@
         overflow-x: hidden;
         white-space: nowrap;
     }
+
+    body{
+        background-color:#010101;
+    }
 </style>
-<div>
+
         <div class="bg-[#010101] pb-2" id="logo-section">
         <a href="dashboard"><img class="max-w-45 mx-auto md:mx-0"
-                src="{{ url_for('static', filename='PikeNetLogoFlat.png') }}"></a>
+                src="{{ url_for('static', filename='images/PikeNetLogoFlat.png') }}"></a>
         </div>
         <div class="bg-[#1f1f1f] p-5" id="header-bar">
             <h1>create a pikenet loading animation</h1>
             <h2>cool themed loading phrases. Assembling the Pikemen, Sharpening the Pikes...</h2>
         </div>
-</div>
+    <div class="pt-5 p-3">
         <!-- Hide this section and dont allow entries if youre not authenticated-->
         <div id="quick-add-section" class="max-w-[100%] flex">
             <div class="input-wrapper mx-auto w-[80%]">
@@ -34,6 +38,7 @@
         <h2 class="text-white" id="recent-additions"><span class="space-mono-bold">Recent additions</span></h2>
 
         <h2 class="text-white space-mono-bold">Searh by tag</h2>
+    </div>
 <script>
     document.getElementById("added-note-title").addEventListener("keydown", function (event) {
         if (event.key === "Enter") {
