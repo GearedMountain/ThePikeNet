@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h1 class="space-mono-bold">Welcome to PikeNet!</h1>
+
+<h1>This page will redirect to login in <span id="countdown">5</span></h1>
+<script>
+    async function beginCountdown() {
+        var timer = 5;
+        while (timer > 0) {
+            await sleep(1000);
+            timer--;
+            document.getElementById("countdown").innerHTML = timer;
+
+        }
+
+        window.location.href = "https://thepikenet.com/login"
+    }
+
+    beginCountdown();
+</script>
+{% endblock %}
