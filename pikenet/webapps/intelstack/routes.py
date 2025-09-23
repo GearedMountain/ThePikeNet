@@ -5,5 +5,5 @@ from . import bp
 @bp.route('/intelstack')
 @role_required(0)
 def index():
-    return render_template('index.html')
+    return render_template('intelstack-index.html')
 
