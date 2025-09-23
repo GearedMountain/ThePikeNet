@@ -16,7 +16,7 @@ def addNoteSubmit():
     result = addNote(title)
     return str(result)
 
-@basic_routing.route('/get-most-recent')
+@bp.route('/get-most-recent')
 @role_required(0)
 def getMostRecentRequest():
     result = getMostRecent()
