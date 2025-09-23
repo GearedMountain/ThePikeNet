@@ -97,3 +97,60 @@ def getNoteById(noteId):
 
     except Exception as e:
         db.session.rollback()
+
+def addTag(tagName, noteId):
+    tagName = tagName.lower()
+    if not isLoggedIn():
+        return "Unauthenticated"
+    try:
+        # SQL statement with ON CONFLICT DO NOTHING to handle duplicates
+        sql= text("""
+            INSERT INTO tags (name) VALUES (:tagName)
+            ON CONFLICT (name) DO NOTHING;
+        """)
+
+        db.session.execute(sql, {
+            "tagName" : tagName.strip()
+            })
+        db.session.commit()
+
+        # SQL statement to get the tag's ID, regardless of whether it was inserted
+        sql = text("""
+            SELECT id FROM tags WHERE name = :tagName;
+        """)
+
+        result = db.session.execute(sql, {
+            "tagName" : tagName.strip()
+            })
+        
+        tagId = result.fetchone()
+        
+
+        # If note ID is also provided, add the tag to the note
+        if noteId:
+            sql= text("""
+                INSERT INTO note_tags (note_id, tag_id) VALUES (:noteId, :tagId)
+            """)
+            print(f"Got tagid {noteId}")
+
+            db.session.execute(sql, {
+                "noteId" : noteId,
+                "tagId" : tagId[0]
+            })
+            
+            db.session.commit()
+        return "Success"
+
+    except Exception as e:
+        print(e)
+        db.session.rollback()
+        return "Fail"
+    
+def getAllTags():
+    if not isLoggedIn():
+        return "Unauthenticated"
+    sql= text(""" SELECT * FROM tags; """)
+    result = db.session.execute(sql) 
+    rows = result.all()   
+    data = [dict(row._mapping) for row in rows]
+    return data

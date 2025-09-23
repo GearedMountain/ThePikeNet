@@ -1,6 +1,6 @@
 from flask import render_template, request, redirect, url_for, session, jsonify
 from pikenet.utils.decorators import login_required, role_required
-from .models import addNote, getMostRecent, getNoteById
+from .models import addNote, getMostRecent, getNoteById, addTag, getAllTags
 from . import bp
 
 @bp.route('/intelstack')
@@ -32,3 +32,18 @@ def showNote():
         return "No parameter"
     result = getNoteById(noteId)
     return render_template('show-note.html', data=result)
+
+@bp.route('/get-all-tags')
+@role_required(0)
+def getAllTagsRequest():
+    result = getAllTags()
+    return jsonify(result)
+
+@bp.route('/add-tag-submit', methods=['POST'])
+@role_required(0)
+def addTagSubmit():
+    data = request.get_json() 
+    tagName = data.get('tagName')
+    noteId = data.get('id')
+    result = addTag(tagName, noteId)
+    return str(result)
