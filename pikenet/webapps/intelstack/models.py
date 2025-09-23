@@ -100,8 +100,6 @@ def getNoteById(noteId):
 
 def addTag(tagName, noteId):
     tagName = tagName.lower()
-    if not isLoggedIn():
-        return "Unauthenticated"
     try:
         # SQL statement with ON CONFLICT DO NOTHING to handle duplicates
         sql= text("""
@@ -147,8 +145,6 @@ def addTag(tagName, noteId):
         return "Fail"
     
 def getAllTags():
-    if not isLoggedIn():
-        return "Unauthenticated"
     sql= text(""" SELECT * FROM tags; """)
     result = db.session.execute(sql) 
     rows = result.all()   
