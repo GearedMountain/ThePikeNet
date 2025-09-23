@@ -57,3 +57,43 @@ def getMostRecent():
         }
         notesList.append(note_data)
     return notesList
+
+def getNoteById(noteId):
+    try:
+        sql = text("""
+        SELECT
+            n.id,
+            n.title,
+            n.description,
+            n.created_at,
+            STRING_AGG(t.name, ', ') AS tags
+        FROM
+            notes AS n
+        LEFT JOIN
+            note_tags AS nt ON n.id = nt.note_id
+        LEFT JOIN
+            tags AS t ON nt.tag_id = t.id
+        WHERE
+            n.id = :note_id
+        GROUP BY
+            n.id
+        """)
+
+        data = db.session.execute(sql, {"note_id":noteId})
+        result = data.fetchone()
+        print(f"note:")
+        if result:
+            # Unpack the result from the database row
+            noteData = {
+                'id': result[0],
+                'title': result[1],
+                'description': result[2],
+                'created_at': result[3],
+                'tags': result[4].split(', ') if result[4] else []
+            }
+            return noteData
+        else:
+            return "Note not found"
+
+    except Exception as e:
+        db.session.rollback()

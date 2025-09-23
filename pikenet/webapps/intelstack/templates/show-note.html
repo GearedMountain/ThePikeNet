@@ -1,4 +1,6 @@
-<!doctype html>
+{% extends 'base.html' %}
+
+{% block content %}
 <style>
     .tag-item {
         background-color: #2d2d2d;
@@ -15,26 +17,11 @@
         flex-wrap: wrap;
     }
 </style>
-<html>
-
-<head>
-    <script src="{{ url_for('static', filename='Popups.js') }}"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='Fonts.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='SimpleAnimations.css') }}">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap"
-        rel="stylesheet">
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-</head>
 
 <body class="bg-[#010101]" id="body">
     <div class="bg-[#010101] pb-2" id="logo-section">
         <a href="dashboard"><img class="max-w-45 mx-auto md:mx-0"
-                src="{{ url_for('get_official_image', filename='PikeNetLogoFlat.png') }}"></a>
+            src="{{ url_for('static', filename='images/PikeNetLogoFlat.png') }}"></a>
     </div>
     <div class="bg-[#1f1f1f] p-5" id="header-bar">
         <p>show black box at the bottom when you click edit mode with an input field. whatever you type shows up as tags
@@ -184,5 +171,4 @@
         console.log("Matches:", matches);
     });
 </script>
-
-</html>
+{% endblock %}
