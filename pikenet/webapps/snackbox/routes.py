@@ -15,5 +15,5 @@ def index():
 @bp.route('/image/<filename>')
 @role_required(0)
 def get_image(filename):
-    currentCountryFoler = os.path.abspath('dynamic/mexico')
+    currentCountryFoler = os.path.abspath('pikenet/webapps/snackbox/dynamic/mexico')
     return send_from_directory(currentCountryFoler, filename)
