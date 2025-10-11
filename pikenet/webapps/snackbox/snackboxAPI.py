@@ -28,7 +28,7 @@ def sanitizeFilename(name):
     name = name.replace("'", "")
     return name
 
-def parse_snacks_and_country(html):
+def parseSnacksAndCountry(html):
     soup = BeautifulSoup(html, 'html.parser')
     container_div = soup.find('div', class_='slider-wrap')
     if not container_div:
@@ -101,7 +101,7 @@ def runSnackboxAPI():
         print("Failed to fetch HTML.")
         return {}
 
-    country, snacks = parse_snacks_and_country(html)
+    country, snacks = parseSnacksAndCountry(html)
     if not snacks:
         print("No snacks found.")
         return {}
