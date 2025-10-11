@@ -4,7 +4,7 @@ from .snackboxAPI import runSnackboxAPI
 from . import bp
 import os
 
-@bp.route('/snackbox-api')
+@bp.route('/snackbox/snackbox-api')
 @role_required(0)
 def index():
     result = runSnackboxAPI()
@@ -12,7 +12,7 @@ def index():
     return "running"
 
 
-@bp.route('/image/<filename>')
+@bp.route('/snackbox/image/<filename>')
 @role_required(0)
 def get_image(filename):
     currentCountryFoler = os.path.abspath('pikenet/webapps/snackbox/dynamic/mexico')
