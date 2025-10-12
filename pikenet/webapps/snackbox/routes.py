@@ -20,7 +20,7 @@ def getSnackboxImage(filename):
     # Secure the country name to avoid path traversal
     safeFilename = secure_filename(filename)
     basePath = 'pikenet/webapps/snackbox/dynamic'
-    countryFolder = os.path.abspath(os.path.join(basePath, getCurrentCountry.lower()))
+    countryFolder = os.path.abspath(os.path.join(basePath, getCurrentCountry().lower()))
 
     if not os.path.exists(countryFolder):
         print("country not found")
