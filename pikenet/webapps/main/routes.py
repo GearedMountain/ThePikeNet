@@ -13,7 +13,6 @@ def index():
 #################################### Authenticating ####################################
 
 @bp.route('/login', methods=['GET', 'POST'])
-#@role_required(0)
 def login():
     if request.method == 'POST':
         # fake login example
@@ -33,6 +32,17 @@ def login():
         return redirect(url_for('main.index'))
     return render_template('login.html')
 
+@bp.route('/guest-login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        # Submit a username with your gues login
+        print("Posted guest")
+    if session.get("user_id"):
+        return redirect(url_for('main.index'))
+    session['auth_value'] = 2
+    return render_template('login.html')
+
+
 @bp.route('/logout', methods=['GET'])
 def logout():
     session.clear()
@@ -42,7 +52,6 @@ def logout():
 #################################### Registering a new account ####################################
 
 @bp.route('/register', methods=['GET', 'POST'])
-#@role_required(0)
 def register():
     if request.method == 'POST':
         # fake login example
