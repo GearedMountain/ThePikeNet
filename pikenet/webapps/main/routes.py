@@ -40,7 +40,7 @@ def guestLogin():
     if session.get("user_id"):
         return redirect(url_for('main.index'))
     session['auth_value'] = 2
-    return render_template('login.html')
+    return render_template('index.html')
 
 
 @bp.route('/logout', methods=['GET'])

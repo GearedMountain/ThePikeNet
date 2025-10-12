@@ -15,7 +15,7 @@ def index():
 
 @bp.route('/snackbox/image/<countryname>/', defaults={'filename': None})
 @bp.route('/snackbox/image/<countryname>/<filename>')
-@role_required(2)
+@role_required(2, 1, 0)
 def get_image_or_list(countryname, filename):
     # Secure the country name to avoid path traversal
     safe_countryname = secure_filename(countryname)
