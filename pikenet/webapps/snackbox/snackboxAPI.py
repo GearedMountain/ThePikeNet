@@ -40,7 +40,7 @@ def parseSnacksAndCountry(html):
         print("Could not find parent container of slider-wrap")
         return None, []
 
-    recent_boxes_div = soup.find('div', class_='recent-boxes')
+    recent_boxes_div = soup.find('section', class_='recent-boxes')
     if not recent_boxes_div:
         print("Could not find div with class 'recent-boxes'")
         country = "Unknown Country"
