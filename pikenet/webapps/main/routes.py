@@ -33,7 +33,7 @@ def login():
     return render_template('login.html')
 
 @bp.route('/guest-login', methods=['GET', 'POST'])
-def login():
+def guestLogin():
     if request.method == 'POST':
         # Submit a username with your gues login
         print("Posted guest")
