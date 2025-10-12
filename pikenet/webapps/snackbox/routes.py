@@ -1,7 +1,7 @@
 from flask import render_template, request, redirect, url_for, session, jsonify, send_from_directory
 from pikenet.utils.decorators import login_required, role_required
 from werkzeug.utils import secure_filename
-from .snackboxAPI import runSnackboxAPI
+from .snackboxAPI import runSnackboxAPI, getCurrentCountry
 from . import bp
 import os
 
@@ -42,3 +42,7 @@ def get_image_or_list(countryname, filename):
         if not os.path.isfile(file_path):
            print("file not found")
         return send_from_directory(country_folder, safe_filename)
+    
+@bp.route('/snackbox/image/current')
+def getCurrentCountryName():
+    return getCurrentCountry()

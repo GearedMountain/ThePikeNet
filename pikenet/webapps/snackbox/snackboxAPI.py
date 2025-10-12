@@ -4,6 +4,7 @@ import re
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 import requests
+import os
 
 BASE_URL = "https://www.universalyums.com/"
 OUTPUT_DIR = "pikenet/webapps/snackbox/dynamic"
@@ -28,6 +29,33 @@ def sanitizeFilename(name):
     name = name.replace("'", "")
     return name
 
+def getCurrentCountry():
+    currentCountry = os.environ.get("CURRENT_COUNTRY")
+    if not currentCountry or currentCountry == "Unkown Country":
+        print("Country hasnt been set or is unkown")
+        html = fetchHtmlWithCurl(BASE_URL)
+        soup = BeautifulSoup(html, 'html.parser')
+
+        recent_boxes_div = soup.find('section', class_='recent-boxes')
+        if not recent_boxes_div:
+            print("Could not find div with class 'recent-boxes'")
+            result = "Unknown Country"
+        else:
+            mostRecent = recent_boxes_div.find('div', class_="item")
+            h4 = mostRecent.find('h4')
+            if not h4:
+                print("couldnt find country h4")
+                result = "Unknown Country"
+            else:
+                result = ''.join(h4.find_all(text=True, recursive=False)).strip()
+        os.environ["CURRENT_COUNTRY"] = result
+        if result == "Unknown Country":
+            print("Couldnt find the country name after attempt")
+        return result
+    else:
+        return currentCountry
+
+
 def parseSnacksAndCountry(html):
     soup = BeautifulSoup(html, 'html.parser')
     container_div = soup.find('div', class_='slider-wrap')
@@ -39,19 +67,8 @@ def parseSnacksAndCountry(html):
     if not parent_div:
         print("Could not find parent container of slider-wrap")
         return None, []
-
-    recent_boxes_div = soup.find('section', class_='recent-boxes')
-    if not recent_boxes_div:
-        print("Could not find div with class 'recent-boxes'")
-        country = "Unknown Country"
-    else:
-        mostRecent = recent_boxes_div.find('div', class_="item")
-        h4 = mostRecent.find('h4')
-        if not h4:
-            print("couldnt find country h4")
-            country = "Unknown Country"
-        else:
-            country = ''.join(h4.find_all(text=True, recursive=False)).strip()
+    
+    country = getCurrentCountry()
              
     snacks = []
     for img in container_div.find_all('img'):
@@ -117,3 +134,4 @@ def runSnackboxAPI():
 
     # 🔹 Return dictionary: { country: [snack names] }
     return {country: [snack['name'] for snack in snacks]}
+
