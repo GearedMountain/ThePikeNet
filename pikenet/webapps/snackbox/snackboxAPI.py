@@ -51,10 +51,8 @@ def parseSnacksAndCountry(html):
             print("couldnt find country h4")
             country = "Unknown Country"
         else:
-            h4_text = h4.get_text(strip=True)
-            match = re.search(r"inside the (.+?) box", h4_text, re.I)
-            country = match.group(1) if match else "Unknown Country"
-
+            country = h4.get_text(strip=True)
+             
     snacks = []
     for img in container_div.find_all('img'):
         alt = img.get('alt', '').strip()
