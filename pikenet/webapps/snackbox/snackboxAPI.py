@@ -51,6 +51,7 @@ def parseSnacksAndCountry(html):
             print("couldnt find country h4")
             country = "Unknown Country"
         else:
+            print(h4.prettify())
             country = h4.get_text(strip=True)
              
     snacks = []
