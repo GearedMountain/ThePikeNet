@@ -20,7 +20,7 @@ def getSnackboxImage(filename):
     # Secure the country name to avoid path traversal
     safeFilename = secure_filename(filename)
     basePath = 'pikenet/webapps/snackbox/dynamic'
-    countryFolder = os.path.abspath(os.path.join(basePath, safeFilename))
+    countryFolder = os.path.abspath(os.path.join(basePath, getCurrentCountry.lower()))
 
     if not os.path.exists(countryFolder):
         print("country not found")
@@ -35,12 +35,12 @@ def getSnackboxImage(filename):
 def getCurrentCountryName():
     currentCountry = getCurrentCountry()
     basePath = 'pikenet/webapps/snackbox/dynamic'
-    countryFolder = os.path.abspath(os.path.join(basePath, currentCountry))
+    countryFolder = os.path.abspath(os.path.join(basePath, currentCountry.lower()))
     try:
             files = os.listdir(countryFolder)
             # Filter out hidden files or directories
-            visible_files = [f for f in files if not f.startswith('.') and os.path.isfile(os.path.join(countryFolder, f))]
-            return jsonify(visible_files)
+            visibleFiles = [f for f in files if not f.startswith('.') and os.path.isfile(os.path.join(countryFolder, f))]
+            return jsonify(visibleFiles)
     except Exception as e:
             print(f"error returning files: {e}")
     return  "Error"
