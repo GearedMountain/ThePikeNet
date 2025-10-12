@@ -40,13 +40,18 @@ def parseSnacksAndCountry(html):
         print("Could not find parent container of slider-wrap")
         return None, []
 
-    h4 = parent_div.find('h4')
-    if not h4:
+    recent_boxes_div = soup.find('div', class_='recent-boxes')
+    if not recent_boxes_div:
+        print("Could not find div with class 'recent-boxes'")
         country = "Unknown Country"
     else:
-        h4_text = h4.get_text(strip=True)
-        match = re.search(r"inside the (.+?) box", h4_text, re.I)
-        country = match.group(1) if match else "Unknown Country"
+        h4 = recent_boxes_div.find('h4')
+        if not h4:
+            country = "Unknown Country"
+        else:
+            h4_text = h4.get_text(strip=True)
+            match = re.search(r"inside the (.+?) box", h4_text, re.I)
+            country = match.group(1) if match else "Unknown Country"
 
     snacks = []
     for img in container_div.find_all('img'):
