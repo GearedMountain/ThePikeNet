@@ -45,8 +45,10 @@ def parseSnacksAndCountry(html):
         print("Could not find div with class 'recent-boxes'")
         country = "Unknown Country"
     else:
-        h4 = recent_boxes_div.find('h4')
+        mostRecent = recent_boxes_div.find('div', class_="item")
+        h4 = mostRecent.find('h4')
         if not h4:
+            print("couldnt find country h4")
             country = "Unknown Country"
         else:
             h4_text = h4.get_text(strip=True)
