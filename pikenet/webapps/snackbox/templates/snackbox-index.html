@@ -1,7 +1,11 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<body>
   <h1 class="space-mono-bold">Universal Yums</h1>
-  <img src="{{ url_for('static', filename='images/SnackboxLogo.png') }}">/> 
+  <div >
+    <img class="mx-auto max-h-[10vh]" src="{{ url_for('static', filename='images/SnackboxLogo.png') }}"/> 
+  </div>
   <p>I couldnt access the server on my dekstop browser until I accessed it via a mobile browser at least once????</p>
-{% endblock %}
+</body>
+  {% endblock %}
