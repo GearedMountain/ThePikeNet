@@ -13,7 +13,7 @@ def index():
     return "running"
 
 @bp.route('/snackbox/')
-@role_required(2, 1, 0)
+@snackboxIndex(2, 1, 0)
 def index():
     return render_template('snackbox-index.html')
 
