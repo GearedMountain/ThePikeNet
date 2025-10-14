@@ -13,8 +13,8 @@ def index():
     return "running"
 
 @bp.route('/snackbox/')
-@snackboxIndex(2, 1, 0)
-def index():
+@role_required(2, 1, 0)
+def snackbox_index():
     return render_template('snackbox-index.html')
 
 #@bp.route('/snackbox/image/<countryname>/', defaults={'filename': None})
