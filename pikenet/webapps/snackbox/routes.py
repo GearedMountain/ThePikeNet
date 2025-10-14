@@ -12,6 +12,10 @@ def index():
     print(result)
     return "running"
 
+@bp.route('/snackbox/')
+@role_required(2, 1, 0)
+def index():
+    return render_template('index.html')
 
 #@bp.route('/snackbox/image/<countryname>/', defaults={'filename': None})
 @bp.route('/snackbox/image/<filename>')
@@ -26,7 +30,6 @@ def getSnackboxImage(filename):
         print("country not found")
     else:
         file_path = os.path.join(countryFolder, safeFilename)
-
         if not os.path.isfile(file_path):
            print("file not found")
         return send_from_directory(countryFolder, safeFilename)
