@@ -6,8 +6,28 @@
   <div >
     <img class="mx-auto max-h-[10vh]" src="{{ url_for('static', filename='images/SnackboxLogo.png') }}"/> 
   </div>
-  <main class="bg-[#0133a3] h-500">
-  <p>I couldnt access the server on my dekstop browser until I accessed it via a mobile browser at least once????</p>
+  <main class="bg-[#0133a3]">
+    <div id="image-container"></div>
   </main>
 </body>
+<script>
+  // Fetch the JSON list of images
+  fetch('/snackbox/image-list')
+      .then(response => response.json())
+      .then(images => {
+          const container = document.getElementById('image-container');
+
+          images.forEach(url => {
+              const img = document.createElement('img');
+              img.src = url;
+              img.alt = 'Image';
+              img.style.width = '200px';
+              img.style.margin = '10px';
+              container.appendChild(img);
+          });
+      })
+      .catch(error => {
+          console.error('Error fetching images:', error);
+      });
+</script>
   {% endblock %}
