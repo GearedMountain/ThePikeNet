@@ -44,9 +44,14 @@
               container.appendChild(img);
 
               const fileName = url.split('/').pop() || '';
-              const captionText = fileName
+              const cleaned = fileName
               .replace(/\.(jpg|jpeg|png|gif)$/i, '') 
               .replace(/_/g, ' '); 
+
+               const captionText = cleaned
+              .split(' ')
+              .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+              .join(' ');
 
               const caption = document.createElement('h3');
               caption.textContent = captionText;
