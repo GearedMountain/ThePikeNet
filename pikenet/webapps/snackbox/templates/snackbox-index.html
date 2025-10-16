@@ -1,13 +1,21 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<style>
+#image-container img{
+  margin:10px;
+  width:180px;
+  height:180px;
+  display:flex; 
+}
+</style>
 <body>
   <h1 class="space-mono-bold">Universal Yums</h1>
   <div >
     <img class="mx-auto max-h-[10vh]" src="{{ url_for('static', filename='images/SnackboxLogo.png') }}"/> 
   </div>
   <main class="bg-[#0133a3]">
-    <div id="image-container"></div>
+    <div class="mx-[400px]" id="image-container"></div>
   </main>
 </body>
 <script>
