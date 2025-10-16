@@ -33,10 +33,25 @@
           const container = document.getElementById('image-container');
 
           images.forEach(url => {
+              const wrapper = document.createElement('div');
+              wrapper.style.display = 'flex';
+              wrapper.style.flexDirection = 'column';
+              wrapper.style.alignItems = 'center';
+
               const img = document.createElement('img');
               img.src = "image/" + url;
-              img.alt = 'Image';
+              img.alt = 'url';
               container.appendChild(img);
+
+              const caption = document.createElement('h3');
+              caption.textContent = url;
+              caption.style.fontSize = '0.8rem';
+              caption.style.textAlign = 'center';
+              caption.style.wordBreak = 'break-word';
+
+              wrapper.appendChild(img);
+              wrapper.appendChild(caption);
+              container.appendChild(wrapper);
           });
       })
       .catch(error => {
