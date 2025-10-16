@@ -43,8 +43,13 @@
               img.alt = 'url';
               container.appendChild(img);
 
+              const fileName = url.split('/').pop() || '';
+              const captionText = fileName
+              .replace(/\.(jpg|jpeg|png|gif)$/i, '') 
+              .replace(/_/g, ' '); 
+
               const caption = document.createElement('h3');
-              caption.textContent = url;
+              caption.textContent = captionText;
               caption.style.fontSize = '0.8rem';
               caption.style.textAlign = 'center';
               caption.style.wordBreak = 'break-word';
