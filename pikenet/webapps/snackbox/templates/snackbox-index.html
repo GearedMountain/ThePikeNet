@@ -2,11 +2,14 @@
 
 {% block content %}
 <style>
+#image-container{
+  display: flex; 
+}
+
 #image-container img{
-  margin:10px;
-  width:180px;
-  height:180px;
-  display:flex; 
+  margin: 10px;
+  width: 180px;
+  height: 180px;
 }
 </style>
 <body>
@@ -29,8 +32,6 @@
               const img = document.createElement('img');
               img.src = "image/" + url;
               img.alt = 'Image';
-              img.style.width = '200px';
-              img.style.margin = '10px';
               container.appendChild(img);
           });
       })
