@@ -41,14 +41,16 @@ def guestLogin():
             candidate = f"g{i}"
             if candidate not in activeAccounts:
                 activeAccounts.add(candidate)
+                session['auth_value'] = 2
+                session['user_id'] = candidate
+                session['username'] = request.form.get('username')
                 print(f"Added guest id: {candidate}")
                 break  # Exit the loop after finding and adding the first available one
             i += 1
-        
     if session.get("user_id"):
         return redirect(url_for('main.index'))
-    session['auth_value'] = 2
-    return render_template('index.html')
+    
+    return render_template('guest-register.html')
 
 
 @bp.route('/logout', methods=['GET'])
