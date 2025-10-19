@@ -11,7 +11,7 @@ def index():
     return render_template('index.html', username=session.get('username'), auth_value=session.get('auth_value'))
 
 #################################### Authenticating ####################################
-
+activeAccounts = set()
 @bp.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -27,6 +27,7 @@ def login():
             session['user_id'] = userId
             session['username'] = username
             session['auth_value'] = authValue
+            activeAccounts.add(userId)
         return redirect(url_for('main.index'))
     if session.get("user_id"):
         return redirect(url_for('main.index'))
@@ -35,8 +36,15 @@ def login():
 @bp.route('/guest-login', methods=['GET', 'POST'])
 def guestLogin():
     if request.method == 'POST':
-        # Submit a username with your gues login
-        print("Posted guest")
+        i = 0
+        while True:
+            candidate = f"g{i}"
+            if candidate not in activeAccounts:
+                activeAccounts.add(candidate)
+                print(f"Added guest id: {candidate}")
+                break  # Exit the loop after finding and adding the first available one
+            i += 1
+        
     if session.get("user_id"):
         return redirect(url_for('main.index'))
     session['auth_value'] = 2
