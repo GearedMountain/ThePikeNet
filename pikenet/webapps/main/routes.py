@@ -37,10 +37,11 @@ def login():
 def guestLogin():
     if request.method == 'POST':
         i = 0
+        print(f"All active: {activeAccounts}")
+
         while True:
             
             candidate = f"g{i}"
-            print(f"checking {candidate}")
             if candidate not in activeAccounts:
                 activeAccounts.add(candidate)
                 session['auth_value'] = 2
