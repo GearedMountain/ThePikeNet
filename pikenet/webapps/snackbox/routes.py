@@ -15,7 +15,7 @@ def index():
 @bp.route('/snackbox/')
 @role_required(2, 1, 0)
 def snackbox_index():
-    return render_template('snackbox-index.html')
+    return render_template('snackbox-index.html', username=session['username'])
 
 #@bp.route('/snackbox/image/<countryname>/', defaults={'filename': None})
 @bp.route('/snackbox/image/<filename>')
