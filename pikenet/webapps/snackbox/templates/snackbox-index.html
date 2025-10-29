@@ -2,30 +2,47 @@
 
 {% block content %}
 <style>
-#image-container{
+#image-container {
   display: flex; 
   flex-wrap: wrap;     
   max-width: 400px;        
   margin: 0 auto;
 }
 
-#image-container div{
+#image-container div {
   margin: 2%;
   width: 46%;
   height: 46%;
   object-fit: cover; 
 }
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.7); /* slightly opaque black */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+  font-size: 2em;
+  z-index: 9999; /* ensure it’s on top */
+}
+
+.no-scroll {
+  overflow: hidden;
+}
 </style>
-<body>
+<body class="no-scroll">
   <!--<h1 class="space-mono-bold">Universal Yums</h1>-->
-  <div >
+  <div>
     <img class="mx-auto max-h-[10vh] mt-2" src="{{ url_for('static', filename='images/SnackboxLogo.svg') }}"/> 
     <p class="text-center">User: {{ username }}</p>
   </div>
   <main class="bg-[#0133a3] mt-2">
-    <div>
-      <p>Please wait for the game to start</p>
-    </div>
+    <div class="overlay">Please wait for the game to start</div>
     <div class="mx-[400px]" id="image-container"></div>
   </main>
 </body>
