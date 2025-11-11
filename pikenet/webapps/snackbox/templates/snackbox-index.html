@@ -67,55 +67,61 @@
     fetch('/snackbox/image-list')
       .then(response => response.json())
       .then(images => {
-        return new Promise((resolve, reject) => {
           const container = document.getElementById('image-container');
 
-          images.forEach(url => {
-              const wrapper = document.createElement('div');
-              wrapper.style.display = 'flex';
-              wrapper.style.flexDirection = 'column';
-              wrapper.style.alignItems = 'center';
+          // Array of promises for each image load
+          const imagePromises = images.map(url => {
+              return new Promise((resolve, reject) => {
+                  const wrapper = document.createElement('div');
+                  wrapper.style.display = 'flex';
+                  wrapper.style.flexDirection = 'column';
+                  wrapper.style.alignItems = 'center';
 
-              const img = document.createElement('img');
-              img.src = "image/" + url;
-              img.alt = 'url';
-              container.appendChild(img);
+                  const img = document.createElement('img');
+                  img.src = "image/" + url;
+                  img.alt = 'url';
 
-              const fileName = url.split('/').pop() || '';
-              const cleaned = fileName
-              .replace(/\.(jpg|jpeg|png|gif)$/i, '') 
-              .replace(/_/g, ' '); 
+                  const fileName = url.split('/').pop() || '';
+                  const cleaned = fileName
+                    .replace(/\.(jpg|jpeg|png|gif)$/i, '') 
+                    .replace(/_/g, ' '); 
 
-              const captionText = cleaned
-              .split(' ')
-              .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-              .join(' ');
+                  const captionText = cleaned
+                    .split(' ')
+                    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+                    .join(' ');
 
-              const caption = document.createElement('h3');
-              caption.textContent = captionText;
-              caption.classList.add("space-mono-bold");
-              caption.style.color = "white";
-              caption.style.textAlign = 'center';
-              caption.style.wordBreak = 'break-word';
+                  const caption = document.createElement('h3');
+                  caption.textContent = captionText;
+                  caption.classList.add("space-mono-bold");
+                  caption.style.color = "white";
+                  caption.style.textAlign = 'center';
+                  caption.style.wordBreak = 'break-word';
 
-              wrapper.appendChild(img);
-              wrapper.appendChild(caption);
-              container.appendChild(wrapper);
+                  wrapper.appendChild(img);
+                  wrapper.appendChild(caption);
+                  container.appendChild(wrapper);
 
-              img.onload = () => resolve(url);
-              img.onerror = () => reject(`Failed to load: ${url}`);
+                  // Wait until image actually loads
+                  img.onload = () => resolve(url);
+                  img.onerror = () => reject(`Failed to load: ${url}`);
+              });
           });
-        });
-        return Promise.allSettled(imagePromises);
+
+          // Wait for ALL image load promises to complete
+          return Promise.allSettled(imagePromises);
+      })
+      .then(results => {
+          console.log("All images processed:", results);
       })
       .catch(error => {
           console.error('Error fetching images:', error);
       })
       .finally(() => {
-        const overlay = document.getElementById("loading-overlay");
-        overlay.remove();
+          // Wait until *after* Promise.allSettled finishes (i.e., images loaded)
+          const overlay = document.getElementById("loading-overlay");
+          overlay.style.display = "none"; // hide overlay once done
       });
-      
   }
   GetAllSnacks();
 </script>
