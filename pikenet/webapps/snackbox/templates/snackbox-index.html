@@ -101,15 +101,13 @@
               wrapper.appendChild(caption);
               container.appendChild(wrapper);
           });
-          
+          const overlay = document.getElementById("loading-overlay");
+          overlay.remove();
       })
       .catch(error => {
           console.error('Error fetching images:', error);
       })
-      .finally(() => {
-        const overlay = document.getElementById("loading-overlay");
-        overlay.remove();
-      });
+      
   }
   GetAllSnacks();
 </script>
