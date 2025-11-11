@@ -100,13 +100,19 @@
               wrapper.appendChild(img);
               wrapper.appendChild(caption);
               container.appendChild(wrapper);
+
+              img.onload = () => resolve(url);
+              img.onerror = () => reject(`Failed to load: ${url}`);
           });
-          const overlay = document.getElementById("loading-overlay");
-          overlay.remove();
+          return Promise.allSettled(imagePromises);
       })
       .catch(error => {
           console.error('Error fetching images:', error);
       })
+      .finally(() => {
+        const overlay = document.getElementById("loading-overlay");
+        overlay.remove();
+      });
       
   }
   GetAllSnacks();
