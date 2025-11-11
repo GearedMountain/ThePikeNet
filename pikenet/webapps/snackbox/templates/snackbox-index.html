@@ -64,6 +64,9 @@
 <script>
   const isAdmin = "{{ isAdmin }}"
   console.log(isAdmin);
+  if(isAdmin) {
+    console.log("TRUE");
+  }
   // Fetch the JSON list of images
   function GetAllSnacks() { 
     fetch('/snackbox/image-list')
