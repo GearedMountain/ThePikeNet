@@ -5,6 +5,8 @@ from .snackboxAPI import runSnackboxAPI, getCurrentCountry
 from . import bp
 import os
 
+availableRatings = {}
+playersJoined = 0
 gameHasStarted = False
 @bp.route('/snackbox/snackbox-api')
 @role_required(0)
@@ -16,7 +18,10 @@ def index():
 @bp.route('/snackbox/')
 @role_required(2, 1, 0)
 def snackbox_index():
-    return render_template('snackbox-index.html', username=session['user_id'])
+    global playersJoined
+    playersJoined += 1
+    isAdmin = session.get('auth_value') == 0
+    return render_template('snackbox-index.html', username=session['user_id'], isAdmin=isAdmin)
 
 #@bp.route('/snackbox/image/<countryname>/', defaults={'filename': None})
 @bp.route('/snackbox/image/<filename>')
