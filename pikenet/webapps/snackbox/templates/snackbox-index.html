@@ -57,15 +57,14 @@
   </div>
   <main class="bg-[#0133a3] mt-2">
     <div id="loading-overlay"></div>
-    <div class="overlay">Please wait for the game to start</div>
+    <div id="waiting-overlay" class="overlay">Please wait for the game to start</div>
     <div class="mx-[400px]" id="image-container"></div>
   </main>
 </body>
 <script>
   const isAdmin = "{{ isAdmin }}"
-  console.log(isAdmin);
   if(isAdmin) {
-    console.log("TRUE");
+    document.getElementById("waiting-overlay").remove();
   }
   // Fetch the JSON list of images
   function GetAllSnacks() { 
@@ -107,7 +106,6 @@
                   wrapper.appendChild(caption);
                   container.appendChild(wrapper);
 
-                  // Wait until image actually loads
                   img.onload = () => resolve(url);
                   img.onerror = () => reject(`Failed to load: ${url}`);
               });
@@ -123,7 +121,6 @@
           console.error('Error fetching images:', error);
       })
       .finally(() => {
-          // Wait until *after* Promise.allSettled finishes (i.e., images loaded)
           const overlay = document.getElementById("loading-overlay");
           overlay.style.display = "none"; // hide overlay once done
       });
