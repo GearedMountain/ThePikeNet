@@ -64,7 +64,7 @@
 </body>
 <script>
   const isAdmin = "{{ isAdmin }}"
-  if(isAdmin) {
+  if (isAdmin == "True") {
     document.getElementById("waiting-overlay").remove();
   }
   // Fetch the JSON list of images
