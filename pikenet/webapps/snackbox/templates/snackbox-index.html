@@ -53,7 +53,7 @@
   <div>
     <img class="mx-auto max-h-[10vh] mt-2" src="{{ url_for('static', filename='images/SnackboxLogo.svg') }}"/> 
     <p class="text-center">User: {{ username }}</p>
-    <p class="text-center">Is Admin: {{ isAdmin }}</p>
+    <p class="text-center">Is Admin: </p>
   </div>
   <main class="bg-[#0133a3] mt-2">
     <div id="loading-overlay"></div>
@@ -62,6 +62,8 @@
   </main>
 </body>
 <script>
+  const isAdmin = "{{ isAdmin }}"
+  console.log(isAdmin);
   // Fetch the JSON list of images
   function GetAllSnacks() { 
     fetch('/snackbox/image-list')
