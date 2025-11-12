@@ -1,10 +1,12 @@
 from flask import Flask
+from flask_socketio import SocketIO
 from Config import Config
 from .utils.database import db 
 
 def create_app():
     app = Flask(__name__)
 
+    socketio.init_app(app)
     # Load configs and 
     app.config.from_object(Config)
     db.init_app(app)

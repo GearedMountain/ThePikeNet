@@ -52,9 +52,9 @@
   <!--<h1 class="space-mono-bold">Universal Yums</h1>-->
   <div>
     <img class="mx-auto max-h-[10vh] mt-2" src="{{ url_for('static', filename='images/SnackboxLogo.svg') }}"/> 
-    <p class="text-center">User: {{ username }}</p>
+    <p class="text-center hidden">User: {{ username }}</p>
   </div>
-  <button onClick="console.log('clicked')">Start Game</button>
+  <button onClick="StartGame()">Start Game</button>
   <main class="bg-[#0133a3] mt-2">
     <div id="loading-overlay">
       <img class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" src="{{ url_for('static', filename='images/Loading.gif') }}"/> 
