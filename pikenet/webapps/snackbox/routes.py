@@ -1,6 +1,4 @@
 from flask import render_template, request, redirect, url_for, session, jsonify, send_from_directory
-from flask_socketio import emit, join_room
-from pikenet import socketio
 
 from pikenet.utils.decorators import login_required, role_required
 from werkzeug.utils import secure_filename
@@ -57,15 +55,3 @@ def getCurrentCountryName():
             print(f"error returning files: {e}")
     return  "Error"
 
-@socketio.on('connect')
-def handle_connect():
-    print("Client connected:", request.sid)
-
-@socketio.on('join')
-def handle_join(data):
-    print("somebody joined")
-    emit('joined', {'username': username}, room=game_id)
-
-@socketio.on('disconnect')
-def handle_disconnect():
-    print('A user disconnected!', request.sid)

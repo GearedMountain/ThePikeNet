@@ -23,6 +23,8 @@ def create_app():
     from pikenet.webapps.snackbox import bp as snackbox_bp
     app.register_blueprint(snackbox_bp)
 
+    import pikenet.webapps.snackbox.socket_events
+
     # IntelStack
     from pikenet.webapps.intelstack import bp as intelstack_bp
     app.register_blueprint(intelstack_bp)
