@@ -3,10 +3,11 @@ from flask_socketio import SocketIO
 from Config import Config
 from .utils.database import db 
 
+socketio = SocketIO(app, cors_allowed_origins="*")
+
 def create_app():
     app = Flask(__name__)
 
-    socketio = SocketIO(app, cors_allowed_origins="*")
     # Load configs and 
     app.config.from_object(Config)
     db.init_app(app)
