@@ -7,7 +7,6 @@ from werkzeug.utils import secure_filename
 from .snackboxAPI import runSnackboxAPI, getCurrentCountry
 from . import bp
 import os
-socketio = SocketIO(app)
 
 availableRatings = {}
 playersJoined = 0
