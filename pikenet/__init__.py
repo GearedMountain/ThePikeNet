@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_socketio import SocketIO
+from flask-socketio import SocketIO
 from Config import Config
 from .utils.database import db 
 
