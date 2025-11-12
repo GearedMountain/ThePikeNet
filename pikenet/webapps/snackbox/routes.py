@@ -57,6 +57,10 @@ def getCurrentCountryName():
             print(f"error returning files: {e}")
     return  "Error"
 
+@socketio.on('connect')
+def handle_connect():
+    print("Client connected:", request.sid)
+
 @socketio.on('join')
 def handle_join(data):
     print("somebody joined")

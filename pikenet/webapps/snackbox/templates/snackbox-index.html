@@ -64,6 +64,11 @@
   </main>
 </body>
 <script>
+  const socket = io('https://thepikenet/snackbox');
+  socket.on('connect', () => {
+      console.log('Connected!');
+      socket.emit('join', {username: 'Alice', game_id: 'game123'});
+  });
   const isAdmin = "{{ isAdmin }}"
   if (isAdmin == "True") {
     document.getElementById("waiting-overlay").remove();
