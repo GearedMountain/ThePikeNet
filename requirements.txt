@@ -1,5 +1,6 @@
 flask
 flask_sqlalchemy
+flask_socketio
 sqlalchemy
 dotenv
 psycopg2-binary
