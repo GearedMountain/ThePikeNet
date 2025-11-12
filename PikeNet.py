@@ -1,4 +1,4 @@
-from pikenet import create_app
+from pikenet import create_app, socketio
 
 app = create_app()
 
