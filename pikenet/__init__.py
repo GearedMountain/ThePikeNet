@@ -6,7 +6,7 @@ from .utils.database import db
 def create_app():
     app = Flask(__name__)
 
-    SocketIO.init_app(app)
+    socketio = SocketIO(app, cors_allowed_origins="*")
     # Load configs and 
     app.config.from_object(Config)
     db.init_app(app)
