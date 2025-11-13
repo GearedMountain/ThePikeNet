@@ -2,11 +2,11 @@ from flask import request, session
 from flask_socketio import emit, join_room
 from pikenet import socketio
 
-@socketio.on('connect')
+@socketio.on('connect', namespace='/snackbox')
 def handle_connect():
     print("Client connected:", request.sid)
 
-@socketio.on('join')
+@socketio.on('join', namespace='/snackbox')
 def handle_join(data):
     print("somebody joined")
 
