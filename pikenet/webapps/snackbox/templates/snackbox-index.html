@@ -64,11 +64,8 @@
   </main>
 </body>
 <script>
-  const socket = io('https://thepikenet.com/snackbox');
-  socket.on('connect', () => {
-      console.log('Connected!');
-      socket.emit('join', {username: 'Alice', game_id: 'game123'});
-  });
+  var socket;
+  
   const isAdmin = "{{ isAdmin }}"
   if (isAdmin == "True") {
     document.getElementById("waiting-overlay").remove();
@@ -129,7 +126,14 @@
       })
       .finally(() => {
           const overlay = document.getElementById("loading-overlay");
-          overlay.style.display = "none"; // hide overlay once done
+          overlay.style.display = "none"; 
+          
+          socket = io('https://thepikenet.com/snackbox');
+          // establish socket only after finished loading
+          socket.on('connect', () => {
+              console.log('Connected!');
+              socket.emit('join', {username: 'Alice', game_id: 'game123'});
+          });
       });
   }
   GetAllSnacks();
