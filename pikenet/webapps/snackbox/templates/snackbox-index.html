@@ -70,9 +70,7 @@
   if (isAdmin == "True") {
     document.getElementById("waiting-overlay").remove();
   }
-  socket.on('user_joined', (data) => {
-    console.log(`New Playercount: ${data.user_joined}`);
-  });
+  
   // Fetch the JSON list of images
   function GetAllSnacks() { 
     fetch('/snackbox/image-list')
@@ -136,6 +134,10 @@
           socket.on('connect', () => {
               console.log('Connected!');
               socket.emit('join', {username: 'Alice', game_id: 'game123'});
+          });
+          
+          socket.on('user_joined', (data) => {
+            console.log(`New Playercount: ${data.user_joined}`);
           });
       });
   }
