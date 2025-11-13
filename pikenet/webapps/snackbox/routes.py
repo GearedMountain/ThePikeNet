@@ -58,9 +58,14 @@ def getCurrentCountryName():
     return  "Error"
 
 # Socketio section
+playersInGame = []
 @socketio.on('connect', namespace='/snackbox')
 def handle_connect():
-    print("Client connected:", request.sid)
+    usersId = session['user_id']
+    if usersId not in playersInGame:
+        playersInGame.append usersId
+        print("Client connected, player count is " + len(playersInGame))
+        #Emit a socket for everybody to update current playercount
 
 @socketio.on('join', namespace='/snackbox')
 def handle_join(data):
