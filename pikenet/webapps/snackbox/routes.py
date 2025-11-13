@@ -60,13 +60,13 @@ def getCurrentCountryName():
 # Socketio section
 playersInGame = []
 @socketio.on('connect', namespace='/snackbox')
-def handle_connect():
+def handleConnect():
     usersId = session['user_id']
     print(usersId)
     print(playersInGame)
     if usersId not in playersInGame:
         playersInGame.append(usersId)
-        print("Client connected, player count is " + len(playersInGame))
+        print(f"Client connected, player count is {len(playersInGame)}")
         #Emit a socket for everybody to update current playercount
 
 @socketio.on('join', namespace='/snackbox')
