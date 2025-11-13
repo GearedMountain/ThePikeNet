@@ -65,7 +65,10 @@ def handleConnect():
     if usersId not in playersInGame:
         playersInGame.append(usersId)
         print(f"Client connected, player count is {len(playersInGame)}")
-        emit('user_joined', {'playerCount': len(playersInGame)}, broadcast=True)
+        playerCount = len(playersInGame)
+        if playerCount = None:
+            playerCount = 1
+        emit('user_joined', {'playerCount': playercount}, broadcast=True)
         #Emit a socket for everybody to update current playercount
 
 @socketio.on('join', namespace='/snackbox')
