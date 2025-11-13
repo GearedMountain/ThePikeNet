@@ -62,6 +62,7 @@ playersInGame = []
 @socketio.on('connect', namespace='/snackbox')
 def handle_connect():
     usersId = session['user_id']
+    print(usersId)
     if usersId not in playersInGame:
         playersInGame.append(usersId)
         print("Client connected, player count is " + len(playersInGame))
