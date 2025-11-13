@@ -5,6 +5,11 @@ from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 import requests
 import os
+from flask import request, session
+from flask_socketio import emit, join_room
+from pikenet import socketio
+
+
 
 BASE_URL = "https://www.universalyums.com/"
 OUTPUT_DIR = "pikenet/webapps/snackbox/dynamic"
@@ -135,3 +140,14 @@ def runSnackboxAPI():
     # 🔹 Return dictionary: { country: [snack names] }
     return {country: [snack['name'] for snack in snacks]}
 
+@socketio.on('connect', namespace='/snackbox')
+def handle_connect():
+    print("Client connected:", request.sid)
+
+@socketio.on('join', namespace='/snackbox')
+def handle_join(data):
+    print("somebody joined")
+
+@socketio.on('disconnect')
+def handle_disconnect():
+    print('A user disconnected!', request.sid)
