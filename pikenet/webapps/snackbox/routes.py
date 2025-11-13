@@ -63,7 +63,7 @@ playersInGame = []
 def handle_connect():
     usersId = session['user_id']
     if usersId not in playersInGame:
-        playersInGame.append usersId
+        playersInGame.append(usersId)
         print("Client connected, player count is " + len(playersInGame))
         #Emit a socket for everybody to update current playercount
 
