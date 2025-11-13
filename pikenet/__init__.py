@@ -3,7 +3,11 @@ from flask_socketio import SocketIO
 from Config import Config
 from .utils.database import db 
 
-socketio = SocketIO(cors_allowed_origins="*")
+socketio = SocketIO(
+        cors_allowed_origins="*",
+        ping_interval=15,   # seconds between pings (default 25)
+        ping_timeout=30
+    )
 
 def create_app():
     app = Flask(__name__)
