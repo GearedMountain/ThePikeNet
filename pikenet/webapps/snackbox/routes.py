@@ -75,7 +75,9 @@ def handle_join(data):
 
 @socketio.on('disconnect')
 def handleDisconnect():
+    print("Player left")
     if request.sid in playersInGame:
+        print("Player removed")
         playersInGame.pop(request.sid, None)
         playerCount = len(playersInGame)
         emit('player_count_update', {'playerCount': playerCount}, broadcast=True)
