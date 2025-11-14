@@ -136,7 +136,7 @@
               socket.emit('join', {username: 'Alice', game_id: 'game123'});
           });
           
-          socket.on('user_joined', (data) => {
+          socket.on('player_count_update', (data) => {
             console.log(`New Playercount: ${data.playerCount}`);
           });
       });
