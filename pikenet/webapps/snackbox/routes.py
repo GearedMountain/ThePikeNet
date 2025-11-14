@@ -65,7 +65,7 @@ def handleConnect():
     if sid not in playersInGame:
         playersInGame[sid] = session["username"]
         players = list(playersInGame.values())
-        emit('player_count_update', {'players': players}, broadcast=True)
+        emit('playerlist_update', {'players': players}, broadcast=True)
         #Emit a socket for everybody to update current playercount
 
 @socketio.on('join', namespace='/snackbox')
@@ -78,4 +78,4 @@ def handleDisconnect():
     if sid in playersInGame:
         playersInGame.pop(sid, None)
         players = list(playersInGame.values())
-        emit('player_count_update', {'players': players}, broadcast=True)
+        emit('playerlist_update', {'players': players}, broadcast=True)

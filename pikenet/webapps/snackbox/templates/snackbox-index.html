@@ -53,6 +53,7 @@
   <div>
     <img class="mx-auto max-h-[10vh] mt-2" src="{{ url_for('static', filename='images/SnackboxLogo.svg') }}"/> 
     <p class="text-center hidden">User: {{ username }}</p>
+    <p id="player-count" class="text-center">0</p>
   </div>
   <button onClick="StartGame()">Start Game</button>
   <main class="bg-[#0133a3] mt-2">
@@ -136,9 +137,11 @@
               socket.emit('join', {username: 'Alice', game_id: 'game123'});
           });
           
-          socket.on('player_count_update', (data) => {
-            const playerList = data.players
+          socket.on('playerlist_update', (data) => {
+            const playerList = data.players;
+            const playerCountElement = document.getElementById("player-count");
             console.log(`Playerlist: ${playerList}`);
+            playerCountElement.innerText = playerList.length
           });
       });
   }
