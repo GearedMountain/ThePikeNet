@@ -63,7 +63,7 @@ playersInGame = {}
 def handleConnect():
     sid = request.sid
     if sid not in playersInGame:
-        playersInGame.append[sid] = session["username"]
+        playersInGame[sid] = session["username"]
         print(f"Client connected, player count is {len(playersInGame)}")
         playerCount = len(playersInGame)
         players = list(playersInGame.keys())
