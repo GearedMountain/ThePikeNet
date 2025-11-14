@@ -66,7 +66,7 @@ def handleConnect():
         playersInGame[sid] = session["username"]
         print(f"Client connected, player count is {len(playersInGame)}")
         playerCount = len(playersInGame)
-        players = list(playersInGame.keys())
+        players = list(playersInGame.values())
         
         emit('player_count_update', {'playerCount': playerCount, 'players': players}, broadcast=True)
         #Emit a socket for everybody to update current playercount
@@ -82,6 +82,7 @@ def handleDisconnect():
     if sid in playersInGame:
         print("Player removed")
         playersInGame.pop(sid, None)
+        players = list(playersInGame.values())
         playerCount = len(playersInGame)
         emit('player_count_update', {'playerCount': playerCount, 'players': players}, broadcast=True)
         print('A user disconnected!', request.sid)
