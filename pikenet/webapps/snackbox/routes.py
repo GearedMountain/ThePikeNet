@@ -64,11 +64,8 @@ def handleConnect():
     sid = request.sid
     if sid not in playersInGame:
         playersInGame[sid] = session["username"]
-        print(f"Client connected, player count is {len(playersInGame)}")
-        playerCount = len(playersInGame)
         players = list(playersInGame.values())
-        
-        emit('player_count_update', {'playerCount': playerCount, 'players': players}, broadcast=True)
+        emit('player_count_update', {'players': players}, broadcast=True)
         #Emit a socket for everybody to update current playercount
 
 @socketio.on('join', namespace='/snackbox')
@@ -77,12 +74,8 @@ def handle_join(data):
 
 @socketio.on('disconnect', namespace='/snackbox')
 def handleDisconnect():
-    print("Player left")
     sid = request.sid
     if sid in playersInGame:
-        print("Player removed")
         playersInGame.pop(sid, None)
         players = list(playersInGame.values())
-        playerCount = len(playersInGame)
-        emit('player_count_update', {'playerCount': playerCount, 'players': players}, broadcast=True)
-        print('A user disconnected!', request.sid)
+        emit('player_count_update', {'players': players}, broadcast=True)
