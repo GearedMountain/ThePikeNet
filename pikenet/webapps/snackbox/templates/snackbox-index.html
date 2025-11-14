@@ -55,7 +55,7 @@
     <p class="text-center hidden">User: {{ username }}</p>
     <p id="player-count" class="text-center">0</p>
   </div>
-  <button id="start-game-button" class="mx-auto bg-blue-500" onClick="StartGame()">Start Game</button>
+  <button id="start-game-button" class="mx-auto bg-[#0133a3]" onClick="StartGame()">Start Game</button>
   <main class="bg-[#0133a3] mt-2">
     <div id="loading-overlay">
       <img class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" src="{{ url_for('static', filename='images/Loading.gif') }}"/> 
@@ -143,7 +143,7 @@
             const playerList = data.players;
             const playerCountElement = document.getElementById("player-count");
             console.log(`Playerlist: ${playerList}`);
-            playerCountElement.innerText = "Players: " . playerList.length;
+            playerCountElement.innerText = "Players: " + playerList.length;
           });
       });
   }
