@@ -61,8 +61,9 @@ def getCurrentCountryName():
 playersInGame = []
 @socketio.on('connect', namespace='/snackbox')
 def handleConnect():
-    if request.sid not in playersInGame:
-        playersInGame.append(request.sid)
+    sid = request.sid
+    if sid not in playersInGame:
+        playersInGame.append(sid)
         print(f"Client connected, player count is {len(playersInGame)}")
         playerCount = len(playersInGame)
         
@@ -76,9 +77,10 @@ def handle_join(data):
 @socketio.on('disconnect', namespace='/snackbox')
 def handleDisconnect():
     print("Player left")
-    if request.sid in playersInGame:
+    sid = request.sid
+    if sid in playersInGame:
         print("Player removed")
-        playersInGame.pop(request.sid)
+        playersInGame.pop(sid)
         playerCount = len(playersInGame)
         emit('player_count_update', {'playerCount': playerCount}, broadcast=True)
         print('A user disconnected!', request.sid)
