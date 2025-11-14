@@ -68,7 +68,7 @@ def handleConnect():
         playerCount = len(playersInGame)
         if playerCount == None:
             playerCount = 1
-        emit('user_joined', {'playerCount': playercount}, broadcast=True)
+        emit('user_joined', {'playerCount': playerCount}, broadcast=True)
         #Emit a socket for everybody to update current playercount
 
 @socketio.on('join', namespace='/snackbox')
