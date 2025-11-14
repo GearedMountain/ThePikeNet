@@ -73,7 +73,7 @@ def handleConnect():
 def handle_join(data):
     print("somebody joined")
 
-@socketio.on('disconnect')
+@socketio.on('disconnect', namespace='/snackbox')
 def handleDisconnect():
     print("Player left")
     if request.sid in playersInGame:
