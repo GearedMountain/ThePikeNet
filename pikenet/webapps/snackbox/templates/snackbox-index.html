@@ -138,6 +138,7 @@
           
           socket.on('player_count_update', (data) => {
             console.log(`New Playercount: ${data.playerCount}`);
+            console.log(`Playerlist: ${data.players}`);
           });
       });
   }
