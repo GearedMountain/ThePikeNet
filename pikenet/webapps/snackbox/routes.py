@@ -66,8 +66,7 @@ def handleConnect():
         playersInGame.append(usersId)
         print(f"Client connected, player count is {len(playersInGame)}")
         playerCount = len(playersInGame)
-        if playerCount == 0:
-            playerCount = 1
+        
         emit('user_joined', {'playerCount': playerCount}, broadcast=True)
         #Emit a socket for everybody to update current playercount
 
