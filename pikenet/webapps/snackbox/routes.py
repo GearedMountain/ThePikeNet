@@ -78,7 +78,7 @@ def handleDisconnect():
     print("Player left")
     if request.sid in playersInGame:
         print("Player removed")
-        playersInGame.pop(request.sid, None)
+        playersInGame.pop(request.sid)
         playerCount = len(playersInGame)
         emit('player_count_update', {'playerCount': playerCount}, broadcast=True)
         print('A user disconnected!', request.sid)
