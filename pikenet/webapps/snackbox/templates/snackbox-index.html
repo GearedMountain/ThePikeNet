@@ -158,7 +158,8 @@
 
           socket.on("game-started", () => {
             if (isAdmin) {
-              const images = document.querySelectorAll('#image-container img');
+              console.log("im an admin")
+              const images = document.querySelectorAll('#image-container > div');
               images.forEach(img => {
                 img.onclick = () => {
                   alert('Image clicked!');
