@@ -60,7 +60,7 @@ def getCurrentCountryName():
 @bp.route('/snackbox/start-game')
 def startSnackboxGame():
     if session.get('auth_value') < 1:
-        emit('game-started', broadcast=True)
+        socketio.emit('game-started', broadcast=True)
 
 # Socketio section
 playersInGame = {}
