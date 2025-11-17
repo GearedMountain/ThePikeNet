@@ -47,8 +47,9 @@
 .no-scroll {
   overflow: hidden;
 }
+
 </style>
-<body class="no-scroll">
+<body id="body" class="no-scroll">
   <!--<h1 class="space-mono-bold">Universal Yums</h1>-->
   <div>
     <img class="mx-auto max-h-[10vh] mt-2" src="{{ url_for('static', filename='images/SnackboxLogo.svg') }}"/> 
@@ -70,6 +71,7 @@
   const isAdmin = "{{ isAdmin }}"
   if (isAdmin == "True") {
     document.getElementById("waiting-overlay").remove();
+    document.getElementById("body").classList = "";
   } else {
     document.getElementById("start-game-button").remove();
   }
@@ -145,6 +147,8 @@
             console.log(`Playerlist: ${playerList}`);
             playerCountElement.innerText = "Players: " + playerList.length;
           });
+
+          
       });
   }
   GetAllSnacks();
