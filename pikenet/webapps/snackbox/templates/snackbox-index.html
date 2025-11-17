@@ -157,6 +157,7 @@
           });
 
           socket.on("game-started", () => {
+            console.log("game has sarted")
             if (isAdmin) {
               console.log("im an admin")
               const images = document.querySelectorAll('#image-container > div');
