@@ -61,6 +61,8 @@ def getCurrentCountryName():
 def startSnackboxGame():
     if session.get('auth_value') < 1:
         socketio.emit('game-started')
+    return "Success" 
+
 
 # Socketio section
 playersInGame = {}
