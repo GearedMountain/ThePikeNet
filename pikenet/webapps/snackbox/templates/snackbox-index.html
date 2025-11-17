@@ -78,6 +78,18 @@
     document.getElementById("start-game-button").remove();
   }
   
+  function StartGame() {
+    fetch('/snackbox/start-game')
+      .then(results => {
+          console.log("Starting game:", results);
+      })
+      .catch(error => {
+          console.error('Error starting game:', error);
+      })
+      .finally(() => {
+      })
+  }
+
   // Fetch the JSON list of images
   function GetAllSnacks() { 
     fetch('/snackbox/image-list')
