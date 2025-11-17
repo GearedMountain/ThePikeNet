@@ -79,15 +79,9 @@
   }
   
   function StartGame() {
-    fetch('/snackbox/start-game')
-      .then(results => {
-          console.log("Starting game:", results);
-      })
-      .catch(error => {
-          console.error('Error starting game:', error);
-      })
-      .finally(() => {
-      })
+   fetch('/snackbox/start-game')
+    .then(results => console.log("Starting game:", results))
+    .catch(error => console.error('Error starting game:', error));
   }
 
   // Fetch the JSON list of images
