@@ -156,21 +156,20 @@
             playerCountElement.innerText = "Players: " + playerList.length;
           });
 
+          socket.on("game-started", () => {
+            console.log("game has sarted")
+            if (isAdmin) {
+              console.log("im an admin")
+              const images = document.querySelectorAll('#image-container > div');
+              images.forEach(img => {
+                img.onclick = () => {
+                  alert('Image clicked!');
+                };
+              });
+            }
+          });
       });
   }
-
-  socket.on("game-started", () => {
-    console.log("game has sarted")
-    if (isAdmin) {
-      console.log("im an admin")
-      const images = document.querySelectorAll('#image-container > div');
-      images.forEach(img => {
-        img.onclick = () => {
-          alert('Image clicked!');
-        };
-      });
-    }
-  });
   GetAllSnacks();
 </script>
   {% endblock %}
