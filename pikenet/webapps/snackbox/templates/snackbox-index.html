@@ -68,7 +68,7 @@
 <script>
   var socket;
   
-  const isAdmin = "{{ isAdmin }}"
+  var isAdmin = "{{ isAdmin }}"
   if (isAdmin == "True") {
     isAdmin = true;
     document.getElementById("waiting-overlay").remove();
