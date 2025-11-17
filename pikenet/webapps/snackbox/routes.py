@@ -61,7 +61,7 @@ def getCurrentCountryName():
 def startSnackboxGame():
     if session.get('auth_value') < 1:
         print("sending game start emi")
-        socketio.emit('game-started')
+        socketio.emit('game-started', namespace='/snackbox')
     return "Success" 
 
 
