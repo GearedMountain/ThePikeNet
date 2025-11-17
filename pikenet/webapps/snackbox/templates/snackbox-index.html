@@ -70,9 +70,11 @@
   
   const isAdmin = "{{ isAdmin }}"
   if (isAdmin == "True") {
+    isAdmin = true;
     document.getElementById("waiting-overlay").remove();
     document.getElementById("body").classList = "";
   } else {
+    isAdmin = false;
     document.getElementById("start-game-button").remove();
   }
   
@@ -137,8 +139,8 @@
           socket = io('https://thepikenet.com/snackbox');
           // establish socket only after finished loading
           socket.on('connect', () => {
-              console.log('Connected!');
-              socket.emit('join', {username: 'Alice', game_id: 'game123'});
+            console.log('Connected!');
+            socket.emit('join', {username: 'Alice', game_id: 'game123'});
           });
           
           socket.on('playerlist_update', (data) => {
@@ -148,7 +150,16 @@
             playerCountElement.innerText = "Players: " + playerList.length;
           });
 
-          
+          socket.on("game-started", () => {
+            if (isAdmin) {
+              const images = document.querySelectorAll('#image-container img');
+              images.forEach(img => {
+                img.onclick = () => {
+                  alert('Image clicked!');
+                };
+              });
+            }
+          });
       });
   }
   GetAllSnacks();
