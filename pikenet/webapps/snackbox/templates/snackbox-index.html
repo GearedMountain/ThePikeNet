@@ -150,7 +150,6 @@
           // establish socket only after finished loading
           socket.on('connect', () => {
             console.log('Connected!');
-            socket.emit('join', {username: 'Alice', game_id: 'game123'});
           });
           
           socket.on('playerlist_update', (data) => {

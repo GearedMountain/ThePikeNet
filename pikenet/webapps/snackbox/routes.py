@@ -72,10 +72,18 @@ def getCurrentCountryName():
 @bp.route('/snackbox/start-game')
 def startSnackboxGame():
     if session.get('auth_value') < 1:
-        print("sending game start emi")
+        currentCountry = getCurrentCountry()
+        basePath = 'pikenet/webapps/snackbox/dynamic'
+        countryFolder = os.path.abspath(os.path.join(basePath, currentCountry.lower()))
+        
+        files = os.listdir(countryFolder)
+            # Filter out hidden files or directories
+        visibleFiles = [f for f in files if not f.startswith('.') and os.path.isfile(os.path.join(countryFolder, f))]
+        gameState.InitializeArrays(len(visibleFiles))
+        print(f"official count: {gameState.completedSnacks}")
+        print(f"starting game with snack count: {gameState.snackCount}")
         socketio.emit('game-started', namespace='/snackbox')
     return "Success" 
-
 
 # Socketio section
 playersInGame = {}
@@ -87,10 +95,6 @@ def handleConnect():
         players = list(playersInGame.values())
         emit('playerlist_update', {'players': players}, broadcast=True)
         #Emit a socket for everybody to update current playercount
-
-@socketio.on('join', namespace='/snackbox')
-def handle_join(data):
-    print("somebody joined")
 
 @socketio.on('disconnect', namespace='/snackbox')
 def handleDisconnect():
