@@ -53,16 +53,13 @@ def getSnackboxImage(filename):
     
 @bp.route('/snackbox/image-list')
 def getCurrentCountryName():
-    global gameState
     currentCountry = getCurrentCountry()
     basePath = 'pikenet/webapps/snackbox/dynamic'
     countryFolder = os.path.abspath(os.path.join(basePath, currentCountry.lower()))
     try:
             files = os.listdir(countryFolder)
             # Filter out hidden files or directories
-            visibleFiles = [f for f in files if not f.startswith('.') and os.path.isfile(os.path.join(countryFolder, f))]
-            if gameState is None:
-                gameState = SnackBoxGame(len(visibleFiles))
+            visibleFiles = [f for f in files if not f.startswith('.') and os.path.isfile(os.path.join(countryFolder, f))] 
             return jsonify(visibleFiles)
     except Exception as e:
             print(f"error returning files: {e}")
@@ -80,7 +77,10 @@ def startSnackboxGame():
 playersInGame = {}
 @socketio.on('connect', namespace='/snackbox')
 def handleConnect():
+    global gameState
     sid = request.sid
+    if gameState is None:
+        gameState = SnackBoxGame(getCurrentCountryName())
     if sid not in playersInGame:
         playersInGame[sid] = session["username"]
         players = list(playersInGame.values())
