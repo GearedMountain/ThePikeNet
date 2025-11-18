@@ -11,6 +11,7 @@ import os
 # Class to store all game information
 class SnackBoxGame:
     def __init__(self, playerCount=0, snackCount=0, phase="started"):
+        print("Initializing game")
         self.snackCount = snackCount
         self.playerCount = playerCount
         self.phase = phase
