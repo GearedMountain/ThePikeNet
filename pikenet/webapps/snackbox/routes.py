@@ -10,15 +10,17 @@ import os
 
 # Class to store all game information
 class SnackBoxGame:
-    def __init__(self, snackCount=0, playerCount=0, phase="started"):
-        print(f"Initialized game with snack count: {snackCount}")
+    def __init__(self, playerCount=0, snackCount=0, phase="started"):
         self.snackCount = snackCount
-        self.completedSnacks = [0] * snackCount
         self.playerCount = playerCount
         self.phase = phase
         self.availableRatings = {}
 
-gameState = None
+    def InitializeArrays(self, snackCount):
+        self.completedSnacks = [0] * snackCount
+        self.snackCount = snackCount
+
+gameState = SnackBoxGame()
 @bp.route('/snackbox/snackbox-api')
 @role_required(0)
 def index():
@@ -59,7 +61,8 @@ def getCurrentCountryName():
     try:
             files = os.listdir(countryFolder)
             # Filter out hidden files or directories
-            visibleFiles = [f for f in files if not f.startswith('.') and os.path.isfile(os.path.join(countryFolder, f))] 
+            visibleFiles = [f for f in files if not f.startswith('.') and os.path.isfile(os.path.join(countryFolder, f))]
+            
             return jsonify(visibleFiles)
     except Exception as e:
             print(f"error returning files: {e}")
@@ -77,10 +80,7 @@ def startSnackboxGame():
 playersInGame = {}
 @socketio.on('connect', namespace='/snackbox')
 def handleConnect():
-    global gameState
     sid = request.sid
-    if gameState is None:
-        gameState = SnackBoxGame(getCurrentCountryName())
     if sid not in playersInGame:
         playersInGame[sid] = session["username"]
         players = list(playersInGame.values())
