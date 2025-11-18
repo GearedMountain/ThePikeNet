@@ -8,9 +8,17 @@ from .snackboxAPI import runSnackboxAPI, getCurrentCountry
 from . import bp
 import os
 
-availableRatings = {}
-playersJoined = 0
-gameHasStarted = False
+# Class to store all game information
+class SnackBoxGame:
+    def __init__(self, snackCount=0, playerCount=0, phase="started"):
+        print(f"Initialized game with snack count: {snackCount}")
+        self.snackCount = snackCount
+        self.completedSnacks = [0] * snackCount
+        self.playerCount = playerCount
+        self.phase = phase
+        self.availableRatings = {}
+
+gameState = None
 @bp.route('/snackbox/snackbox-api')
 @role_required(0)
 def index():
@@ -21,8 +29,8 @@ def index():
 @bp.route('/snackbox/')
 @role_required(2, 1, 0)
 def snackbox_index():
-    global playersJoined
-    playersJoined += 1
+    global gameState
+    gameState.playerCount += 1
     isAdmin = session.get('auth_value') == 0
     return render_template('snackbox-index.html', username=session['user_id'], isAdmin=isAdmin)
 
@@ -45,6 +53,7 @@ def getSnackboxImage(filename):
     
 @bp.route('/snackbox/image-list')
 def getCurrentCountryName():
+    global gameState
     currentCountry = getCurrentCountry()
     basePath = 'pikenet/webapps/snackbox/dynamic'
     countryFolder = os.path.abspath(os.path.join(basePath, currentCountry.lower()))
@@ -52,6 +61,8 @@ def getCurrentCountryName():
             files = os.listdir(countryFolder)
             # Filter out hidden files or directories
             visibleFiles = [f for f in files if not f.startswith('.') and os.path.isfile(os.path.join(countryFolder, f))]
+            if gameState is None:
+                gameState = SnackBoxGame(len(visibleFiles))
             return jsonify(visibleFiles)
     except Exception as e:
             print(f"error returning files: {e}")
