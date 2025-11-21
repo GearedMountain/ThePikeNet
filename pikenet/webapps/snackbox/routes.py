@@ -111,7 +111,11 @@ def startSnackboxGame():
         gameState.phase = "started"
         print(f"official count: {gameState.completedSnacks}")
         print(f"starting game with snack count: {gameState.snackCount}")
-        socketio.emit("game-started", {"completedSnacks": gameState.completedSnacks}, namespace="/snackbox")
+        socketio.emit(
+            "game-started",
+            {"completedSnacks": gameState.completedSnacks},
+            namespace="/snackbox",
+        )
     return "Success"
 
 
@@ -126,7 +130,8 @@ def handleConnect():
         playersInGame[sid] = session["username"]
         players = list(playersInGame.values())
         emit("playerlist_update", {"players": players}, broadcast=True)
-        if gameState.
+        if gameState.phase == "started":
+            print("Game already started and somebody rejoined")
         # Emit a socket for everybody to update current playercount
 
 
