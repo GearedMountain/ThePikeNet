@@ -21,7 +21,7 @@ import os
 
 # Class to store all game information
 class SnackBoxGame:
-    def __init__(self, playerCount=0, snackCount=0, phase="started"):
+    def __init__(self, playerCount=0, snackCount=0, phase="waiting"):
         print("Initializing game")
         self.snackCount = snackCount
         self.playerCount = playerCount
@@ -108,9 +108,10 @@ def startSnackboxGame():
             if not f.startswith(".") and os.path.isfile(os.path.join(countryFolder, f))
         ]
         gameState.InitializeArrays(len(visibleFiles))
+        gameState.phase = "started"
         print(f"official count: {gameState.completedSnacks}")
         print(f"starting game with snack count: {gameState.snackCount}")
-        socketio.emit("game-started", namespace="/snackbox")
+        socketio.emit("game-started", {"completedSnacks": gameState.completedSnacks}, namespace="/snackbox")
     return "Success"
 
 
@@ -125,6 +126,7 @@ def handleConnect():
         playersInGame[sid] = session["username"]
         players = list(playersInGame.values())
         emit("playerlist_update", {"players": players}, broadcast=True)
+        if gameState.
         # Emit a socket for everybody to update current playercount
 
 

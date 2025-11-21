@@ -126,7 +126,6 @@
               .join(" ");
 
             allCaptions.push(captionText);
-            console.log(allCaptions);
 
             const caption = document.createElement("h3");
             caption.textContent = captionText;
@@ -170,8 +169,8 @@
           playerCountElement.innerText = "Players: " + playerList.length;
         });
 
-        socket.on("game-started", () => {
-          console.log("game has sarted");
+        socket.on("game-started", (data) => {
+          console.log("game has sarted: ".data.completedSnacks);
           if (isAdmin) {
             console.log("im an admin");
             const images = document.querySelectorAll("#image-container > div");
