@@ -73,9 +73,10 @@
     <div id="waiting-overlay" class="overlay">
       Please wait for the game to start
     </div>
-    <div class="mx-[400px] min-h-[50vh]" id="image-container">
+    <div class="text-center space-mono-bold text-[white] bg-[]">
       Completed Snacks:
     </div>
+    <div class="mx-[400px] min-h-[50vh]" id="image-container"></div>
   </main>
 </body>
 <script>
@@ -104,7 +105,7 @@
       const images = document.querySelectorAll("#image-container > div");
       images.forEach((img) => {
         img.onclick = () => {
-          alert(img.parentElement.id);
+          alert(img.id);
         };
       });
     } else {
