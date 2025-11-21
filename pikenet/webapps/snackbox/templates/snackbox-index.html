@@ -174,7 +174,7 @@
 
         socket.on("game-started", (data) => {
           completedSnacksArray = data.completedSnacks;
-          console.log("game has sarted: ", data.completedSnacks);
+          console.log("game has sarted: ", completedSnacksArray);
           if (isAdmin) {
             console.log("im an admin");
             const images = document.querySelectorAll("#image-container > div");
@@ -184,10 +184,11 @@
               };
             });
           } else {
+            document.getElementById("waiting-overlay").display = "none";
             for (let i = 0; i < completedSnacksArray.length; i++) {
+              console.log(completedSnacksArray[i]);
               if (completedSnacksArray[i] == 0) {
                 document.getElementById(`snack:${i}`).display = "none";
-                document.getElementById("waiting-overlay").display = "none";
               }
             }
           }
