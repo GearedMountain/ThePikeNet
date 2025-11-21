@@ -25,12 +25,15 @@ class SnackBoxGame:
         print("Initializing game")
         self.snackCount = snackCount
         self.playerCount = playerCount
+        self.gamePlayerCount = 0
         self.phase = phase
         self.availableRatings = {}
 
     def InitializeArrays(self, snackCount):
         self.completedSnacks = [0] * snackCount
         self.snackCount = snackCount
+        # However many are in is how many will be expected
+        self.gamePlayerCount = self.playerCount
 
 
 gameState = SnackBoxGame()
@@ -131,6 +134,12 @@ def handleConnect():
         players = list(playersInGame.values())
         emit("playerlist_update", {"players": players}, broadcast=True)
         if gameState.phase == "started":
+            socketio.emit(
+                "game-started",
+                {"completedSnacks": gameState.completedSnacks},
+                room=request.sid,
+                namespace="/snackbox",
+            )
             print("Game already started and somebody rejoined")
         # Emit a socket for everybody to update current playercount
 
