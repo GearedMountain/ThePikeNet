@@ -96,6 +96,7 @@
   }
 
   // Fetch the JSON list of images
+  var completedSnacksArray;
   function GetAllSnacks() {
     const allCaptions = [];
     fetch("/snackbox/image-list")
@@ -104,12 +105,14 @@
         const container = document.getElementById("image-container");
 
         // Array of promises for each image load
-        const imagePromises = images.map((url) => {
+
+        const imagePromises = images.map((url, index) => {
           return new Promise((resolve, reject) => {
             const wrapper = document.createElement("div");
             wrapper.style.display = "flex";
             wrapper.style.flexDirection = "column";
             wrapper.style.alignItems = "center";
+            wrapper.id = `snack:${index}`;
 
             const img = document.createElement("img");
             img.src = "image/" + url;
@@ -170,6 +173,7 @@
         });
 
         socket.on("game-started", (data) => {
+          completedSnacksArray = data.completedSnacks;
           console.log("game has sarted: ", data.completedSnacks);
           if (isAdmin) {
             console.log("im an admin");
@@ -179,6 +183,12 @@
                 alert("Image clicked!");
               };
             });
+          } else {
+            for (let i = 0; i < completedSnacksArray.length; i++) {
+              if (completedSnacksArray[i] == 0) {
+                document.getElementById("snack:", i).classList.add("hidden");
+              }
+            }
           }
         });
       });
