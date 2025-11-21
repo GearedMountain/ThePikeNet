@@ -186,10 +186,8 @@
           } else {
             for (let i = 0; i < completedSnacksArray.length; i++) {
               if (completedSnacksArray[i] == 0) {
-                document.getElementById(`snack:${i}`).classList.add("hidden");
-                document
-                  .getElementById("waiting-overlay")
-                  .classList.add("hidden");
+                document.getElementById(`snack:${i}`).display = "none";
+                document.getElementById("waiting-overlay").display = "none";
               }
             }
           }
