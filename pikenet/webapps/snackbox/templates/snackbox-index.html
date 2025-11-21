@@ -184,11 +184,11 @@
               };
             });
           } else {
-            document.getElementById("waiting-overlay").display = "none";
+            document.getElementById("waiting-overlay").style.display = "none";
             for (let i = 0; i < completedSnacksArray.length; i++) {
               console.log(completedSnacksArray[i]);
               if (completedSnacksArray[i] == 0) {
-                document.getElementById(`snack:${i}`).display = "none";
+                document.getElementById(`snack:${i}`).style.display = "none";
               }
             }
           }
