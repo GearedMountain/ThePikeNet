@@ -1,148 +1,166 @@
-{% extends 'base.html' %}
-
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <style>
-    .tag-item {
-        background-color: #2d2d2d;
-        border-radius: 3px;
-        padding: 3px;
-        white-space: nowrap;
-    }
+  .tag-item {
+    background-color: #2d2d2d;
+    border-radius: 3px;
+    padding: 3px;
+    white-space: nowrap;
+  }
 
-    .tag-item:hover {
-        color: red !important;
-    }
+  .tag-item:hover {
+    color: red !important;
+  }
 
-    .tag-holder-edit-mode {
-        flex-wrap: wrap;
-    }
+  .tag-holder-edit-mode {
+    flex-wrap: wrap;
+  }
 </style>
 
 <body class="bg-[#010101]" id="body">
-    <div class="bg-[#010101] pb-2" id="logo-section">
-        <a href="dashboard"><img class="max-w-45 mx-auto md:mx-0"
-            src="{{ url_for('static', filename='images/PikeNetLogoFlat.png') }}"></a>
+  <div class="bg-[#010101] pb-2" id="logo-section">
+    <a href="dashboard"
+      ><img
+        class="max-w-45 mx-auto md:mx-0"
+        src="{{ url_for('static', filename='images/PikeNetLogoFlat.png') }}"
+    /></a>
+  </div>
+  <div class="bg-[#1f1f1f] p-5" id="header-bar">
+    <p>
+      show black box at the bottom when you click edit mode with an input field.
+      whatever you type shows up as tags (as many as you can show so have
+      overflow hidden) and you can click them or press tab to autocomplete
+    </p>
+  </div>
+  <main class="p-3">
+    <!-- Hide this section and dont allow entries if youre not authenticated-->
+    <button class="bg-red-500">Delete Note</button>
+    <h1 id="note-title" class="text-white space-mono-bold text-center text-xl">
+      Loading Title...
+    </h1>
+    <div
+      id="tag-holder"
+      class="tag-holder-edit-mode text-yellow-200 max-w-[100%] mt-2 mb-2 flex gap-2 flex-row"
+    ></div>
+    <div id="quick-add-section" class="max-w-[100%] flex">
+      <div id="tag-input-wrapper" class="input-wrapper mx-auto w-[80%]">
+        <input
+          id="added-tag"
+          class="hidden bg-[#1f1f1f] text-[#e6e6e6] w-[100%]"
+          type="text"
+          required
+          placeholder="Add tag..."
+        />
+      </div>
+      <input
+        id="autocomplete-input"
+        class="bg-[#1f1f1f] text-[#e6e6e6] w-[100%]"
+        type="text"
+        required
+        placeholder="Add tag..."
+      />
     </div>
-    <div class="bg-[#1f1f1f] p-5" id="header-bar">
-        <p>show black box at the bottom when you click edit mode with an input field. whatever you type shows up as tags
-            (as many as you can show so have overflow hidden) and you can click them or press tab to autocomplete</p>
+
+    <div id="note-description" class="text-white">
+      <textarea
+        id="description-field"
+        class="h-[60vh] w-[80vw] mx-auto"
+        placeholder="Add description..."
+      ></textarea>
     </div>
-    <main class="p-3">
-        <!-- Hide this section and dont allow entries if youre not authenticated-->
-        <button class="bg-red-500">Delete Note</button>
-        <h1 id="note-title" class="text-white space-mono-bold text-center text-xl">Loading Title...</h1>
-        <div id="tag-holder" class="tag-holder-edit-mode text-yellow-200 max-w-[100%] mt-2 mb-2 flex gap-2 flex-row">
-        </div>
-        <div id="quick-add-section" class="max-w-[100%] flex">
-            <div id="tag-input-wrapper" class="input-wrapper mx-auto w-[80%]">
-                <input id="added-tag" class="hidden bg-[#1f1f1f] text-[#e6e6e6] w-[100%]" type="text" required
-                    placeholder="Add tag..." />
-            </div>
-            <input id="autocomplete-input" class=" bg-[#1f1f1f] text-[#e6e6e6] w-[100%]" type="text" required
-                placeholder="Add tag..." />
-        </div>
-
-        <div id="note-description" class="text-white">
-            <textarea id="description-field" class="h-[60vh] w-[80vw] mx-auto" placeholder="Add description..."></textarea>
-            
-        </div>
-
-    </main>
+  </main>
 </body>
 <script>
-    let data = '{{data|tojson}}'
-    data = JSON.parse(data)
+  let data = "{{data|tojson}}";
+  data = JSON.parse(data);
 
-    id = data.id;
-    tags = data.tags
+  id = data.id;
+  tags = data.tags;
 
-    let editMode = false;
-    let allTags = [];
-    document.getElementById("note-title").textContent = data.title;
-    document.getElementById("added-tag").addEventListener("keydown", function (event) {
-        if (event.key === "Enter") {
-            const value = this.value;
-            if (value !== "") {
-                console.log("Entered value:", value);
-                addTag(value);
-            }
-            this.value = ""
+  let editMode = false;
+  let allTags = [];
+  document.getElementById("note-title").textContent = data.title;
+  document
+    .getElementById("added-tag")
+    .addEventListener("keydown", function (event) {
+      if (event.key === "Enter") {
+        const value = this.value;
+        if (value !== "") {
+          console.log("Entered value:", value);
+          addTag(value);
         }
+        this.value = "";
+      }
     });
 
-    function showTags() {
-        const tagHolder = document.getElementById("tag-holder");
-        tags.forEach(element => {
-            const newTag = document.createElement('p');
-            newTag.classList.add('tag-item');
-            newTag.textContent = element;
-            tagHolder.appendChild(newTag)
-            newTag.onclick = function () {
-
-                if (editMode) {
-                    // If clicked in edit mode, delete the tag from this note
-                    console.log("You click tag: " + element)
-                } else {
-
-                }
-
-            };
-        });
-    }
-    showTags();
-
-    async function getAllTags() {
-        const response = await fetch("/get-all-tags");
-
-        const result = await response.json();
-        allTags = result;
-        console.log(allTags);
-    }
-    // Ideally only call this after you go into edit mode to reduce overhead of every load
-    getAllTags()
-
-    async function addTag(tagName) {
-        const response = await fetch("/add-tag-submit", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ tagName, id })
-        });
-
-        const result = await response.text();
-        if (result === "Success") {
-            window.location = "/show-note?id=" + id;
-        }
-        console.log("RESPONSE: " + result);
-    }
-
-    function changeEditMode() {
+  function showTags() {
+    const tagHolder = document.getElementById("tag-holder");
+    tags.forEach((element) => {
+      const newTag = document.createElement("p");
+      newTag.classList.add("tag-item");
+      newTag.textContent = element;
+      tagHolder.appendChild(newTag);
+      newTag.onclick = function () {
         if (editMode) {
-            document.getElementById("added-tag").classList.add("hidden");
-            document.getElementById("body").classList.remove("no-scroll")
-            console.log("edit mode disabled");
-
+          // If clicked in edit mode, delete the tag from this note
+          console.log("You click tag: " + element);
         } else {
-            document.getElementById("added-tag").classList.remove("hidden");
-            document.getElementById("body").classList.add("no-scroll")
-            console.log("edit mode enabled");
         }
-        editMode = !editMode;
-    }
-
-    const inputField = document.getElementById("autocomplete-input");
-    inputField.addEventListener("input", () => {
-        const inputValue = inputField.value.toLowerCase();
-
-        // Filter matches
-        const matches = allTags.filter(entry =>
-            entry.name.toLowerCase().startsWith(inputValue)
-        );
-
-        // Log matches to console
-        console.clear(); // Optional: clean up console on each input
-        console.log("Matches:", matches);
+      };
     });
+  }
+  showTags();
+
+  async function getAllTags() {
+    const response = await fetch("/get-all-tags");
+
+    const result = await response.json();
+    allTags = result;
+    console.log(allTags);
+  }
+  // Ideally only call this after you go into edit mode to reduce overhead of every load
+  getAllTags();
+
+  async function addTag(tagName) {
+    const response = await fetch("/add-tag-submit", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ tagName, id }),
+    });
+
+    const result = await response.text();
+    if (result === "Success") {
+      window.location = "/show-note?id=" + id;
+    }
+    console.log("RESPONSE: " + result);
+  }
+
+  function changeEditMode() {
+    if (editMode) {
+      document.getElementById("added-tag").classList.add("hidden");
+      document.getElementById("body").classList.remove("no-scroll");
+      console.log("edit mode disabled");
+    } else {
+      document.getElementById("added-tag").classList.remove("hidden");
+      document.getElementById("body").classList.add("no-scroll");
+      console.log("edit mode enabled");
+    }
+    editMode = !editMode;
+  }
+
+  const inputField = document.getElementById("autocomplete-input");
+  inputField.addEventListener("input", () => {
+    const inputValue = inputField.value.toLowerCase();
+
+    // Filter matches
+    const matches = allTags.filter((entry) =>
+      entry.name.toLowerCase().startsWith(inputValue)
+    );
+
+    // Log matches to console
+    console.clear(); // Optional: clean up console on each input
+    console.log("Matches:", matches);
+  });
 </script>
 {% endblock %}

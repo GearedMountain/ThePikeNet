@@ -1,6 +1,6 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-<head>
+  <head>
     <title>{% block title %}PikeNet{% endblock %}</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,23 +9,30 @@
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <script src="{{ url_for('static', filename='js/popups.js') }}"></script>
 
-    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='images/PikeNetLogo.png') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/fonts.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/simpleAnimations.css') }}">
-
-</head>
-<body>
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="{{ url_for('static', filename='images/PikeNetLogo.png') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/fonts.css') }}"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/simpleAnimations.css') }}"
+    />
+  </head>
+  <body>
     <!--
     <nav>
         <a href="/">Home</a> | <a href="/login">Login</a> | <a href="/blog">Blog</a>
     </nav>
     -->
-    <main>
-        {% block content %}{% endblock %}
-    </main>
+    <main>{% block content %}{% endblock %}</main>
 
     <footer>
-        <p>&copy; 2025 PikeNet</p>
+      <p>&copy; 2025 PikeNet</p>
     </footer>
-</body>
+  </body>
 </html>

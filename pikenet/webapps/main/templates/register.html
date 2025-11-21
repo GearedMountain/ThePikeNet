@@ -1,48 +1,86 @@
-{% extends 'base.html' %}
-
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <body class="bg-black">
   <main>
-    <img class="hidden max-w-45 mx-auto md:mx-0 md:flex" src="{{ url_for('static', filename='images/PikeNetLogo.png') }}">
-    <img class="max-w-45 mx-auto md:mx-0 md:hidden" src="{{ url_for('static', filename='images/PikeNetLogoFlat.png') }}">
+    <img
+      class="hidden max-w-45 mx-auto md:mx-0 md:flex"
+      src="{{ url_for('static', filename='images/PikeNetLogo.png') }}"
+    />
+    <img
+      class="max-w-45 mx-auto md:mx-0 md:hidden"
+      src="{{ url_for('static', filename='images/PikeNetLogoFlat.png') }}"
+    />
 
-    <form id="register-account-form" method="POST" id="login-menu"
-      class="mx-auto max-w-[90%]  flex flex-col space-y-4 md:max-w-200 text-[#B3B3B3]">
-      <h1 class="space-mono-bold text-3xl text-center" id="login-title">Welcome to the PikeNet</h1>
+    <form
+      id="register-account-form"
+      method="POST"
+      id="login-menu"
+      class="mx-auto max-w-[90%] flex flex-col space-y-4 md:max-w-200 text-[#B3B3B3]"
+    >
+      <h1 class="space-mono-bold text-3xl text-center" id="login-title">
+        Welcome to the PikeNet
+      </h1>
       <!--<h1>V:{{pikenetVersion}}</h1>-->
       <input
         class="hidden space-mono-regular bg-[#171717] border-4 border-[#B3B3B3] rounded-lg p-4 max-w-[100%] focus:bg-[#3d3d3d]"
-        id="username" name="username" placeholder="Username"
+        id="username"
+        name="username"
+        placeholder="Username"
         onkeydown="if(event.key === ' ') { event.preventDefault(); showPopup(3, 'Spaces are not allowed', true); }"
-        pattern="[A-Za-z0-9]+" title="Username must contain only letters and numbers" required />
+        pattern="[A-Za-z0-9]+"
+        title="Username must contain only letters and numbers"
+        required
+      />
 
       <input
         class="hidden space-mono-regular bg-[#171717] border-4 border-[#B3B3B3] rounded-lg p-4 max-w-[100%] focus:bg-[#3d3d3d]"
-        id="email" name="email" placeholder="Email : optional" type="email" required />
-        
-      <input
-        class="hidden space-mono-regular bg-[#171717] border-4 border-[#B3B3B3] rounded-lg p-4 max-w-[100%] focus:bg-[#3d3d3d]"
-        id="password" name="password" placeholder="Password" type="password" minlength="8"
-        title="Passwords must be at least 8 characters long" required />
+        id="email"
+        name="email"
+        placeholder="Email : optional"
+        type="email"
+        required
+      />
 
       <input
         class="hidden space-mono-regular bg-[#171717] border-4 border-[#B3B3B3] rounded-lg p-4 max-w-[100%] focus:bg-[#3d3d3d]"
-        id="password-confirm" name="password-confirm" placeholder="Retype Password" type="password" minlength="8"
-        title="Passwords must be at least 8 characters long" required />
+        id="password"
+        name="password"
+        placeholder="Password"
+        type="password"
+        minlength="8"
+        title="Passwords must be at least 8 characters long"
+        required
+      />
 
-      <button type="submit"
+      <input
+        class="hidden space-mono-regular bg-[#171717] border-4 border-[#B3B3B3] rounded-lg p-4 max-w-[100%] focus:bg-[#3d3d3d]"
+        id="password-confirm"
+        name="password-confirm"
+        placeholder="Retype Password"
+        type="password"
+        minlength="8"
+        title="Passwords must be at least 8 characters long"
+        required
+      />
+
+      <button
+        type="submit"
         class="hidden rounded-lg bg-[#355b67] p-4 space-mono-bold text-[#c9c9c9] text-xl cursor-pointer hover:bg-[#53747e] transition duration-200"
-        id='register-btn'>
+        id="register-btn"
+      >
         <p id="submit-button-text" class="">Sign up</p>
-        <img id="submit-button-loading" class="hidden max-h-[40px] mx-auto"
-          src="{{ url_for('static', filename='images/Loading.gif') }}" />
+        <img
+          id="submit-button-loading"
+          class="hidden max-h-[40px] mx-auto"
+          src="{{ url_for('static', filename='images/Loading.gif') }}"
+        />
       </button>
-      <div class="hidden flex-col gap-4 flex md:flex-row align-center w-[100%] " id="misc-login">
-      </div>
+      <div
+        class="hidden flex-col gap-4 flex md:flex-row align-center w-[100%]"
+        id="misc-login"
+      ></div>
     </form>
   </main>
   <!-- Error message that will appear in the bottom-right -->
-
 </body>
 
 <script>
@@ -50,91 +88,101 @@
   function applyFadeInWithDelay(elementId, delay) {
     setTimeout(() => {
       const element = document.getElementById(elementId);
-      element.classList.remove('hidden'); // Remove the opacity-0 class
-      element.classList.add('fade-in-bottom'); // Add the fade-in animation
+      element.classList.remove("hidden"); // Remove the opacity-0 class
+      element.classList.add("fade-in-bottom"); // Add the fade-in animation
     }, delay);
   }
 
   // Apply delayed animations to each element
-  applyFadeInWithDelay('login-title', 0);
-  applyFadeInWithDelay('username', 100);
-  applyFadeInWithDelay('email', 200);
-  applyFadeInWithDelay('password', 300);
-  applyFadeInWithDelay('password-confirm', 400);
-  applyFadeInWithDelay('register-btn', 500);
-  applyFadeInWithDelay('misc-login', 500);
+  applyFadeInWithDelay("login-title", 0);
+  applyFadeInWithDelay("username", 100);
+  applyFadeInWithDelay("email", 200);
+  applyFadeInWithDelay("password", 300);
+  applyFadeInWithDelay("password-confirm", 400);
+  applyFadeInWithDelay("register-btn", 500);
+  applyFadeInWithDelay("misc-login", 500);
 
-  document.getElementById("register-account-form").addEventListener("submit", async function (e) {
-    e.preventDefault(); // Stop form from reloading the page
+  document
+    .getElementById("register-account-form")
+    .addEventListener("submit", async function (e) {
+      e.preventDefault(); // Stop form from reloading the page
 
-    const username = document.getElementById("username").value;
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    const passwordConfirm = document.getElementById("password-confirm").value;
+      const username = document.getElementById("username").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      const passwordConfirm = document.getElementById("password-confirm").value;
 
-    // Make sure passwords match
-    if (password !== passwordConfirm) {
-      showPopup(0, "Passwords do not match", true);
-      attentionElement(0, "password-confirm", "Pulse")
-      return
-    }
-
-    document.getElementById("submit-button-loading").classList.remove("hidden");
-    document.getElementById("submit-button-text").classList.add("hidden");
-    document.getElementById("register-btn").disabled = true;
-
-    const response = await fetch("/register", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({ username, email, password })
-    });
-
-   
-
-    // If the submission was valid, load until the person clicks on the verification link
-    if (response.ok) {
-      const result = await response.json();
-      document.getElementById("register-btn").disabled = true;
-      document.getElementById("submit-button-loading").classList.remove("hidden");
-      document.getElementById("submit-button-text").classList.add("hidden");
-      var verified = false;
-      while (!verified) {
-        verified = await checkVerificationStatus(result.hashValue);
-        await sleep(1000)
+      // Make sure passwords match
+      if (password !== passwordConfirm) {
+        showPopup(0, "Passwords do not match", true);
+        attentionElement(0, "password-confirm", "Pulse");
+        return;
       }
-      // Hide loading on response
-      document.getElementById("register-btn").disabled = false;
-      document.getElementById("submit-button-loading").classList.add("hidden");
-      document.getElementById("submit-button-text").classList.remove("hidden");
-      window.location.href = "http://127.0.0.1:5000/"
-      console.log("Success");
-    } else {
-      attentionElement(0, "username", "Pulse")
-      attentionElement(0, "email", "Pulse")
 
-      showPopup(0, "Username or Email is in use", true);
-      document.getElementById("register-btn").disabled = false;
-      document.getElementById("submit-button-loading").classList.add("hidden");
-      document.getElementById("submit-button-text").classList.remove("hidden");
-    }
-  });
+      document
+        .getElementById("submit-button-loading")
+        .classList.remove("hidden");
+      document.getElementById("submit-button-text").classList.add("hidden");
+      document.getElementById("register-btn").disabled = true;
+
+      const response = await fetch("/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, email, password }),
+      });
+
+      // If the submission was valid, load until the person clicks on the verification link
+      if (response.ok) {
+        const result = await response.json();
+        document.getElementById("register-btn").disabled = true;
+        document
+          .getElementById("submit-button-loading")
+          .classList.remove("hidden");
+        document.getElementById("submit-button-text").classList.add("hidden");
+        var verified = false;
+        while (!verified) {
+          verified = await checkVerificationStatus(result.hashValue);
+          await sleep(1000);
+        }
+        // Hide loading on response
+        document.getElementById("register-btn").disabled = false;
+        document
+          .getElementById("submit-button-loading")
+          .classList.add("hidden");
+        document
+          .getElementById("submit-button-text")
+          .classList.remove("hidden");
+        window.location.href = "http://127.0.0.1:5000/";
+        console.log("Success");
+      } else {
+        attentionElement(0, "username", "Pulse");
+        attentionElement(0, "email", "Pulse");
+
+        showPopup(0, "Username or Email is in use", true);
+        document.getElementById("register-btn").disabled = false;
+        document
+          .getElementById("submit-button-loading")
+          .classList.add("hidden");
+        document
+          .getElementById("submit-button-text")
+          .classList.remove("hidden");
+      }
+    });
 
   async function checkVerificationStatus(hash) {
     console.log("sending hash " + hash);
     const response = await fetch("/register-check", {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ hash })
+      body: JSON.stringify({ hash }),
     });
 
     const result = await response.json();
     return result.message;
   }
-
-
 </script>
 {% endblock %}

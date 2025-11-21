@@ -7,10 +7,11 @@ from email.utils import formataddr
 from datetime import datetime, timezone
 import os
 
-EMAIL_ADDRESS = 'noreply@gearedmountain.com'
+EMAIL_ADDRESS = "noreply@gearedmountain.com"
 EMAIL_PASSWORD = os.getenv("EMAIL_PASS")
 display_name = "PikeNet"
 email_address = EMAIL_ADDRESS
+
 
 def sendAuthCheck(to_address: str, code: str):
     msg = MIMEMultipart("related")
@@ -61,22 +62,23 @@ def sendAuthCheck(to_address: str, code: str):
             server.login(EMAIL_ADDRESS, EMAIL_PASSWORD)
             server.send_message(msg)
         print(f"Email sent to {to_address}")
-        
+
     except Exception as e:
         print(f"Failed to send email: {e}")
 
+
 # Helper function to  create a dictionary entry for authentication check
 currentAuthorizationChecks = {}
+
+
 def createAuthCheck(username: str, password: str, email: str, hash: str):
-    
-    epochTime = int(datetime.now(timezone.utc).timestamp())    
+
+    epochTime = int(datetime.now(timezone.utc).timestamp())
     currentAuthorizationChecks[hash] = (username, password, email, epochTime, False)
-    
-    sendAuthCheck(
-        to_address=email,
-        code=hash
-    )
+
+    sendAuthCheck(to_address=email, code=hash)
     print(f"Creating new authorization request: {currentAuthorizationChecks}")
+
 
 def registerValidated(receivedHash):
     response = currentAuthorizationChecks[receivedHash][4]
@@ -85,6 +87,7 @@ def registerValidated(receivedHash):
         del currentAuthorizationChecks[receivedHash]
     return response
 
+
 def verifyRegistrationHash(hashValue):
     if hashValue not in currentAuthorizationChecks:
         print("Fake or expired validation link")
@@ -92,5 +95,8 @@ def verifyRegistrationHash(hashValue):
         oldTuple = currentAuthorizationChecks[hashValue]
         newTuple = oldTuple[:4] + (True,) + oldTuple[5:]
         currentAuthorizationChecks[hashValue] = newTuple
-        return [currentAuthorizationChecks[hashValue][0],currentAuthorizationChecks[hashValue][1],currentAuthorizationChecks[hashValue][2]]
-
+        return [
+            currentAuthorizationChecks[hashValue][0],
+            currentAuthorizationChecks[hashValue][1],
+            currentAuthorizationChecks[hashValue][2],
+        ]

@@ -1,40 +1,72 @@
-{% extends 'base.html' %}
-
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <body class="bg-black">
   <main>
-    <img class="hidden max-w-45 mx-auto md:mx-0 md:flex" src="{{ url_for('static', filename='images/PikeNetLogo.png') }}">
-    <img class="max-w-45 mx-auto md:mx-0 md:hidden" src="{{ url_for('static', filename='images/PikeNetLogoFlat.png') }}">
+    <img
+      class="hidden max-w-45 mx-auto md:mx-0 md:flex"
+      src="{{ url_for('static', filename='images/PikeNetLogo.png') }}"
+    />
+    <img
+      class="max-w-45 mx-auto md:mx-0 md:hidden"
+      src="{{ url_for('static', filename='images/PikeNetLogoFlat.png') }}"
+    />
 
-    <form action="/login" method="POST" id="login-menu"
-      class="mx-auto max-w-[90%]  flex flex-col space-y-4 md:max-w-200 text-[#B3B3B3]">
-      <h1 class="space-mono-bold text-3xl text-center" id="login-title">Welcome to the PikeNet</h1>
+    <form
+      action="/login"
+      method="POST"
+      id="login-menu"
+      class="mx-auto max-w-[90%] flex flex-col space-y-4 md:max-w-200 text-[#B3B3B3]"
+    >
+      <h1 class="space-mono-bold text-3xl text-center" id="login-title">
+        Welcome to the PikeNet
+      </h1>
       <!--<h1>V:{{pikenetVersion}}</h1>-->
       <input
         class="hidden space-mono-regular bg-[#171717] border-4 border-[#B3B3B3] rounded-lg p-4 max-w-[100%] focus:bg-[#3d3d3d]"
-        id="username" name="username" placeholder="Username"
+        id="username"
+        name="username"
+        placeholder="Username"
         onkeydown="if(event.key === ' ') { event.preventDefault(); showPopup(3, 'Spaces are not allowed', true); }"
-        pattern="[A-Za-z0-9]+" title="Username must contain only letters and numbers" required />
+        pattern="[A-Za-z0-9]+"
+        title="Username must contain only letters and numbers"
+        required
+      />
       <input
         class="hidden space-mono-regular bg-[#171717] border-4 border-[#B3B3B3] rounded-lg p-4 max-w-[100%] focus:bg-[#3d3d3d]"
-        id="password" name="password" placeholder="Password" type="password" minlength="8"
-        title="Passwords must be at least 8 characters long" required />
-      <button type="submit"
+        id="password"
+        name="password"
+        placeholder="Password"
+        type="password"
+        minlength="8"
+        title="Passwords must be at least 8 characters long"
+        required
+      />
+      <button
+        type="submit"
         class="hidden rounded-lg bg-[#355b67] p-4 space-mono-bold text-[#c9c9c9] text-xl cursor-pointer hover:bg-[#53747e] transition duration-200"
-        id='login-btn'>Sign in</button>
-      <div class="hidden flex-col gap-4 flex md:flex-row align-center w-[100%] " id="misc-login">
-        <a href="register"
-          class=" space-mono-bold mx-auto text-xl underline hover:text-[#355b67] transition duration-200"
-          id="register-account">Register New Account</a>
-        <a href="guest-login"
-          class=" space-mono-bold mx-auto text-xl underline hover:text-[#355b67] transition duration-200"
-          id="guest-login">Continue as a Guest</a>
+        id="login-btn"
+      >
+        Sign in
+      </button>
+      <div
+        class="hidden flex-col gap-4 flex md:flex-row align-center w-[100%]"
+        id="misc-login"
+      >
+        <a
+          href="register"
+          class="space-mono-bold mx-auto text-xl underline hover:text-[#355b67] transition duration-200"
+          id="register-account"
+          >Register New Account</a
+        >
+        <a
+          href="guest-login"
+          class="space-mono-bold mx-auto text-xl underline hover:text-[#355b67] transition duration-200"
+          id="guest-login"
+          >Continue as a Guest</a
+        >
       </div>
-
     </form>
   </main>
   <!-- Error message that will appear in the bottom-right -->
-
 </body>
 
 <script>
@@ -42,17 +74,16 @@
   function applyFadeInWithDelay(elementId, delay) {
     setTimeout(() => {
       const element = document.getElementById(elementId);
-      element.classList.remove('hidden'); // Remove the opacity-0 class
-      element.classList.add('fade-in-bottom'); // Add the fade-in animation
+      element.classList.remove("hidden"); // Remove the opacity-0 class
+      element.classList.add("fade-in-bottom"); // Add the fade-in animation
     }, delay);
   }
 
   // Apply delayed animations to each element
-  applyFadeInWithDelay('login-title', 0);
-  applyFadeInWithDelay('username', 100);
-  applyFadeInWithDelay('password', 200);
-  applyFadeInWithDelay('login-btn', 300);
-  applyFadeInWithDelay('misc-login', 400);
-
+  applyFadeInWithDelay("login-title", 0);
+  applyFadeInWithDelay("username", 100);
+  applyFadeInWithDelay("password", 200);
+  applyFadeInWithDelay("login-btn", 300);
+  applyFadeInWithDelay("misc-login", 400);
 </script>
 {% endblock %}
