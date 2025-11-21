@@ -170,7 +170,7 @@
         });
 
         socket.on("game-started", (data) => {
-          console.log("game has sarted: ".data.completedSnacks);
+          console.log("game has sarted: ", data.completedSnacks);
           if (isAdmin) {
             console.log("im an admin");
             const images = document.querySelectorAll("#image-container > div");
