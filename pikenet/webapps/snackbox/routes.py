@@ -95,12 +95,12 @@ def index():
 def selectSnack():
     data = request.get_json()
     snackNumber = data.get("selectedSnack")
-    gameState.StartVote(snackNumber)
-    socketio.emit(
-        "snack-selected",
-        {"currentVote": gameState.currentVote},
-        namespace="/snackbox",
-    )
+    if gameState.StartVote(snackNumber):
+        socketio.emit(
+            "snack-selected",
+            {"currentVote": gameState.currentVote},
+            namespace="/snackbox",
+        )
     return f"received: {snackNumber}"
 
 
