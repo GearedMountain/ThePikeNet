@@ -46,7 +46,7 @@ class SnackBoxGame:
 
             self.phase = "voting"
             self.currentVote = int(snackNumber)
-            return self.currentVote
+            return True
         else:
             return False
 
