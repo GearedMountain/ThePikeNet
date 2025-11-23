@@ -63,6 +63,7 @@
   >
     Start Game
   </button>
+  <div id="voting-selector" class="flex flex-wrap gap-4"></div>
   <main class="bg-[#0133a3] mt-2">
     <div id="loading-overlay">
       <img
@@ -181,6 +182,16 @@
 
             img.onload = () => resolve(url);
             img.onerror = () => reject(`Failed to load: ${url}`);
+
+            const container = document.getElementById("voting-selector");
+
+            const box = document.createElement("div");
+            box.className =
+              "flex justify-center items-center bg-green-500 text-white font-bold rounded-md";
+            box.style.width = "10vw";
+            box.style.height = "10vw";
+            box.textContent = index;
+            container.appendChild(box);
           });
         });
 

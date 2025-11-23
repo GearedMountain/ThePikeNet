@@ -47,8 +47,13 @@ class SnackBoxGame:
         else:
             return False
 
-    def AddScore(self, voteValue):
-        self.completedSnacks[self.currentVote] += voteValue
+    def AddScore(self, voter, voteValue):
+        if voteValue in gameState.availableRatings[voter]:
+            gameState.availableRatings[voter].remove(voteValue)
+            self.completedSnacks[self.currentVote] += voteValue
+            return True
+        else:
+            return False
 
 
 gameState = SnackBoxGame()
