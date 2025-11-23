@@ -242,6 +242,7 @@
 
         socket.on("snack-selected", (data) => {
           const selectedSnack = data.currentVote;
+          document.getElementById("voting-selector").classList.remove("hidden");
           console.log(`Were voting on ${selectedSnack}`);
         });
 

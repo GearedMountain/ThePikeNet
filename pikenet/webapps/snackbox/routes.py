@@ -42,7 +42,7 @@ class SnackBoxGame:
     def StartVote(self, snackNumber):
         if self.phase == "started":
             self.phase = "voting"
-            self.currentVote = snackNumber
+            self.currentVote = int(snackNumber)
             return self.currentVote
         else:
             return False
