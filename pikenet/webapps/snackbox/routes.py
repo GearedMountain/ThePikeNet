@@ -29,11 +29,15 @@ class SnackBoxGame:
         self.phase = phase
         self.availableRatings = {}
 
-    def InitializeArrays(self, snackCount):
+    def InitializeArrays(self, snackCount, players):
         self.completedSnacks = [0] * snackCount
         self.snackCount = snackCount
         # However many are in is how many will be expected
         self.gamePlayerCount = self.playerCount
+        self.availableRatings = {
+            player: list(range(1, snackCount + 1)) for player in players
+        }
+        print(self.availableRatings)
 
     def StartVote(self, snackNumber):
         if self.phase == "started":
@@ -42,6 +46,9 @@ class SnackBoxGame:
             return self.currentVote
         else:
             return False
+
+    def AddScore(self, voteValue):
+        self.completedSnacks[self.currentVote] += voteValue
 
 
 gameState = SnackBoxGame()
@@ -78,6 +85,16 @@ def selectSnack():
         namespace="/snackbox",
     )
     return f"received: {snackNumber}"
+
+
+@bp.route("/snackbox/cast-vote", methods=["POST"])
+@role_required(2, 1, 0)
+def castVote():
+    data = request.get_json()
+    voteValue = data.get("voteValue")
+    gameState.AddScore(voteValue)
+
+    return f"received: {voteValue}"
 
 
 # @bp.route('/snackbox/image/<countryname>/', defaults={'filename': None})
@@ -132,7 +149,9 @@ def startSnackboxGame():
             for f in files
             if not f.startswith(".") and os.path.isfile(os.path.join(countryFolder, f))
         ]
-        gameState.InitializeArrays(len(visibleFiles))
+
+        players = list(playersInGame.values())
+        gameState.InitializeArrays(len(visibleFiles), players)
         gameState.phase = "started"
         print(f"official count: {gameState.completedSnacks}")
         print(f"starting game with snack count: {gameState.snackCount}")
@@ -174,9 +193,9 @@ def handleConnect():
             socketio.emit(
                 "snack-selected",
                 {"currentVote": gameState.currentVote},
+                room=request.sid,
                 namespace="/snackbox",
             )
-        # Emit a socket for everybody to update current playercount
 
 
 @socketio.on("disconnect", namespace="/snackbox")
