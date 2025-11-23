@@ -65,9 +65,9 @@
   </button>
   <div
     id="voting-selector"
-    class="flex flex-nowrap gap-4 overflow-x-auto py-2"
+    class="flex flex-nowrap gap-4 overflow-x-auto py-2 px-2 hidden"
   ></div>
-  <main class="bg-[#0133a3] mt-2">
+  <main class="bg-[#0133a3]">
     <div id="loading-overlay">
       <img
         class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2"
@@ -204,7 +204,19 @@
             "flex justify-center items-center bg-[#0133a3] text-white font-bold shrink-0";
           box.style.width = "10vw";
           box.style.height = "10vw";
+          box.id = `vote:${i}`;
           box.textContent = i;
+          box.onclick = () => {
+            console.log("Box clicked:", i); // replace with your action
+            // Example: send number to backend via fetch
+            fetch("/snackbox/cast-vote", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ voteValue: i }),
+            })
+              .then((res) => res.text())
+              .then((data) => console.log("Server response:", data));
+          };
           container.appendChild(box);
         }
       })
