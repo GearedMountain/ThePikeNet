@@ -303,6 +303,7 @@
             }
 
             castedVotes = data.castedVotes;
+            GameInfoUpdate(completedSnacks);
           });
           if (!data.canVote) {
             document.getElementById("voting-selector").classList.add("hidden");
