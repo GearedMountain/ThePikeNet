@@ -100,6 +100,16 @@ def castVote():
     voter = session["username"]
     print(f"{voter} voted {voteValue}")
     gameState.AddScore(session["username"], voteValue)
+    socketio.emit(
+        "update-remaining-votes",
+        {
+            "remainingVotes": gameState.availableRatings[
+                playersInGame[session["username"]]
+            ]
+        },
+        room=request.sid,
+        namespace="/snackbox",
+    )
     print()
     return f"received: {voteValue}"
 
@@ -189,6 +199,13 @@ def handleConnect():
                 namespace="/snackbox",
             )
 
+            socketio.emit(
+                "update-remaining-votes",
+                {"remainingVotes": gameState.availableRatings[playersInGame[sid]]},
+                room=request.sid,
+                namespace="/snackbox",
+            )
+
         if gameState.phase == "voting":
             socketio.emit(
                 "game-started",
@@ -200,6 +217,13 @@ def handleConnect():
             socketio.emit(
                 "snack-selected",
                 {"currentVote": gameState.currentVote},
+                room=request.sid,
+                namespace="/snackbox",
+            )
+
+            socketio.emit(
+                "update-remaining-votes",
+                {"remainingVotes": gameState.availableRatings[playersInGame[sid]]},
                 room=request.sid,
                 namespace="/snackbox",
             )

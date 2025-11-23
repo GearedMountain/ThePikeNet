@@ -249,6 +249,12 @@
         socket.on("game-started", (data) => {
           GameInfoUpdate(data.completedSnacks);
         });
+
+        socket.on("update-remaining-votes", (data) => {
+          data.remainingVotes.forEach((vote) => {
+            document.getElementById(`vote:${vote}`).style.display = "none";
+          });
+        });
       });
   }
   GetAllSnacks();
