@@ -114,7 +114,7 @@
             },
             body: JSON.stringify({ selectedSnack: SnackNumber }),
           })
-            .then((response) => response.json())
+            .then((response) => response.text())
             .then((data) => {
               console.log("Server response:", data);
             })
