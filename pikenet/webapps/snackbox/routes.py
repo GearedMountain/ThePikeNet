@@ -40,7 +40,7 @@ class SnackBoxGame:
         print(self.availableRatings)
 
     def StartVote(self, snackNumber):
-        if self.phase == "started" and self.completedSnacks[snackNumber] == 0:
+        if self.phase == "started" and self.completedSnacks[int(snackNumber)] == 0:
             self.usersWhoHaventVoted = list(self.availableRatings.keys())
 
             self.phase = "voting"
