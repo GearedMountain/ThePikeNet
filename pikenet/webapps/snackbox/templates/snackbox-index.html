@@ -182,24 +182,26 @@
 
             img.onload = () => resolve(url);
             img.onerror = () => reject(`Failed to load: ${url}`);
-
-            const container = document.getElementById("voting-selector");
-
-            const box = document.createElement("div");
-            box.className =
-              "flex justify-center items-center bg-green-500 text-white font-bold rounded-md";
-            box.style.width = "10vw";
-            box.style.height = "10vw";
-            box.textContent = index;
-            container.appendChild(box);
           });
         });
 
         // Wait for ALL image load promises to complete
+
         return Promise.allSettled(imagePromises);
       })
       .then((results) => {
         console.log("All images processed:", results);
+        for (let i = 1; i <= completedSnacksArray.length; i++) {
+          const container = document.getElementById("voting-selector");
+
+          const box = document.createElement("div");
+          box.className =
+            "flex justify-center items-center bg-green-500 text-white font-bold rounded-md";
+          box.style.width = "10vw";
+          box.style.height = "10vw";
+          box.textContent = i;
+          container.appendChild(box);
+        }
       })
       .catch((error) => {
         console.error("Error fetching images:", error);
