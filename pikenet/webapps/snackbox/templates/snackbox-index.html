@@ -113,6 +113,14 @@
     votes.forEach((v) => v.classList.remove("hidden"));
     totals.forEach((t) => t.classList.remove("hidden"));
     console.log("game has sarted: ", completedSnacksArray);
+
+    data.castedVotes.forEach((voteValue, index) => {
+      if (voteValue !== 0) {
+        document.getElementById(
+          `yourVote:${index}`
+        ).innerText = `Your Vote: ${data.castedVotes[index]}`;
+      }
+    });
     if (isAdmin) {
       const images = document.querySelectorAll("#image-container > div");
       document.getElementById("start-game-button").style.display = "none";
@@ -153,6 +161,7 @@
   }
   // Fetch the JSON list of images
   var completedSnacksArray;
+  var castedVotes;
   var snackCount = 0;
   function GetAllSnacks() {
     const allCaptions = [];
@@ -292,13 +301,7 @@
               box.style.display = "none";
             }
 
-            data.castedVotes.forEach((voteValue, index) => {
-              if (voteValue !== 0) {
-                document.getElementById(
-                  `yourVote:${index}`
-                ).innerText = `Your Vote: ${data.castedVotes[index]}`;
-              }
-            });
+            castedVotes = data.castedVotes;
           });
           if (!data.canVote) {
             document.getElementById("voting-selector").classList.add("hidden");
