@@ -115,6 +115,12 @@ def castVote():
     # Reverse lookup: find the SID for this voter
     voterSid = next((sid for sid, user in playersInGame.items() if user == voter), None)
 
+    socketio.emit(
+        "game-started",
+        {"completedSnacks": gameState.completedSnacks},
+        namespace="/snackbox",
+    )
+
     canVote = True if session["username"] in gameState.usersWhoHaventVoted else False
     socketio.emit(
         "update-remaining-votes",
