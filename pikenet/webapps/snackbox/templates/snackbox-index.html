@@ -250,6 +250,10 @@
           GameInfoUpdate(data.completedSnacks);
         });
 
+        socket.on("game-update", (data) => {
+          GameInfoUpdate(data.completedSnacks);
+        });
+
         socket.on("update-remaining-votes", (data) => {
           const allBoxes = document.querySelectorAll('[id^="vote:"]');
           allBoxes.forEach((box) => {

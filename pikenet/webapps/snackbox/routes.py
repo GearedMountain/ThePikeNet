@@ -53,10 +53,13 @@ class SnackBoxGame:
         if (
             voteValue in gameState.availableRatings[voter]
             and voter in self.usersWhoHaventVoted
+            and self.phase == "voting"
         ):
             gameState.availableRatings[voter].remove(voteValue)
             self.usersWhoHaventVoted.remove(voter)
             self.completedSnacks[self.currentVote] += voteValue
+            if len(self.usersWhoHaventVoted) == 0:
+                self.phase = "started"
             return True
         else:
             return False
