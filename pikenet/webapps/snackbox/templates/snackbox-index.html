@@ -63,7 +63,10 @@
   >
     Start Game
   </button>
-  <div id="voting-selector" class="flex flex-wrap gap-4"></div>
+  <div
+    id="voting-selector"
+    class="flex flex-nowrap gap-4 overflow-x-auto py-2"
+  ></div>
   <main class="bg-[#0133a3] mt-2">
     <div id="loading-overlay">
       <img
@@ -198,7 +201,7 @@
 
           const box = document.createElement("div");
           box.className =
-            "flex  flex-nowrap gap-4 overflow-x-auto justify-center items-center bg-[#0133a3] text-white font-bold";
+            "flex justify-center items-center bg-[#0133a3] text-white font-bold";
           box.style.width = "10vw";
           box.style.height = "10vw";
           box.textContent = i;
