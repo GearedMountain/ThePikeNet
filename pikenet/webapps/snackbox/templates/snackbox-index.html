@@ -145,6 +145,8 @@
         ).innerText = `Total Score: ${completedSnacksArray[i]}`;
         if (completedSnacksArray[i] == 0) {
           document.getElementById(`snack:${i}`).style.display = "none";
+        } else {
+          document.getElementById(`snack:${i}`).style.display = "flex";
         }
       }
     }
