@@ -35,6 +35,14 @@ class SnackBoxGame:
         # However many are in is how many will be expected
         self.gamePlayerCount = self.playerCount
 
+    def StartVote(self, snackNumber):
+        if self.phase == "started":
+            self.phase = "voting"
+            self.currentVote = snackNumber
+            return self.currentVote
+        else:
+            return False
+
 
 gameState = SnackBoxGame()
 
@@ -63,6 +71,12 @@ def index():
 def selectSnack():
     data = request.get_json()
     snackNumber = data.get("selectedSnack")
+    gameState.StartVote(snackNumber)
+    socketio.emit(
+        "snack-selected",
+        {"currentVote": gameState.currentVote},
+        namespace="/snackbox",
+    )
     return f"received: {snackNumber}"
 
 
@@ -148,7 +162,20 @@ def handleConnect():
                 room=request.sid,
                 namespace="/snackbox",
             )
-            print("Game already started and somebody rejoined")
+
+        if gameState.phase == "voting":
+            socketio.emit(
+                "game-started",
+                {"completedSnacks": gameState.completedSnacks},
+                room=request.sid,
+                namespace="/snackbox",
+            )
+
+            socketio.emit(
+                "snack-selected",
+                {"currentVote": gameState.currentVote},
+                namespace="/snackbox",
+            )
         # Emit a socket for everybody to update current playercount
 
 

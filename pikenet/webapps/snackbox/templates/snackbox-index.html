@@ -210,6 +210,11 @@
           playerCountElement.innerText = "Players: " + playerList.length;
         });
 
+        socket.on("snack-selected", (data) => {
+          const selectedSnack = data.currentVote;
+          console.log(`Were voting on ${selectedSnack}`);
+        });
+
         socket.on("game-started", (data) => {
           GameInfoUpdate(data.completedSnacks);
         });
