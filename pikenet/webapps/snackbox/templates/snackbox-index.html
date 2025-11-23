@@ -262,6 +262,10 @@
           });
           if (!data.canVote) {
             document.getElementById("voting-selector").classList.add("hidden");
+          } else {
+            document
+              .getElementById("voting-selector")
+              .classList.remove("hidden");
           }
         });
       });
