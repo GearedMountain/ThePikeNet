@@ -97,8 +97,8 @@ def selectSnack():
 def castVote():
     data = request.get_json()
     voteValue = data.get("voteValue")
-    print(f"{session.get["username"]} voted {voteValue}")
-    gameState.AddScore(session.get["username"], voteValue)
+    print(f"{session["username"]} voted {voteValue}")
+    gameState.AddScore(session["username"], voteValue)
     print()
     return f"received: {voteValue}"
 
