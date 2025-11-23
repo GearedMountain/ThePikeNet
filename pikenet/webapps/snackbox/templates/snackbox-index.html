@@ -251,8 +251,16 @@
         });
 
         socket.on("update-remaining-votes", (data) => {
-          data.remainingVotes.forEach((vote) => {
-            document.getElementById(`vote:${vote}`).style.display = "none";
+          const allBoxes = document.querySelectorAll('[id^="vote:"]');
+          allBoxes.forEach((box) => {
+            const voteNumber = parseInt(box.id.split(":")[1], 10);
+
+            // Hide if voteNumber is NOT in remainingVotes
+            if (!data.remainingVotes.includes(voteNumber)) {
+              box.style.display = "none";
+            } else {
+              box.style.display = "flex"; // or "block" depending on your layout
+            }
           });
         });
       });
