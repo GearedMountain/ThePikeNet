@@ -56,6 +56,7 @@ class SnackBoxGame:
             and voter in self.usersWhoHaventVoted
             and self.phase == "voting"
         ):
+            self.castedRatings[voter][self.currentVote] = voteValue
             gameState.availableRatings[voter].remove(voteValue)
             self.usersWhoHaventVoted.remove(voter)
             self.completedSnacks[self.currentVote] += voteValue
