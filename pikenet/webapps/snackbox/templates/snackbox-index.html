@@ -87,6 +87,7 @@
   var socket;
 
   var isAdmin = "{{ isAdmin }}";
+  var selectedSnack = -1;
   if (isAdmin == "True") {
     isAdmin = true;
     document.getElementById("waiting-overlay").remove();
@@ -266,7 +267,7 @@
         });
 
         socket.on("snack-selected", (data) => {
-          const selectedSnack = data.currentVote;
+          selectedSnack = data.currentVote;
           document.getElementById("voting-selector").classList.remove("hidden");
           console.log(`Were voting on ${selectedSnack}`);
         });
