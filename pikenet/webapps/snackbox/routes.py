@@ -116,7 +116,7 @@ def castVote():
     voterSid = next((sid for sid, user in playersInGame.items() if user == voter), None)
 
     socketio.emit(
-        "game-started",
+        "game-update",
         {"completedSnacks": gameState.completedSnacks},
         namespace="/snackbox",
     )
