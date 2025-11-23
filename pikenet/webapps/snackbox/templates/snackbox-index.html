@@ -104,6 +104,13 @@
 
   function GameInfoUpdate(completedSnacks) {
     completedSnacksArray = completedSnacks;
+    const captions = document.querySelectorAll(".snack-caption");
+    const votes = document.querySelectorAll(".your-vote");
+    const totals = document.querySelectorAll(".total-score");
+
+    captions.forEach((c) => c.classList.add("hidden"));
+    votes.forEach((v) => v.classList.remove("hidden"));
+    totals.forEach((t) => t.classList.remove("hidden"));
     console.log("game has sarted: ", completedSnacksArray);
     if (isAdmin) {
       const images = document.querySelectorAll("#image-container > div");
@@ -176,13 +183,22 @@
 
             const caption = document.createElement("h3");
             caption.textContent = captionText;
-            caption.classList.add("space-mono-bold");
-            caption.style.color = "white";
-            caption.style.textAlign = "center";
-            caption.style.wordBreak = "break-word";
+            caption.className =
+              "snack-caption space-mono-bold text-white text-center";
+
+            // Elements to show *after* game starts
+            const yourVote = document.createElement("p");
+            yourVote.textContent = "Your Vote: ?";
+            yourVote.className = "your-vote text-white text-center hidden";
+
+            const totalScore = document.createElement("p");
+            totalScore.textContent = "Total Score: ?";
+            totalScore.className = "total-score text-white text-center hidden";
 
             wrapper.appendChild(img);
             wrapper.appendChild(caption);
+            wrapper.appendChild(yourVote);
+            wrapper.appendChild(totalScore);
             container.appendChild(wrapper);
 
             img.onload = () => resolve(url);
