@@ -102,11 +102,7 @@ def castVote():
     gameState.AddScore(session["username"], voteValue)
     socketio.emit(
         "update-remaining-votes",
-        {
-            "remainingVotes": gameState.availableRatings[
-                playersInGame[session["username"]]
-            ]
-        },
+        {"remainingVotes": gameState.availableRatings[session["username"]]},
         room=request.sid,
         namespace="/snackbox",
     )
