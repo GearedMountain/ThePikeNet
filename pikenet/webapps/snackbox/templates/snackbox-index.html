@@ -76,7 +76,7 @@
     <div class="text-center space-mono-bold text-[white] bg-[]">
       Completed Snacks:
     </div>
-    <div class="mx-[400px] min-h-[50vh]" id="image-container"></div>
+    <div class="mx-[400px] min-h-[80vh]" id="image-container"></div>
   </main>
 </body>
 <script>
@@ -103,9 +103,24 @@
     console.log("game has sarted: ", completedSnacksArray);
     if (isAdmin) {
       const images = document.querySelectorAll("#image-container > div");
+      document.getElementById("start-game-button").style.display = "none";
       images.forEach((img) => {
         img.onclick = () => {
-          alert(img.id);
+          const SnackNumber = img.id.split(":")[1];
+          fetch("/snackbox/select-snack", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ selectedSnack: SnackNumber }),
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              console.log("Server response:", data);
+            })
+            .catch((error) => {
+              console.error("Error:", error);
+            });
         };
       });
     } else {

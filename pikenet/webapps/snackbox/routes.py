@@ -58,6 +58,14 @@ def index():
     return "running"
 
 
+@bp.route("/snackbox/select-snack", methods=["POST"])
+@role_required(0)
+def selectSnack():
+    data = request.get_json()
+    snackNumber = data.get("selectedSnack")
+    return f"received: {snackNumber}"
+
+
 # @bp.route('/snackbox/image/<countryname>/', defaults={'filename': None})
 @bp.route("/snackbox/image/<filename>")
 @role_required(2, 1, 0)
