@@ -114,7 +114,7 @@
     totals.forEach((t) => t.classList.remove("hidden"));
     console.log("game has sarted: ", completedSnacksArray);
 
-    data.castedVotes.forEach((voteValue, index) => {
+    castedVotes.forEach((voteValue, index) => {
       if (voteValue !== 0) {
         document.getElementById(
           `yourVote:${index}`
@@ -161,7 +161,7 @@
   }
   // Fetch the JSON list of images
   var completedSnacksArray;
-  var castedVotes;
+  var castedVotes = [0];
   var snackCount = 0;
   function GetAllSnacks() {
     const allCaptions = [];
