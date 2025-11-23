@@ -39,14 +39,6 @@ class SnackBoxGame:
 gameState = SnackBoxGame()
 
 
-@bp.route("/snackbox/snackbox-api")
-@role_required(0)
-def index():
-    result = runSnackboxAPI()
-    print(result)
-    return "running"
-
-
 @bp.route("/snackbox/")
 @role_required(2, 1, 0)
 def snackbox_index():
@@ -56,6 +48,14 @@ def snackbox_index():
     return render_template(
         "snackbox-index.html", username=session["user_id"], isAdmin=isAdmin
     )
+
+
+@bp.route("/snackbox/snackbox-api")
+@role_required(0)
+def index():
+    result = runSnackboxAPI()
+    print(result)
+    return "running"
 
 
 # @bp.route('/snackbox/image/<countryname>/', defaults={'filename': None})
