@@ -8,6 +8,8 @@ from . import bp
 
 @bp.route("/")
 def index():
+    if session.get("auth_value") is None:
+        return redirect(url_for("login"))
     print(session.get("auth_value"))
     return render_template(
         "index.html",
