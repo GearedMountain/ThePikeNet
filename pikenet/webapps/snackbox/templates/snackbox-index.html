@@ -291,6 +291,14 @@
             if (!data.remainingVotes.includes(voteNumber)) {
               box.style.display = "none";
             }
+
+            data.castedVotes.forEach((voteValue, index) => {
+              if (voteValue !== 0) {
+                document.getElementById(
+                  `yourVote:${index}`
+                ).innerText = `Your Vote: ${data.castedVotes[index]}`;
+              }
+            });
           });
           if (!data.canVote) {
             document.getElementById("voting-selector").classList.add("hidden");

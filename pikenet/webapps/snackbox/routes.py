@@ -37,6 +37,7 @@ class SnackBoxGame:
         self.availableRatings = {
             player: list(range(1, snackCount + 1)) for player in players
         }
+        self.castedRatings = {player: [0] * snackCount for player in players}
         print(self.availableRatings)
 
     def StartVote(self, snackNumber):
@@ -127,6 +128,7 @@ def castVote():
         {
             "remainingVotes": gameState.availableRatings[session["username"]],
             "canVote": canVote,
+            "castedVotes": gameState.castedRatings[session["username"]],
         },
         room=voterSid,
         namespace="/snackbox",
@@ -228,6 +230,7 @@ def handleConnect():
                 {
                     "remainingVotes": gameState.availableRatings[playersInGame[sid]],
                     "canVote": canVote,
+                    "castedVotes": gameState.castedRatings[playersInGame[sid]],
                 },
                 room=request.sid,
                 namespace="/snackbox",
@@ -256,6 +259,7 @@ def handleConnect():
                 {
                     "remainingVotes": gameState.availableRatings[playersInGame[sid]],
                     "canVote": canVote,
+                    "castedVotes": gameState.castedRatings[playersInGame[sid]],
                 },
                 room=request.sid,
                 namespace="/snackbox",
