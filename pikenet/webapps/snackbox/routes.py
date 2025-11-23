@@ -62,6 +62,7 @@ class SnackBoxGame:
             self.completedSnacks[self.currentVote] += voteValue
             if len(self.usersWhoHaventVoted) == 0:
                 self.phase = "started"
+                return "Everybody Voted"
             return True
         else:
             return False
@@ -110,8 +111,9 @@ def castVote():
     voteValue = data.get("voteValue")
     voter = session["username"]
     print(f"{voter} voted {voteValue}")
-    gameState.AddScore(session["username"], voteValue)
-
+    result = gameState.AddScore(session["username"], voteValue)
+    if result == "Everybody Voted":
+        socketio.emit("everybody-voted", namespace="/snackbox"),
     voter = session["username"]
 
     # Reverse lookup: find the SID for this voter

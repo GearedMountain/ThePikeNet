@@ -63,6 +63,7 @@
   >
     Start Game
   </button>
+  <p id="next-snack-available" clas="hidden">Select Next Snack</p>
   <div
     id="voting-selector"
     class="flex flex-nowrap gap-4 overflow-x-auto py-2 px-2 hidden"
@@ -112,9 +113,7 @@
 
     votes.forEach((v) => v.classList.remove("hidden"));
     totals.forEach((t) => t.classList.remove("hidden"));
-    console.log("game has sarted: ", completedSnacksArray);
 
-    console.log(castedVotes);
     castedVotes.forEach((voteValue, index) => {
       if (voteValue !== 0) {
         document.getElementById(
@@ -243,6 +242,9 @@
           box.textContent = i;
           box.onclick = () => {
             console.log("Box clicked:", i); // replace with your action
+            document
+              .getElementById("next-snack-available")
+              .classList.add("hidden");
             document.getElementById(
               `yourVote:${selectedSnack}`
             ).innerText = `Your Vote: ${i}`;
@@ -290,6 +292,12 @@
 
         socket.on("game-update", (data) => {
           GameInfoUpdate(data.completedSnacks);
+        });
+
+        socket.on("everybody-voted", (data) => {
+          document
+            .getElementById("next-snack-available")
+            .classList.remove("hidden");
         });
 
         socket.on("update-remaining-votes", (data) => {
