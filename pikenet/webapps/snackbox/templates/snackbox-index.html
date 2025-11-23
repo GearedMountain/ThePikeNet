@@ -297,9 +297,11 @@
         });
 
         socket.on("everybody-voted", (data) => {
-          document
-            .getElementById("next-snack-available")
-            .classList.remove("hidden");
+          if (isAdmin) {
+            document
+              .getElementById("next-snack-available")
+              .classList.remove("hidden");
+          }
         });
 
         socket.on("update-remaining-votes", (data) => {
