@@ -40,7 +40,9 @@ class SnackBoxGame:
         print(self.availableRatings)
 
     def StartVote(self, snackNumber):
-        if self.phase == "started":
+        if self.phase == "started" and self.completedSnacks[snackNumber] == 0:
+            self.usersWhoHaventVoted = list(self.availableRatings.keys())
+
             self.phase = "voting"
             self.currentVote = int(snackNumber)
             return self.currentVote
@@ -48,8 +50,12 @@ class SnackBoxGame:
             return False
 
     def AddScore(self, voter, voteValue):
-        if voteValue in gameState.availableRatings[voter]:
+        if (
+            voteValue in gameState.availableRatings[voter]
+            and voter in self.usersWhoHaventVoted
+        ):
             gameState.availableRatings[voter].remove(voteValue)
+            self.usersWhoHaventVoted.remove(voter)
             self.completedSnacks[self.currentVote] += voteValue
             return True
         else:
@@ -106,9 +112,13 @@ def castVote():
     # Reverse lookup: find the SID for this voter
     voterSid = next((sid for sid, user in playersInGame.items() if user == voter), None)
 
+    canVote = True if session["username"] in gameState.usersWhoHaventVoted else False
     socketio.emit(
         "update-remaining-votes",
-        {"remainingVotes": gameState.availableRatings[session["username"]]},
+        {
+            "remainingVotes": gameState.availableRatings[session["username"]],
+            "canVote": canVote,
+        },
         room=voterSid,
         namespace="/snackbox",
     )
@@ -201,9 +211,15 @@ def handleConnect():
                 namespace="/snackbox",
             )
 
+            canVote = (
+                True if playersInGame[sid] in gameState.usersWhoHaventVoted else False
+            )
             socketio.emit(
                 "update-remaining-votes",
-                {"remainingVotes": gameState.availableRatings[playersInGame[sid]]},
+                {
+                    "remainingVotes": gameState.availableRatings[playersInGame[sid]],
+                    "canVote": canVote,
+                },
                 room=request.sid,
                 namespace="/snackbox",
             )
@@ -223,9 +239,15 @@ def handleConnect():
                 namespace="/snackbox",
             )
 
+            canVote = (
+                True if playersInGame[sid] in gameState.usersWhoHaventVoted else False
+            )
             socketio.emit(
                 "update-remaining-votes",
-                {"remainingVotes": gameState.availableRatings[playersInGame[sid]]},
+                {
+                    "remainingVotes": gameState.availableRatings[playersInGame[sid]],
+                    "canVote": canVote,
+                },
                 room=request.sid,
                 namespace="/snackbox",
             )

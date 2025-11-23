@@ -258,10 +258,11 @@
             // Hide if voteNumber is NOT in remainingVotes
             if (!data.remainingVotes.includes(voteNumber)) {
               box.style.display = "none";
-            } else {
-              box.style.display = "flex"; // or "block" depending on your layout
             }
           });
+          if (!data.canVote) {
+            document.getElementById("voting-selector").classList.add("hidden");
+          }
         });
       });
   }
