@@ -100,10 +100,16 @@ def castVote():
     voter = session["username"]
     print(f"{voter} voted {voteValue}")
     gameState.AddScore(session["username"], voteValue)
+
+    voter = session["username"]
+
+    # Reverse lookup: find the SID for this voter
+    voterSid = next((sid for sid, user in playersInGame.items() if user == voter), None)
+
     socketio.emit(
         "update-remaining-votes",
         {"remainingVotes": gameState.availableRatings[session["username"]]},
-        room=request.sid,
+        room=voterSid,
         namespace="/snackbox",
     )
     print()
