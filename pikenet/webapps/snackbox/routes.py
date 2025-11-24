@@ -111,7 +111,7 @@ def castVote():
     voteValue = data.get("voteValue")
     voter = session["username"]
     socketio.emit(
-        "sombody-voted",
+        "somebody-voted",
         {"voteCasted": f"{voter} voted {voteValue}"},
         namespace="/snackbox",
     )
