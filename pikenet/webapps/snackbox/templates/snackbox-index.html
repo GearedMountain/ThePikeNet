@@ -68,6 +68,7 @@
     id="voting-selector"
     class="flex flex-nowrap gap-4 overflow-x-auto py-2 px-2 hidden"
   ></div>
+  <div id="vote-board"></div>
   <main class="bg-[#0133a3]">
     <div id="loading-overlay">
       <img
@@ -290,7 +291,7 @@
         socket.on("snack-selected", (data) => {
           selectedSnack = data.currentVote;
           document.getElementById("voting-selector").classList.remove("hidden");
-          console.log(`Were voting on ${selectedSnack}`);
+          document.getElementById("vote-board").innerHTML = "";
         });
 
         socket.on("game-started", (data) => {
@@ -299,6 +300,13 @@
 
         socket.on("game-update", (data) => {
           GameInfoUpdate(data.completedSnacks);
+        });
+
+        socket.on("somebody-voted", (data) => {
+          const voteBoard = document.getElementById("vote-board");
+          const vote = document.createElement("p");
+          vote.textContent = data.voteCasted;
+          voteBoard.appen(vote);
         });
 
         socket.on("everybody-voted", (data) => {

@@ -110,7 +110,12 @@ def castVote():
     data = request.get_json()
     voteValue = data.get("voteValue")
     voter = session["username"]
-    print(f"{voter} voted {voteValue}")
+    socketio.emit(
+        "sombody-voted",
+        {"voteCasted": f"{voter} voted {voteValue}"},
+        namespace="/snackbox",
+    )
+
     result = gameState.AddScore(session["username"], voteValue)
     if result == "Everybody Voted":
         socketio.emit("everybody-voted", namespace="/snackbox"),
