@@ -306,7 +306,7 @@
           const voteBoard = document.getElementById("vote-board");
           const vote = document.createElement("p");
           vote.textContent = data.voteCasted;
-          voteBoard.appen(vote);
+          voteBoard.append(vote);
         });
 
         socket.on("everybody-voted", (data) => {
