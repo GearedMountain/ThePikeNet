@@ -143,6 +143,11 @@
             });
         };
       });
+      for (let i = 0; i < completedSnacksArray.length; i++) {
+        document.getElementById(
+          `totalScore:${i}`
+        ).innerText = `Total Score: ${completedSnacksArray[i]}`;
+      }
     } else {
       captions.forEach((c) => c.classList.add("hidden"));
 
