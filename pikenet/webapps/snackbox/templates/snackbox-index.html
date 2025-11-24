@@ -68,7 +68,7 @@
     id="voting-selector"
     class="flex flex-nowrap gap-4 overflow-x-auto py-2 px-2 hidden"
   ></div>
-  <div id="vote-board"></div>
+  <div id="vote-board" class="mx-2 space-mono-bold"></div>
   <main class="bg-[#0133a3]">
     <div id="loading-overlay">
       <img
@@ -248,11 +248,9 @@
           box.textContent = i;
           box.onclick = () => {
             console.log("Box clicked:", i); // replace with your action
-            if (isAdmin) {
-              document
-                .getElementById("next-snack-available")
-                .classList.add("hidden");
-            }
+            document
+              .getElementById("next-snack-available")
+              .classList.add("hidden");
             document.getElementById(
               `yourVote:${selectedSnack}`
             ).innerText = `Your Vote: ${i}`;
