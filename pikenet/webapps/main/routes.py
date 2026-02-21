@@ -11,7 +11,7 @@ def index():
     if session.get("auth_value") is None:
         return redirect(url_for("main.login"))
     else:
-        return redirect("https://thepikenet.com/snackbox")
+        return redirect("https://thepikenet.com/")
     print(session.get("auth_value"))
     return render_template(
         "index.html",
