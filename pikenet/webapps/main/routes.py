@@ -11,13 +11,13 @@ def index():
     if session.get("auth_value") is None:
         return redirect(url_for("main.login"))
     else:
-        return redirect("https://thepikenet.com/")
-    print(session.get("auth_value"))
-    return render_template(
-        "index.html",
-        username=session.get("username"),
-        auth_value=session.get("auth_value"),
-    )
+
+        print(session.get("auth_value"))
+        return render_template(
+            "index.html",
+            username=session.get("username"),
+            auth_value=session.get("auth_value"),
+        )
 
 
 #################################### Authenticating ####################################
