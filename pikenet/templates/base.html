@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <title>{% block title %}PikeNet{% endblock %}</title>
@@ -10,10 +10,17 @@
     <script src="{{ url_for('static', filename='js/popups.js') }}"></script>
 
     <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/simple-keyboard/build/css/index.css"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/simple-keyboard/build/index.js"></script>
+
+    <link
       rel="icon"
       type="image/x-icon"
       href="{{ url_for('static', filename='images/PikeNetLogo.png') }}"
     />
+
     <link
       rel="stylesheet"
       href="{{ url_for('static', filename='css/fonts.css') }}"
@@ -22,17 +29,203 @@
       rel="stylesheet"
       href="{{ url_for('static', filename='css/simpleAnimations.css') }}"
     />
+
+    <style>
+      .simple-keyboard {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        display: none;
+        z-index: 99999;
+      }
+
+      #keyboard-spacer {
+        height: 0px;
+      }
+    </style>
   </head>
+
   <body>
-    <!--
-    <nav>
-        <a href="/">Home</a> | <a href="/login">Login</a> | <a href="/blog">Blog</a>
-    </nav>
-    -->
     <main>{% block content %}{% endblock %}</main>
 
+    <div class="simple-keyboard"></div>
+
+    <div id="keyboard-spacer"></div>
     <footer>
       <p>&copy; 2025 PikeNet</p>
     </footer>
+
+    <script>
+      const spacer = document.getElementById("keyboard-spacer");
+
+      let activeInput = null;
+      let isShift = false;
+      let isCaps = false;
+
+      const keyboardEl = document.querySelector(".simple-keyboard");
+
+      const KEYBOARD_HEIGHT = 300;
+
+      function showKeyboard(input) {
+        activeInput = input;
+        keyboardEl.style.display = "block";
+
+        // 🔥 create scroll space for keyboard
+        spacer.style.height = KEYBOARD_HEIGHT + "px";
+
+        setTimeout(() => {
+          scrollToInput(input);
+        }, 50);
+      }
+
+      function hideKeyboard() {
+        activeInput = null;
+        keyboardEl.style.display = "none";
+
+        // remove scroll space
+        spacer.style.height = "0px";
+      }
+
+      function scrollToInput(input) {
+        const rect = input.getBoundingClientRect();
+
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+
+        const inputY = rect.top + scrollTop;
+
+        const keyboardOffset = KEYBOARD_HEIGHT + 20;
+
+        const targetY =
+          inputY - (window.innerHeight - keyboardOffset - rect.height);
+
+        window.scrollTo({
+          top: Math.max(targetY, 0),
+          behavior: "smooth",
+        });
+
+        input.focus();
+      }
+
+      /* ONLY ONE focus handler (IMPORTANT FIX) */
+      document.addEventListener("focusin", (e) => {
+        if (e.target.matches("input, textarea")) {
+          showKeyboard(e.target);
+        }
+      });
+
+      /* hide only when clicking outside */
+      document.addEventListener("mousedown", (e) => {
+        const clickedInput = e.target.matches("input, textarea");
+        const clickedKeyboard = e.target.closest(".simple-keyboard");
+
+        if (!clickedInput && !clickedKeyboard) {
+          hideKeyboard();
+        }
+      });
+
+      let keyboard = new SimpleKeyboard.default({
+        onKeyPress: (button) => handleKey(button),
+      });
+
+      setTimeout(updateKeyLabels, 50);
+
+      function handleKey(button) {
+        if (!activeInput) return;
+
+        let start = activeInput.selectionStart ?? 0;
+        let end = activeInput.selectionEnd ?? 0;
+        let value = activeInput.value ?? "";
+
+        function insertText(text) {
+          activeInput.value = value.slice(0, start) + text + value.slice(end);
+
+          let pos = start + text.length;
+          activeInput.setSelectionRange(pos, pos);
+        }
+
+        // SHIFT (one-time only)
+        if (button === "{shift}") {
+          isShift = true;
+          updateKeyLabels();
+          return;
+        }
+
+        // CAPS LOCK (persistent)
+        if (button === "{caps}") {
+          isCaps = !isCaps;
+          updateKeyLabels();
+          return;
+        }
+
+        // BACKSPACE
+        if (button === "{bksp}") {
+          activeInput.value =
+            value.slice(0, Math.max(start - 1, 0)) + value.slice(end);
+
+          let pos = Math.max(start - 1, 0);
+          activeInput.setSelectionRange(pos, pos);
+          activeInput.focus();
+          return;
+        }
+
+        // ENTER
+        if (button === "{enter}") {
+          insertText("\n");
+          return;
+        }
+
+        // SPACE
+        if (button === "{space}") {
+          insertText(" ");
+          return;
+        }
+
+        // TAB
+        if (button === "{tab}") {
+          insertText("\t");
+          return;
+        }
+
+        // NORMAL KEYS
+        if (!button.startsWith("{")) {
+          let key = button;
+
+          let shouldUppercase = isCaps || isShift;
+
+          if (shouldUppercase && key.length === 1) {
+            key = key.toUpperCase();
+          }
+
+          insertText(key);
+
+          // SHIFT resets AFTER one use (correct behavior)
+          if (isShift) {
+            isShift = false;
+            updateKeyLabels();
+          }
+        }
+
+        activeInput.focus();
+      }
+
+      function updateKeyLabels() {
+        const buttons = document.querySelectorAll(".hg-button");
+
+        buttons.forEach((btn) => {
+          const label = btn.textContent;
+          if (!label) return;
+
+          // only letters
+          if (label.length === 1 && label.match(/[a-z]/i)) {
+            if (isCaps || isShift) {
+              btn.textContent = label.toUpperCase();
+            } else {
+              btn.textContent = label.toLowerCase();
+            }
+          }
+        });
+      }
+    </script>
   </body>
 </html>

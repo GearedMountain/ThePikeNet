@@ -35,6 +35,11 @@ def create_app():
 
     app.register_blueprint(intelstack_bp)
 
+    # PikePay
+    from pikenet.webapps.pikepay import bp as pikepay_bp
+
+    app.register_blueprint(pikepay_bp)
+
     # If you have more addons, register them here
     # from app.addons.blog import bp as blog_bp
     # app.register_blueprint(blog_bp)

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Signature Box</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .signature-container {
+      background: white;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    canvas {
+      border: 2px solid #333;
+      border-radius: 8px;
+      cursor: crosshair;
+      background: white;
+    }
+
+    .buttons {
+      margin-top: 15px;
+    }
+
+    button {
+      padding: 10px 16px;
+      margin: 0 5px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .clear-btn {
+      background: #e74c3c;
+      color: white;
+    }
+
+    .save-btn {
+      background: #2ecc71;
+      color: white;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="signature-container">
+    <h2>Sign Below</h2>
+
+    <canvas id="signaturePad" width="500" height="200"></canvas>
+
+    <div class="buttons">
+      <button class="clear-btn" onclick="clearCanvas()">
+        Clear
+      </button>
+
+      <button class="save-btn" onclick="saveSignature()">
+        Save
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById("signaturePad");
+    const ctx = canvas.getContext("2d");
+
+    let drawing = false;
+
+    function startPosition(e) {
+      drawing = true;
+      draw(e);
+    }
+
+    function endPosition() {
+      drawing = false;
+      ctx.beginPath();
+    }
+
+    function draw(e) {
+      if (!drawing) return;
+
+      const rect = canvas.getBoundingClientRect();
+
+      ctx.lineWidth = 2;
+      ctx.lineCap = "round";
+      ctx.strokeStyle = "#000";
+
+      ctx.lineTo(
+        e.clientX - rect.left,
+        e.clientY - rect.top
+      );
+
+      ctx.stroke();
+      ctx.beginPath();
+
+      ctx.moveTo(
+        e.clientX - rect.left,
+        e.clientY - rect.top
+      );
+    }
+
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    function saveSignature() {
+      const image = canvas.toDataURL("image/png");
+
+      const link = document.createElement("a");
+      link.download = "signature.png";
+      link.href = image;
+      link.click();
+    }
+
+    // Mouse Events
+    canvas.addEventListener("mousedown", startPosition);
+    canvas.addEventListener("mouseup", endPosition);
+    canvas.addEventListener("mousemove", draw);
+
+    // Touch Events for Mobile
+    canvas.addEventListener("touchstart", (e) => {
+      e.preventDefault();
+      startPosition(e.touches[0]);
+    });
+
+    canvas.addEventListener("touchend", (e) => {
+      e.preventDefault();
+      endPosition();
+    });
+
+    canvas.addEventListener("touchmove", (e) => {
+      e.preventDefault();
+      draw(e.touches[0]);
+    });
+  </script>
+</body>
+</html>

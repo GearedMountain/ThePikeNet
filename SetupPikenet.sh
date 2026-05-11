@@ -1,11 +1,11 @@
 #!/bin/bash
 echo "This product requires python 3 to be pre-installed in the environment"
-yes | sudo apt install python3-venv > /dev/null 2>&1
+yes | apt install python3-venv > /dev/null 2>&1
 
 # Optional: create virtual environment if it doesn't exist
 if [ ! -d "venv" ]; then
     echo "Creating virtual environment..."
-    sudo python3 -m venv venv
+    python3 -m venv venv
 fi
 
 
@@ -15,7 +15,7 @@ source ./venv/bin/activate
 
 # Upgrade pip
 echo "Ensuring pip status..."
-yes | sudo apt install python3-pip > /dev/null 2>&1
+yes | apt install python3-pip > /dev/null 2>&1
 pip install --upgrade pip > /dev/null 2>&1
 
 # Install dependencies
@@ -44,14 +44,14 @@ echo "Preparing postgres..."
 mkdir -p $HOME/$APPNAME/pgsql
 if [ ! -f postgresql-16.2.tar.gz ]; then
 echo "Downloading postgres..."
-sudo curl -O https://ftp.postgresql.org/pub/source/v16.2/postgresql-16.2.tar.gz
+curl -O https://ftp.postgresql.org/pub/source/v16.2/postgresql-16.2.tar.gz
 else
 echo "Postgresq already downloaded"
 fi
-sudo tar -xf postgresql-16.2.tar.gz
+tar -xf postgresql-16.2.tar.gz
 
 # Readline is required for any psql interaction ( terminal database editing )
-yes | sudo apt install libreadline-dev
+yes | apt install libreadline-dev
 echo "Configuring postgres..."
 cd postgresql-16.2
 ./configure --without-icu -prefix=$HOME/$APPNAME/pgsql > /dev/null 2>&1 # No icu makes it hard for postgres to handle foreign characters, ensure english is the only required language
