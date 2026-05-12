@@ -91,6 +91,11 @@ INSERT INTO users (username, email, password, auth_value)
 VALUES ('pikemin', 'noreply@gearedmountain.com', 'pikeminpikemin', 0)
 ON CONFLICT (username) DO NOTHING;
 
+-- Create kiosk login
+INSERT INTO users (username, email, password, auth_value)
+VALUES ('kiosk', 'noreplykiosk@gearedmountain.com', 'kioskkiosk', 2)
+ON CONFLICT (username) DO NOTHING;
+
 -- INTEL STACK DATABASES
 -- Create the notes table
 CREATE TABLE IF NOT EXISTS notes (

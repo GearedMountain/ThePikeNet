@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Computer Loan Agreement</title>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f2f2f2;
+        display: flex;
+        justify-content: center;
+        padding: 40px;
+      }
+
+      .form-container {
+        width: 800px;
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      h1 {
+        text-align: center;
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        margin-top: 15px;
+        font-weight: bold;
+      }
+
+      input[type="text"],
+      input[type="number"] {
+        width: 100%;
+        padding: 10px;
+        margin-top: 5px;
+        border-radius: 6px;
+        border: 1px solid #ccc;
+      }
+
+      .row {
+        display: flex;
+        gap: 10px;
+      }
+
+      .row input {
+        flex: 1;
+      }
+
+      .checkbox-group {
+        display: flex;
+        gap: 15px;
+        margin-top: 10px;
+      }
+
+      .checkbox-group label {
+        font-weight: normal;
+      }
+
+      canvas {
+        border: 2px solid #333;
+        border-radius: 8px;
+        margin-top: 10px;
+        width: 100%;
+        height: 200px;
+        background: white;
+        cursor: crosshair;
+      }
+
+      .buttons {
+        margin-top: 10px;
+        display: flex;
+        gap: 10px;
+      }
+
+      button {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+      }
+
+      .clear {
+        background: #e74c3c;
+        color: white;
+      }
+
+      .submit {
+        background: #2ecc71;
+        color: white;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="form-container">
+      <button class="clear" onclick="window.location.href = '/pikepay'">
+        Cancel Request
+      </button>
+      <h1>PikePay Personal Loan Request</h1>
+
+      <label>Name of Requester *</label>
+      <div class="row">
+        <input type="text" placeholder="First" />
+        <input type="text" placeholder="Last" />
+      </div>
+
+      <label>Loan Ammount *</label>
+      <input type="number" placeholder="The ammount being requested" />
+
+      <label>Loan Justification *</label>
+      <input type="text" placeholder="What you will use the loan for" />
+
+      <label>Expected Weekly Income *</label>
+      <input type="number" placeholder="Your expected income the next 7 days" />
+      <!-- Agreement
+      <label>Expected check Income *</label>
+      <div class="checkbox-group">
+        <label><input type="checkbox" /> Headphones</label>
+        <label><input type="checkbox" /> Mouse</label>
+        <label><input type="checkbox" /> Battery charger</label>
+      </div>
+
+      -->
+      <label style="margin-top: 20px">
+        <input type="checkbox" /> I permit administrators of PikePay to perform
+        a credit review on my account
+      </label>
+
+      <label>Signature *</label>
+      <canvas id="signaturePad"></canvas>
+
+      <div class="buttons">
+        <button class="clear" onclick="clearSignature()">Clear</button>
+        <button class="submit" onclick="submitForm()">Submit</button>
+      </div>
+    </div>
+
+    <script>
+      const canvas = document.getElementById("signaturePad");
+      const ctx = canvas.getContext("2d");
+
+      let drawing = false;
+
+      // Fix canvas resolution for crisp drawing
+      function resizeCanvas() {
+        const ratio = window.devicePixelRatio || 1;
+        canvas.width = canvas.offsetWidth * ratio;
+        canvas.height = canvas.offsetHeight * ratio;
+        ctx.scale(ratio, ratio);
+      }
+      resizeCanvas();
+
+      canvas.addEventListener("mousedown", (e) => {
+        drawing = true;
+        ctx.beginPath();
+      });
+
+      canvas.addEventListener("mouseup", () => {
+        drawing = false;
+      });
+
+      canvas.addEventListener("mousemove", draw);
+
+      canvas.addEventListener("touchstart", (e) => {
+        drawing = true;
+        ctx.beginPath();
+      });
+
+      canvas.addEventListener("touchend", () => {
+        drawing = false;
+      });
+
+      canvas.addEventListener("touchmove", (e) => {
+        draw(e.touches[0]);
+      });
+
+      function draw(e) {
+        if (!drawing) return;
+
+        const rect = canvas.getBoundingClientRect();
+
+        ctx.lineWidth = 2;
+        ctx.lineCap = "round";
+        ctx.strokeStyle = "#000";
+
+        ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+      }
+
+      function clearSignature() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+
+      function submitForm() {
+        const signature = canvas.toDataURL("image/png");
+
+        console.log("Signature image:", signature);
+
+        alert("Form submitted (signature captured in console)");
+        const win = window.open();
+        win.document.write(`<img src="${signature}" />`);
+      }
+    </script>
+  </body>
+</html>

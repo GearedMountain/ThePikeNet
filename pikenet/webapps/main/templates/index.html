@@ -1,13 +1,93 @@
 {% extends 'base.html' %} {% block content %}
-<h1 class="space-mono-bold">Welcome to PikeNet!</h1>
-<p>This is the dashboard.</p>
-<a href="/logout">logout</a>
-<a href="/login">login</a>
-<a href="/intelstack">intelstack</a>
-<a href="/snackbox">snackbox</a>
-<a href="/pikepay">pikepay</a>
-<p>
-  I couldnt access the server on my dekstop browser until I accessed it via a
-  mobile browser at least once????
-</p>
+<style>
+  body{
+    background-color: black;
+  }
+</style>
+<div class="p-8">
+  <h1 class="text-4xl font-bold mb-2 space-mono-bold text-white">Welcome to PikeNet</h1>
+
+
+  <!-- Dashboard Grid -->
+  <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
+    <!-- IntelStack -->
+    <a
+      href="/intelstack"
+      class="group bg-white dark:border-gray-300 border border-gray-500 dark:border-gray-700 rounded-2xl p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+    >
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-2xl font-semibold">IntelStack</h2>
+
+        <div
+          class="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900 flex items-center justify-center text-xl"
+        >
+          🧠
+        </div>
+      </div>
+
+      <p class="text-gray-900 dark:text-gray-300">
+        Access intelligence tools and data systems.
+      </p>
+    </a>
+
+    <!-- SnackBox -->
+    <a
+      href="/snackbox"
+      class="group bg-white dark:border-gray-300 border border-gray-500 dark:border-gray-700 rounded-2xl p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+    >
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-2xl font-semibold">SnackBox</h2>
+
+        <div
+          class="w-12 h-12 rounded-xl bg-pink-100 dark:bg-pink-900 flex items-center justify-center text-xl"
+        >
+          🍬
+        </div>
+      </div>
+
+      <p class="text-gray-900 dark:text-gray-300">
+        Explore monthly snacks and multiplayer features.
+      </p>
+    </a>
+
+    <!-- PikePay -->
+    <a
+      href="/pikepay"
+      class="group bg-white dark:border-gray-300 border border-gray-500 dark:border-gray-700 rounded-2xl p-6 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+    >
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-2xl font-semibold">PikePay</h2>
+
+        <div
+          class="w-12 h-12 rounded-xl bg-green-100 dark:bg-green-900 flex items-center justify-center text-xl"
+        >
+          💳
+        </div>
+      </div>
+
+      <p class="text-gray-900 dark:text-gray-300">
+        Manage payments and account services.
+      </p>
+    </a>
+  </div>
+
+  <!-- Bottom Links 
+  
+    <a
+      href="/login"
+      class="px-5 py-2 rounded-xl bg-blue-600 text-white hover:bg-blue-700 transition-colors duration-300"
+    >
+      Login
+    </a>
+-->
+    <div class="mt-10 flex gap-4"></div>
+    <a
+      href="/logout"
+      class="px-5 py-2 rounded-xl bg-red-600 text-white hover:bg-red-700 transition-colors duration-300"
+    >
+      Logout
+    </a>
+  </div>
+</div>
+
 {% endblock %}
