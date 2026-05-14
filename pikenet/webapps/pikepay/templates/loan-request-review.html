@@ -50,8 +50,8 @@
         gap: 10px;
       }
 
-      .row input {
-        flex: 1;
+      h3 {
+        color: #5898ad;
       }
 
       .checkbox-group {
@@ -101,39 +101,71 @@
 
   <body>
     <div class="form-container">
-      <h1>PikePay Personal Loan Request</h1>
+      <button class="clear" onclick="window.location.href = '/pikepay'">
+        Go Back
+      </button>
+      <h1>PikePay Personal Loan Request Review</h1>
 
-      <label>Name of Requester *</label>
-      <div class="row">
-        <input type="text" placeholder="First" id="firstName" />
-        <input type="text" placeholder="Last" id="lastName" />
-      </div>
+      <label>Name of Requester</label>
+      <h3 id="firstName">{{firstName}}</h3>
+      <h3 id="lastName">{{lastName}}</h3>
 
-      <label>Loan Ammount *</label>
+      <label>Requester Credit Score</label>
+      <h3 id="creditScore">{{creditScore}}</h3>
+
+      <label>Loan Ammount</label>
+      <h3 id="loanAmount">${{amountRequested}}</h3>
+
+      <label>Loan Justification</label>
+      <h3 id="loanReason">{{justification}}</h3>
+
+      <label>Expected Weekly Income</label>
+      <h3 id="weeklyIncome">${{expectedIncome}}</h3>
+
+      <label>Repayment Amount *</label>
       <input
         type="number"
-        placeholder="The ammount being requested"
-        id="loanAmount"
+        placeholder="Total amount to be repaid"
+        id="repaymentAmount"
+        onblur="calculateInterest()"
       />
 
-      <label>Loan Justification *</label>
-      <input
-        type="text"
-        placeholder="What you will use the loan for"
-        id="loanReason"
-        maxlength="254"
-      />
-
-      <label>Expected Weekly Income *</label>
+      <label>Loan Length (days) *</label>
       <input
         type="number"
-        placeholder="Your expected income the next 7 days"
-        id="weeklyIncome"
+        placeholder="Number of days until full repayment is due"
+        id="loanLength"
+        onblur="calculateInterest()"
       />
-      <label style="margin-top: 20px">
-        <input type="checkbox" id="creditReview" /> I permit administrators of
-        PikePay to perform a credit review on my account
-      </label>
+
+      <label>Payment Cycle (days) *</label>
+      <input
+        type="number"
+        placeholder="Number of days from previous cycle until payment is due"
+        id="paymentCycle"
+        onblur="calculateInterest()"
+      />
+      <h3 id="interestRate">next</h3>
+      <script>
+        function calculateInterest() {
+          repaymentAmount = Number(
+            document.getElementById("repaymentAmount").value,
+          );
+          loanLength = Number(document.getElementById("loanLength").value);
+          paymentCycle = Number(document.getElementById("paymentCycle").value);
+          if (repaymentAmount != "" && loanLength != "" && paymentCycle != "") {
+            numberOfPayments = Math.ceil(loanLength / paymentCycle);
+            duePerPayment = Math.round(repaymentAmount / numberOfPayments);
+
+            requestedAmount = Number("{{amountRequested}}");
+            interestRate =
+              (repaymentAmount / requestedAmount) ** (1 / numberOfPayments) - 1;
+
+            document.getElementById("interestRate").innerText =
+              (interestRate * 100).toFixed(2) + "%";
+          }
+        }
+      </script>
       <!-- Agreement
       <label>Expected check Income *</label>
       <div class="checkbox-group">
@@ -148,10 +180,10 @@
       <canvas id="signaturePad"></canvas>
  -->
       <div class="buttons">
-        <button class="clear" onclick="window.location.href = '/pikepay'">
-          Cancel Request
+        <button class="clear" onclick="clearSignature()">
+          Deny Application
         </button>
-        <button class="submit" onclick="submitForm()">Submit</button>
+        <button class="submit" onclick="submitForm()">Approve</button>
       </div>
     </div>
 

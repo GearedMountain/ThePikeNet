@@ -83,7 +83,8 @@ CREATE TABLE IF NOT EXISTS users (
     username VARCHAR(100) UNIQUE NOT NULL,
     email VARCHAR(120) UNIQUE NOT NULL,
     password VARCHAR(200) NOT NULL,
-    auth_value INTEGER NOT NULL DEFAULT 2
+    auth_value INTEGER NOT NULL DEFAULT 2,
+    credit_score INTEGER NOT NULL DEFAULT 300
 );
 
 -- Create default admin
@@ -123,6 +124,30 @@ CREATE TABLE IF NOT EXISTS note_tags (
 );
 
 -- SNACKBOX DATABASES
+
+-- PIKEPAY DATABASES
+CREATE TABLE IF NOT EXISTS pikepay_loans (
+    loan_id SERIAL NOT NULL,
+    user_id INT NOT NULL,
+    state VARCHAR(20) DEFAULT 'Requested',
+    first_name VARCHAR(20) NOT NULL,
+    last_name VARCHAR(20) NOT NULL,
+    justification VARCHAR(255) NOT NULL,
+    expected_income NUMERIC NOT NULL,
+    amount_requested NUMERIC NOT NULL,
+    amount_owed NUMERIC,
+    start_date DATE DEFAULT CURRENT_DATE,
+    repayment_length INT,
+    payment_cycle INT,
+    requester_signature TEXT,
+    
+    PRIMARY KEY (loan_id),
+    
+     CONSTRAINT fk_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE CASCADE
+);
 
 EOF
 
