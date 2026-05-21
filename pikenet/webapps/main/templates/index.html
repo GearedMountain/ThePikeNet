@@ -89,5 +89,9 @@
     </a>
   </div>
 </div>
-
+{% if username == "kiosk" %}
+<script>
+window.location.href = "/pikepay";
+</script>
+{% endif %}
 {% endblock %}

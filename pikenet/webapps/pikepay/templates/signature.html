@@ -62,9 +62,13 @@
       <canvas id="signaturePad" width="750" height="300"></canvas>
 
       <div class="buttons">
-        <button class="clear-btn" onclick="clearCanvas()">Clear</button>
+        <button class="clear-btn" onclick="clearCanvas()" id="clearButton">
+          Clear
+        </button>
 
-        <button class="save-btn" onclick="saveSignature()">Save</button>
+        <button class="save-btn" onclick="saveSignature()" id="saveButton">
+          Save
+        </button>
       </div>
     </div>
 
@@ -105,13 +109,22 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);
       }
 
+      signatureToken = "{{signatureToken}}";
       function saveSignature() {
-        const image = canvas.toDataURL("image/png");
+        document.getElementById("saveButton").remove();
+        document.getElementById("clearButton").remove();
+        const image = btoa(canvas.toDataURL("image/png"));
+        console.log(image);
+        fetch("/pikepay/submit-kiosk-signature/" + signatureToken, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            image: image,
+          }),
+        });
 
-        //const link = document.createElement("a");
-        //link.download = "signature.png";
-        //link.href = image;
-        //link.click();
         window.location.href = "/pikepay";
       }
 

@@ -13,15 +13,24 @@ def grabCreditScore(userId):
         return None
 
 
-def getMyOpenLoanCount(userId):
+def getMyLoanHistory(userId):
+    sql = text("SELECT * FROM pikepay_loans WHERE user_id = :userId")
+    result = db.session.execute(sql, {"userId": userId})
+    rows = result.fetchall()
+    if rows:
+        return rows
+    else:
+        return None
+
+
+def getMyRecentLoanHistory(userId):
     sql = text(
-        "SELECT COUNT(*) AS open_loans FROM pikepay_loans WHERE user_id = :userId AND state = 'Open';"
+        "SELECT * FROM pikepay_loans WHERE user_id = :userId ORDER BY loan_id DESC LIMIT 5"
     )
     result = db.session.execute(sql, {"userId": userId})
-    row = result.fetchone()
-    if row:
-        creditScore = row[0]
-        return creditScore
+    rows = result.fetchall()
+    if rows:
+        return rows
     else:
         return None
 
@@ -37,28 +46,92 @@ def showAllLoans():
 
 
 def getLoanInfoToReview(loanId):
-    sql = text(
-        "SELECT user_id, first_name, last_name, justification, expected_income, amount_requested state FROM pikepay_loans WHERE loan_id = :loanId"
-    )
+    sql = text("SELECT * FROM pikepay_loans WHERE loan_id = :loanId")
     result = db.session.execute(sql, {"loanId": loanId})
     row = result.fetchone()
     if row:
 
-        userId, firstName, lastName, justification, expectedIncome, amountRequested = (
-            row
-        )
-        creditScore = grabCreditScore(userId)
-        return (
-            creditScore,
+        (
+            loanId,
             userId,
+            state,
             firstName,
             lastName,
             justification,
             expectedIncome,
             amountRequested,
+            amountOwed,
+            startDate,
+            loanLength,
+            paymentCycle,
+            signature,
+        ) = row
+        creditScore = grabCreditScore(userId)
+        return (
+            creditScore,
+            userId,
+            state,
+            firstName,
+            lastName,
+            justification,
+            expectedIncome,
+            amountRequested,
+            amountOwed,
+            startDate,
+            loanLength,
+            paymentCycle,
+            signature,
         )
     else:
         return None
+
+
+def initiallyApproveLoan(loanId, repaymentAmount, loanLength, paymentCycle):
+    # It now needs to be signed, this isnt the loan being finalized and paid out
+    try:
+        sql = text(
+            "UPDATE pikepay_loans SET state='SignatureNeeded', amount_owed= :repaymentAmount, repayment_length= :loanLength, payment_cycle= :paymentCycle WHERE loan_id= :loanId"
+        )
+        db.session.execute(
+            sql,
+            {
+                "loanId": loanId,
+                "repaymentAmount": repaymentAmount,
+                "loanLength": loanLength,
+                "paymentCycle": paymentCycle,
+            },
+        )
+        db.session.commit()
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
+
+def denyLoan(loanId):
+    try:
+        sql = text("UPDATE pikepay_loans SET state='Denied' WHERE loan_id= :loanId")
+        db.session.execute(sql, {"loanId": loanId})
+        db.session.commit()
+        return True
+    except Exception as e:
+        print(e)
+        return False
+
+
+def updateCustomerSignature(loanId, customerSignature):
+    try:
+        sql = text(
+            "UPDATE pikepay_loans SET state='Open', requester_signature= :customerSignature WHERE loan_id= :loanId"
+        )
+        db.session.execute(
+            sql, {"loanId": loanId, "customerSignature": customerSignature}
+        )
+        db.session.commit()
+        return True
+    except Exception as e:
+        print(e)
+        return False
 
 
 def makeLoanRequest(firstName, lastName, loanAmount, loanReason, weeklyIncome, userId):

@@ -1,43 +1,7 @@
 {% extends 'base.html' %} {% block content %}
 <!--
 <button id="adminButton">Review Loan Requests</button>
-<button id="adminButton2" onclick="OpenKioskSignature()">
-  Open Kiosk Signature
-</button>
-<script>
-  async function OpenKioskSignature() {
-    const button = document.getElementById("adminButton2");
 
-    // optional: disable immediately so user can't spam it
-    button.disabled = true;
-    button.innerText = "Loading...";
-
-    try {
-      const response = await fetch(
-        "https://thepikenet.com/pikepay/open-kiosk-signature",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        },
-      );
-
-      if (response.ok) {
-        // hide after successful response
-        button.style.display = "none";
-      } else {
-        // re-enable if failed
-        button.disabled = false;
-        button.innerText = "Open Kiosk Signature";
-      }
-    } catch (err) {
-      console.error(err);
-      button.disabled = false;
-      button.innerText = "Open Kiosk Signature";
-    }
-  }
-</script>
 -->
 
 <style>
@@ -48,7 +12,9 @@
   }
 
   .card {
+    background: #0d0d0d;
     border: 0px solid #2a2a2a;
+    border-radius: 4px;
     border-bottom-width: 4px;
   }
 
@@ -65,15 +31,17 @@
   }
 </style>
 <body>
-  <!-- Navbar -->
-  <nav class="w-full border-b border-gray-700 px-6 py-4">
+  <!-- Navbar Desktop -->
+  <nav class="hidden w-full border-b border-gray-700 px-6 py-4 md:!block">
     <div class="flex items-center gap-8">
       <!-- Logo -->
-      <div class="flex items-center gap-2 text-xl">
-        <div class="w-3 h-6 bg-gray-300"></div>
-        <span class="text-blue-500">PikePay</span>
-      </div>
-
+       <a href="/">
+        <img
+      class="max-h-[4rem]"
+      src="{{ url_for('static', filename='images/PikeNetLogoFlat.png') }}"
+      
+    />
+    </a>
       <!-- Links -->
       <div class="flex gap-8 text-white text-lg">
         <a
@@ -85,8 +53,6 @@
         <a href="/pikepay/loan-request-initial" class="nav-link"
           >Request Loan</a
         >
-        <a href="#" class="nav-link">History</a>
-
         {% if auth == 0 %}
         <a
           class="nav-link"
@@ -99,94 +65,260 @@
     </div>
   </nav>
 
-  <!-- Top Cards -->
-  <div id="dashboard-section" class="hidden">
-    <section class="flex justify-center gap-40 mt-8 flex-wrap">
-      <!-- Credit Score -->
-      <div
-        class="card w-[260px] h-[130px] flex flex-col items-center justify-center"
-      >
-        <h2 class="text-3xl mb-3">Your Credit Score</h2>
-        <p class="text-5xl text-[#5898ad]" id="creditScore">0</p>
+  <!-- Navbar Mobile -->
+  <nav class="block w-full border-b border-gray-700 px-6 py-4 md:!hidden">
+    <div class="flex flex-col gap-4">
+       <img
+      class="max-h-[4rem]"
+      src="{{ url_for('static', filename='images/PikeNetLogoFlat.png') }}"
+    />
+
+      <!-- Links -->
+      <div class="flex flex-col gap-4 text-white text-lg">
+        <a
+          onClick="changeSectionSelected('dashboard-section')"
+          class="nav-link"
+          id="dashboard-section-tab"
+        >
+          Dashboard
+        </a>
+
+        <a href="/pikepay/loan-request-initial" class="nav-link">
+          Request Loan
+        </a>
+
       </div>
+    </div>
+  </nav>
 
-      <!-- Estimated Limit -->
-      <div
-        class="card w-[260px] h-[130px] flex flex-col items-center justify-center"
-      >
-        <h2 class="text-3xl mb-3">Estimated Limit</h2>
-        <p class="text-5xl text-[#5898ad]" id="creditLimit">$0</p>
-      </div>
-    </section>
+  <div class="m-auto p-12 max-w-[1250px]">
+    <!-- Top Cards -->
+    <div id="dashboard-section" class="hidden">
+      <!-- Dashboard Cards -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-8">
+        <!-- Current User -->
+        <div class="bg-[#0D0D0D] rounded-2xl p-6 shadow-xl">
+          <p class="text-white text-3xl mb-2">Welcome Back</p>
+          <p class="text-xl text-[#5898ad]" id="currentUser">Loading...</p>
+        </div>
 
-    <!-- Loan Information -->
-    <section class="mt-10 border-t border-gray-600">
-      <div class="card w-full py-6 px-6">
-        <h2 class="text-3xl mb-8">Loan Information</h2>
+        <!-- Credit Score -->
+        <div class="bg-[#0D0D0D] rounded-2xl p-6 shadow-xl">
+          <p class="text-zinc-400 text-sm mb-2">Credit Score</p>
 
-        <div class="grid grid-cols-4 text-center gap-6">
-          <div>
-            <p class="text-2xl">Loan Balance</p>
-            <p class="text-3xl text-[#5898ad] mt-2">$118</p>
+          <div class="flex items-end gap-2">
+            <h2 class="text-4xl font-bold text-green-400" id="creditScore">
+              742
+            </h2>
+
+            <span class="text-green-300 mb-1" id="creditScoreDescriptor">
+              Needs Work
+            </span>
           </div>
 
-          <div>
-            <p class="text-2xl">Payment Due</p>
-            <p class="text-3xl text-[#5898ad] mt-2">20 May</p>
-          </div>
-
-          <div>
-            <p class="text-2xl">Amount Due</p>
-            <p class="text-3xl text-[#5898ad] mt-2">$50</p>
-          </div>
-
-          <div>
-            <p class="text-2xl">Interest Rate</p>
-            <p class="text-3xl text-[#5898ad] mt-2">1.53%</p>
+          <div
+            class="w-[100%] bg-[#202020] rounded-full h-3 mt-5 overflow-hidden"
+          >
+            <div
+              class="bg-green-400 h-full rounded-full w-[0%]"
+              id="creditScoreBar"
+            ></div>
           </div>
         </div>
+
+        <!-- Credit Limit -->
+        <div class="bg-[#0D0D0D] rounded-2xl p-6 shadow-xl">
+          <p class="text-zinc-400 text-sm mb-2">Credit Limit</p>
+
+          <h2 class="text-4xl font-bold text-[#5898ad]" id="creditLimit">$0</h2>
+
+          <p class="text-zinc-500 mt-3 text-sm">This is an Estimation*</p>
+        </div>
       </div>
-    </section>
-  </div>
+      <div class="">
+        <!-- Should show the most recent 3 in your history of loans -->
+        <h2 class="text-xl font-semibold">Loan Inquiries</h2>
+      </div>
+      <br />
 
-  {% if auth == 0 %}
-  <div id="employee-section" class="hidden">
-    <p>Employee section here</p>
-    <div class="card w-full p-6">
-      <h3 class="text-2xl mb-4">Loan Requests</h3>
+      <div class="overflow-x-auto rounded-2xl shadow-xl bg-[#0D0D0D]">
+        <table class="w-[100%]">
+          <thead class="bg-[#171717]">
+            <tr>
+              <th class="text-left px-6 py-4 font-semibold">ID</th>
+              <th class="text-left px-6 py-4 font-semibold">Status</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-zinc-800">
+            {% if recentLoanHistory %}
+            {% for loan in recentLoanHistory %}
+            <tr class="hover:bg-[#171717] transition">
+              <td class="px-6 py-4">{{ loan.loan_id }}</td>
+                {% if loan.state == "Requested" %}
+                 <td class="px-6 py-4">
+                <span
+                  class="bg-yellow-500/20 text-yellow-300 px-3 py-1 rounded-full text-sm"
+                >
+                  In Review
+                </span>
+              </td>
+                {% elif loan.state == "SignatureNeeded" %}
+                 <td class="px-6 py-4">
+                <span
+                  class="bg-yellow-500/20 text-yellow-300 px-3 py-1 rounded-full text-sm"
+                >
+                  See Bank
+                </span>
+              </td>
+                {% elif loan.state == "Denied" %}
+              <td class="px-6 py-4">
+                <span
+                  class="bg-red-500/20 text-red-300 px-3 py-1 rounded-full text-sm"
+                >
+                  Denied
+                </span>
+              </td>
+                {% elif loan.state == "Closed" %}
+                <td class="px-6 py-4">
+                <span
+                  class="bg-gray-700/20 text-gray-300 px-3 py-1 rounded-full text-sm"
+                >
+                  Closed
+                </span>
+                </td>
+                 {% elif loan.state == "Open" %}
+                <td class="px-6 py-4">
+                <span
+                  class="bg-green-500/20 text-green-300 px-3 py-1 rounded-full text-sm"
+                >
+                  Approved
+                </span>
+                </td>
+                {% else %}
+                <span class="text-gray-400">{{ loan.state }}</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+            {% endif %}
+          </tbody>
 
-      <table class="w-full text-left border-collapse">
-        <thead>
-          <tr class="border-b border-gray-700 text-gray-300">
-            <th class="py-3">Loan ID Number</th>
-            <th class="py-3">State</th>
-          </tr>
-        </thead>
+        </table>
+      </div>
 
-        <tbody>
-          {% for loan in requestedLoans %}
-          <tr
-            class="border-b border-gray-800 hover:bg-gray-900 transition"
-            onclick="viewSelectedLoan({{ loan.loan_id }})"
-          >
-            <td class="py-3 text-white">{{ loan.loan_id }}</td>
-            <td class="py-3 font-semibold">
-              {% if loan.state == "Requested" %}
-              <span class="text-yellow-400">Requested</span>
-              {% elif loan.state == "Open" %}
-              <span class="text-green-400">Open</span>
-              {% elif loan.state == "Denied" %}
-              <span class="text-red-400">Denied</span>
-              {% elif loan.state == "Closed" %}
-              <span class="text-red-400">Closed</span>
-              {% else %}
-              <span class="text-gray-400">{{ loan.state }}</span>
-              {% endif %}
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
+      <br/> 
+
+      <div class="">
+        <h2 class="text-xl font-semibold">Active Loans</h2>
+
+        <h2 class="text-l text-zinc-400 font-semibold">
+          You do not have any active loans
+        </h2>
+      </div>
+      <br />
+      <div class="bg-[#0D0D0D] rounded-2xl p-6 shadow-xl">
+        <p class="text-zinc-400 text-lg mb-2">
+          Loan <span class="text-[#5898ad]">13</span>
+        </p>
+
+        <h2 class="text-2xl font-bold text-[#5898ad]">
+          <span class="text-white">Balance:</span> $165
+        </h2>
+        <p class="text-white mt-3 text-sm">Due March 17, 2026</p>
+        <p class="text-white mt-3 text-sm">Next Payment March 17, 2026</p>
+        <p class="text-white mt-3 text-sm">Payment Amount $165</p>
+      </div>
+    </div>
+
+    {% if auth == 0 %}
+    <div id="employee-section" class="hidden">
+      <p>Employee section here</p>
+      <div class="card w-full p-6">
+        <h3 class="text-2xl mb-4">Loan Requests</h3>
+
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b border-gray-700 text-gray-300">
+              <th class="py-3">Loan ID Number</th>
+              <th class="py-3">State</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% if requestedLoans %}
+            {% for loan in requestedLoans %}
+            {% if loan.state != "Open" and loan.state != "Denied" %}
+            <tr
+              class="border-b border-gray-800 hover:bg-gray-900 transition"
+              onclick="viewSelectedLoan({{ loan.loan_id }})"
+            >
+              <td class="py-3 text-white">{{ loan.loan_id }}</td>
+              <td class="py-3 font-semibold">
+                {% if loan.state == "Requested" %}
+                <span class="text-yellow-400">Requested</span>
+                {% elif loan.state == "Open" %}
+                <span class="text-green-400">Open</span>
+                {% elif loan.state == "Denied" %}
+                <span class="text-red-400">Denied</span>
+                {% elif loan.state == "Closed" %}
+                <span class="text-red-400">Closed</span>
+                 {% elif loan.state == "SignatureNeeded" %}
+                <span class="text-yellow-400">Signature Needed</span>
+                {% else %}
+                <span class="text-gray-400">{{ loan.state }}</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+          </tbody>
+        </table>
+        </div>
+
+
+        <br/>
+        <div class="card w-full p-6">
+        <h3 class="text-2xl mb-4">Loan History</h3>
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b border-gray-700 text-gray-300">
+              <th class="py-3">Loan ID Number</th>
+              <th class="py-3">State</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            {% if requestedLoans %}
+            {% for loan in requestedLoans %}
+            {% if loan.state != "SignatureNeeded" and loan.state != "Requested" %}
+            <tr
+              class="border-b border-gray-800 hover:bg-gray-900 transition"
+              onclick="viewSelectedLoan({{ loan.loan_id }})"
+            >
+              <td class="py-3 text-white">{{ loan.loan_id }}</td>
+              <td class="py-3 font-semibold">
+                {% if loan.state == "Requested" %}
+                <span class="text-yellow-400">Requested</span>
+                {% elif loan.state == "Open" %}
+                <span class="text-green-400">Open</span>
+                {% elif loan.state == "Denied" %}
+                <span class="text-red-400">Denied</span>
+                {% elif loan.state == "Closed" %}
+                <span class="text-red-400">Closed</span>
+                 {% elif loan.state == "SignatureNeeded" %}
+                <span class="text-yellow-400">Signature Needed</span>
+                {% else %}
+                <span class="text-gray-400">{{ loan.state }}</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endif %}
+            {% endfor %}
+            {% endif %}
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
   <script>
@@ -215,6 +347,13 @@
   {% endif %}
 
   <script>
+    let username = "{{ username }}";
+    function setCurrentUser() {
+      username = username.charAt(0).toUpperCase() + username.slice(1);
+      document.getElementById("currentUser").innerText = username;
+    }
+    setCurrentUser();
+
     let currentSelection = "dashboard-section";
     function changeSectionSelected(selectedSection) {
       document.getElementById(currentSelection).classList.add("hidden");
@@ -250,9 +389,26 @@
         const currentValue = Math.floor(progress * targetScore);
 
         creditScore.textContent = currentValue;
+
+        percentage = (currentValue - 300) / 550;
+        barPercentage = currentValue / 850;
+
+        const scoreDescriptor = document.getElementById(
+          "creditScoreDescriptor",
+        );
+        if (currentValue >= 800) {
+          scoreDescriptor.innerText = "Exceptional";
+        } else if (currentValue >= 740) {
+          scoreDescriptor.innerText = "Very Good";
+        } else if (currentValue >= 670) {
+          scoreDescriptor.innerText = "Good";
+        } else if (currentValue >= 580) {
+          scoreDescriptor.innerText = "Fair";
+        }
+
+        changeCreditScoreBar(barPercentage);
         if (currentValue > 300) {
-          creditLimit.textContent =
-            "$" + Math.round(((currentValue - 300) / 550) * 500);
+          creditLimit.textContent = "$" + Math.round(percentage * 500);
         }
         if (progress < 1) {
           requestAnimationFrame(update);
@@ -262,6 +418,24 @@
       }
 
       requestAnimationFrame(update);
+    }
+
+    function changeCreditScoreBar(percentage) {
+      percentage = percentage * 100;
+      const red = Math.round(255 - percentage * 2.55);
+      const green = Math.round(percentage * 2.55);
+
+      // Apply bar width + color
+      const bar = document.getElementById("creditScoreBar");
+
+      bar.style.width = `${percentage}%`;
+      bar.style.backgroundColor = `rgb(${red}, ${green}, 80)`;
+
+      const creditScoreNumber = document.getElementById("creditScore");
+      creditScoreNumber.style.color = `rgb(${red}, ${green}, 80)`;
+
+      const scoreDescriptor = document.getElementById("creditScoreDescriptor");
+      scoreDescriptor.style.color = `rgb(${red}, ${green}, 80)`;
     }
 
     window.addEventListener("load", () => {

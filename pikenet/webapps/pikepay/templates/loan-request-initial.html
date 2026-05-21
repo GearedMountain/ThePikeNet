@@ -7,7 +7,7 @@
 
     <style>
       body {
-        color: white;
+        color: #d6d6d6;
         font-family: Arial, sans-serif;
         background: black;
         display: flex;
@@ -17,7 +17,7 @@
 
       .form-container {
         width: 800px;
-        background: #111111;
+        background: #0d0d0d;
         padding: 30px;
         border-radius: 12px;
         box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
@@ -36,13 +36,14 @@
 
       input[type="text"],
       input[type="number"] {
+        box-sizing: border-box;
         width: 100%;
         padding: 10px;
         margin-top: 5px;
         border-radius: 6px;
-        border: 1px solid black;
-        background-color: #333;
-        color: White;
+        border: 1px solid #171717;
+        background-color: #171717;
+        color: #d6d6d6;
       }
 
       .row {
@@ -88,12 +89,12 @@
       }
 
       .clear {
-        background: #e74c3c;
+        background: #b8342f;
         color: white;
       }
 
       .submit {
-        background: #2ecc71;
+        background: #0d7a2b;
         color: white;
       }
     </style>
@@ -147,6 +148,11 @@
       <label>Signature *</label>
       <canvas id="signaturePad"></canvas>
  -->
+      <div>
+        <p style="color: #b8342f; display: none" id="popup-error">
+          You must fill out all required areas and accept the user agreement
+        </p>
+      </div>
       <div class="buttons">
         <button class="clear" onclick="window.location.href = '/pikepay'">
           Cancel Request
@@ -223,6 +229,18 @@
           weekly_income: document.getElementById("weeklyIncome").value,
           credit_review: document.getElementById("creditReview").checked,
         };
+
+        if (
+          data["first_name"] == "" ||
+          data["last_name"] == "" ||
+          data["loan_amount"] == "" ||
+          data["loan_reason"] == "" ||
+          data["weekly_income"] == "" ||
+          data["credit_review"] == false
+        ) {
+          document.getElementById("popup-error").style.display = "block";
+          return;
+        }
 
         try {
           const response = await fetch("/pikepay/submit-initial-request", {

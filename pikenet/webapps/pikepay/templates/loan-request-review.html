@@ -36,6 +36,8 @@
 
       input[type="text"],
       input[type="number"] {
+        box-sizing: border-box;
+
         width: 100%;
         padding: 10px;
         margin-top: 5px;
@@ -52,6 +54,8 @@
 
       h3 {
         color: #5898ad;
+        margin-top: 0.5rem;
+        margin-bottom: 0.5rem;
       }
 
       .checkbox-group {
@@ -104,8 +108,11 @@
       <button class="clear" onclick="window.location.href = '/pikepay'">
         Go Back
       </button>
+      {% if state == "Open" %}
+      <h1>PikePay Personal Loan Contract</h1>
+      {% else %}
       <h1>PikePay Personal Loan Request Review</h1>
-
+      {% endif %}
       <label>Name of Requester</label>
       <h3 id="firstName">{{firstName}}</h3>
       <h3 id="lastName">{{lastName}}</h3>
@@ -122,51 +129,199 @@
       <label>Expected Weekly Income</label>
       <h3 id="weeklyIncome">${{expectedIncome}}</h3>
 
+      {% if state == "Requested" %}
       <label>Repayment Amount *</label>
-      <input
-        type="number"
-        placeholder="Total amount to be repaid"
-        id="repaymentAmount"
-        onblur="calculateInterest()"
-      />
+      <div class="row">
+        <input
+          type="number"
+          placeholder="Total amount to be repaid"
+          id="repaymentAmount"
+          oninput="calculateInterest()"
+        />
+        <h3 id="interestRate">0.00%</h3>
+      </div>
 
       <label>Loan Length (days) *</label>
-      <input
-        type="number"
-        placeholder="Number of days until full repayment is due"
-        id="loanLength"
-        onblur="calculateInterest()"
-      />
+      <div class="row">
+        <input
+          type="number"
+          placeholder="Number of days until full repayment is due"
+          id="loanLength"
+          oninput="calculateInterest()"
+        />
+        <h3 id="dueDate">Jan 1, 2026</h3>
+      </div>
 
       <label>Payment Cycle (days) *</label>
-      <input
-        type="number"
-        placeholder="Number of days from previous cycle until payment is due"
-        id="paymentCycle"
-        onblur="calculateInterest()"
-      />
-      <h3 id="interestRate">next</h3>
+      <div class="row">
+        <input
+          type="number"
+          placeholder="Number of days from previous cycle until payment is due"
+          id="paymentCycle"
+          oninput="calculateInterest()"
+        />
+        <h3 id="paymentCount">1 Payment(s)</h3>
+      </div>
+      {% endif %} {% if state == "SignatureNeeded" %}
+
+      <div
+        style="background-color: white; border-radius: 16px; display: none"
+        id="kiosk-signature-container"
+      >
+        <img id="kiosk-signature" />
+      </div>
       <script>
-        function calculateInterest() {
-          repaymentAmount = Number(
-            document.getElementById("repaymentAmount").value,
-          );
-          loanLength = Number(document.getElementById("loanLength").value);
-          paymentCycle = Number(document.getElementById("paymentCycle").value);
-          if (repaymentAmount != "" && loanLength != "" && paymentCycle != "") {
-            numberOfPayments = Math.ceil(loanLength / paymentCycle);
-            duePerPayment = Math.round(repaymentAmount / numberOfPayments);
+        loanId = "{{loanId}}";
+        function awaitSignature() {
+          fetch("/pikepay/check-kiosk-signature?loanid=" + loanId, {
+            method: "GET",
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              const signature = data.signature;
+              if (signature == "WAITING") {
+                console.log("Awaiting signature");
 
-            requestedAmount = Number("{{amountRequested}}");
-            interestRate =
-              (repaymentAmount / requestedAmount) ** (1 / numberOfPayments) - 1;
+                return;
+              }
+              const displayedSignature = document.getElementById(
+                "kiosk-signature-container",
+              );
+              displayedSignature.style.display = "block";
+              document.getElementById("kiosk-signature").src = atob(signature);
+              clearInterval(awaitSignature);
+              document.getElementById("denyButton").remove();
+            });
+        }
 
-            document.getElementById("interestRate").innerText =
-              (interestRate * 100).toFixed(2) + "%";
+        async function OpenKioskSignature() {
+          const button = document.getElementById("openKioskButton");
+
+          // optional: disable immediately so user can't spam it
+          button.disabled = true;
+          button.innerText = "Loading...";
+
+          try {
+            const response = await fetch(
+              "https://thepikenet.com/pikepay/open-kiosk-signature",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+              },
+            );
+
+            if (response.ok) {
+              // hide after successful response
+              button.style.display = "none";
+              setInterval(awaitSignature, 2000);
+            } else {
+              // re-enable if failed
+              button.disabled = false;
+              button.innerText = "Open Kiosk Signature";
+            }
+          } catch (err) {
+            console.error(err);
+            button.disabled = false;
+            button.innerText = "Open Kiosk Signature";
           }
         }
       </script>
-      <!-- Agreement
+
+      <div class="buttons">
+        <button
+          class="clear"
+          onclick="submitApplication('Denied')"
+          id="denyButton"
+        >
+          Close Application
+        </button>
+
+        <button
+          class="submit"
+          onclick="OpenKioskSignature()"
+          id="openKioskButton"
+        >
+          Open Kiosk Signature
+        </button>
+        {% endif %} {% if state == "Open" %}
+        <div
+          style="background-color: white; border-radius: 16px"
+          id="kiosk-signature-container"
+        >
+          <img id="kiosk-signature" />
+        </div>
+        <script>
+          signature = "{{signature}}";
+          document.getElementById("kiosk-signature").src = atob(signature);
+        </script>
+        {% endif %} {% if state == "Requested" %}
+        <button class="clear" onclick="submitApplication('Denied')">
+          Close Application
+        </button>
+
+        <button class="submit" onclick="submitApplication('Approved')">
+          Approve Application
+        </button>
+        {% endif %}
+      </div>
+    </div>
+
+    <script>
+      function calculateInterest() {
+        repaymentAmount = Number(
+          document.getElementById("repaymentAmount").value,
+        );
+        loanLength = Number(document.getElementById("loanLength").value);
+        paymentCycle = Number(document.getElementById("paymentCycle").value);
+        if (repaymentAmount != "" && loanLength != "" && paymentCycle != "") {
+          numberOfPayments = Math.ceil(loanLength / paymentCycle);
+          duePerPayment = Math.round(repaymentAmount / numberOfPayments);
+
+          requestedAmount = Number("{{amountRequested}}");
+          interestRate =
+            (repaymentAmount / requestedAmount) ** (1 / numberOfPayments) - 1;
+
+          document.getElementById("interestRate").innerText =
+            (interestRate * 100).toFixed(2) + "%";
+
+          // Also calculate the date based on loan length
+          dueDate = document.getElementById("dueDate");
+          dueDate.innerText = calculateFutureDate(Number(loanLength));
+
+          paymentCount = document.getElementById("paymentCount");
+          paymentCount.innerText = numberOfPayments + " Payment(s)";
+        }
+      }
+
+      function calculateFutureDate(daysFromNow) {
+        const date = new Date();
+        date.setDate(date.getDate() + Number(daysFromNow));
+
+        const months = [
+          "January",
+          "February",
+          "March",
+          "April",
+          "May",
+          "June",
+          "July",
+          "August",
+          "September",
+          "October",
+          "November",
+          "December",
+        ];
+
+        const day = String(date.getDate()).padStart(2, "0");
+        const month = months[date.getMonth()];
+        const year = date.getFullYear();
+
+        return `${month} ${day}, ${year}`;
+      }
+    </script>
+    <!-- Agreement
       <label>Expected check Income *</label>
       <div class="checkbox-group">
         <label><input type="checkbox" /> Headphones</label>
@@ -179,85 +334,24 @@
       <label>Signature *</label>
       <canvas id="signaturePad"></canvas>
  -->
-      <div class="buttons">
-        <button class="clear" onclick="clearSignature()">
-          Deny Application
-        </button>
-        <button class="submit" onclick="submitForm()">Approve</button>
-      </div>
-    </div>
 
     <script>
-      /*
-      const canvas = document.getElementById("signaturePad");
-      const ctx = canvas.getContext("2d");
-
-      let drawing = false;
-
-      // Fix canvas resolution for crisp drawing
-      function resizeCanvas() {
-        const ratio = window.devicePixelRatio || 1;
-        canvas.width = canvas.offsetWidth * ratio;
-        canvas.height = canvas.offsetHeight * ratio;
-        ctx.scale(ratio, ratio);
-      }
-      resizeCanvas();
-
-      canvas.addEventListener("mousedown", (e) => {
-        drawing = true;
-        ctx.beginPath();
-      });
-
-      canvas.addEventListener("mouseup", () => {
-        drawing = false;
-      });
-
-      canvas.addEventListener("mousemove", draw);
-
-      canvas.addEventListener("touchstart", (e) => {
-        drawing = true;
-        ctx.beginPath();
-      });
-
-      canvas.addEventListener("touchend", () => {
-        drawing = false;
-      });
-
-      canvas.addEventListener("touchmove", (e) => {
-        draw(e.touches[0]);
-      });
-
-      function draw(e) {
-        if (!drawing) return;
-
-        const rect = canvas.getBoundingClientRect();
-
-        ctx.lineWidth = 2;
-        ctx.lineCap = "round";
-        ctx.strokeStyle = "#000";
-
-        ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
-      }
-      */
+      loanId = "{{loanId}}";
       function clearSignature() {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
       }
 
-      async function submitForm() {
+      async function submitApplication(state) {
         const data = {
-          first_name: document.getElementById("firstName").value,
-          last_name: document.getElementById("lastName").value,
-          loan_amount: document.getElementById("loanAmount").value,
-          loan_reason: document.getElementById("loanReason").value,
-          weekly_income: document.getElementById("weeklyIncome").value,
-          credit_review: document.getElementById("creditReview").checked,
+          repayment_amount: document.getElementById("repaymentAmount").value,
+          loan_length: document.getElementById("loanLength").value,
+          payment_cycle: document.getElementById("paymentCycle").value,
+          loan_status: state,
+          loan_id: Number(loanId),
         };
 
         try {
-          const response = await fetch("/pikepay/submit-initial-request", {
+          const response = await fetch("/pikepay/submit_request_response", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
@@ -269,7 +363,7 @@
 
           console.log(result);
 
-          alert("Loan request submitted successfully");
+          alert("Loan submitted successfully");
           window.location.href = "/pikepay";
         } catch (error) {
           console.error(error);
@@ -277,15 +371,16 @@
           alert("Failed to submit request");
         }
       }
+
       /*
-         const signature = canvas.toDataURL("image/png");
+          const signature = canvas.toDataURL("image/png");
 
-         console.log("Signature image:", signature);
+          console.log("Signature image:", signature);
 
-         alert("Form submitted (signature captured in console)");
-         const win = window.open();
-         win.document.write(`<img src="${signature}" />`);
-         */
+          alert("Form submitted (signature captured in console)");
+          const win = window.open();
+          win.document.write(`<img src="${signature}" />`);
+          */
     </script>
   </body>
 </html>

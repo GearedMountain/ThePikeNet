@@ -4,10 +4,13 @@ from . import bp
 import subprocess
 from .models import (
     grabCreditScore,
-    getMyOpenLoanCount,
+    getMyRecentLoanHistory,
     makeLoanRequest,
     showAllLoans,
     getLoanInfoToReview,
+    denyLoan,
+    initiallyApproveLoan,
+    updateCustomerSignature,
 )
 
 
@@ -15,8 +18,7 @@ from .models import (
 @role_required(2, 1, 0)
 def index():
     creditScore = grabCreditScore(session.get("user_id"))
-    loanCount = getMyOpenLoanCount(session.get("user_id"))
-    print(loanCount)
+    recentLoanHistory = getMyRecentLoanHistory(session.get("user_id"))
 
     requestedLoans = None
     if session.get("auth_value") == 0:
@@ -28,7 +30,7 @@ def index():
         auth=session.get("auth_value"),
         username=session.get("username"),
         creditScore=creditScore,
-        loanCount=loanCount,
+        recentLoanHistory=recentLoanHistory,
         requestedLoans=requestedLoans,
     )
 
@@ -46,11 +48,17 @@ def loan_request_review():
     (
         creditScore,
         userId,
+        state,
         firstName,
         lastName,
         justification,
         expectedIncome,
         amountRequested,
+        amountOwed,
+        startDate,
+        loanLength,
+        paymentCycle,
+        signature,
     ) = getLoanInfoToReview(loanId)
 
     print(f"An employee is reviewing loan number {loanId}")
@@ -62,16 +70,20 @@ def loan_request_review():
         justification=justification,
         expectedIncome=expectedIncome,
         amountRequested=amountRequested,
+        loanId=loanId,
+        state=state,
+        signature=signature,
     )
 
 
-signatureToken = "ABC123ABC123"
+signatureToken = "AWERSIPGJHAOIPWERJFPIOAWJEPOFKJAWEG"
+createdSignature = ""
 
 
 @bp.route(f"/pikepay/kiosk-signature/{signatureToken}")
 @role_required(2, 1, 0)
 def kiosk_signature():
-    return render_template("signature.html")
+    return render_template("signature.html", signatureToken=signatureToken)
 
 
 @bp.route("/pikepay/submit-initial-request", methods=["POST"])
@@ -111,11 +123,47 @@ def submit_initial_request():
     return jsonify({"status": "ok"})
 
 
+@bp.route("/pikepay/submit_request_response", methods=["POST"])
+@role_required(0)
+def submit_request_response():
+    if request.method == "POST":
+        try:
+            data = request.get_json()
+            repaymentAmount = data.get("repayment_amount")
+            loanLength = data.get("loan_length")
+            paymentCycle = data.get("payment_cycle")
+            loanStatus = data.get("loan_status")
+            loanId = data.get("loan_id")
+            if loanStatus and loanId:
+                if loanStatus == "Approved":
+                    if repaymentAmount and loanLength and paymentCycle and loanStatus:
+                        initiallyApproveLoan(
+                            loanId, repaymentAmount, loanLength, paymentCycle
+                        )
+                    else:
+                        print("MISSING INFO")
+                if loanStatus == "Denied":
+                    denyLoan(loanId)
+            else:
+                return jsonify({"status": "no id or status"})
+        except Exception as e:
+            print(e)
+    return jsonify({"status": "ok"})
+
+
 @bp.route("/pikepay/open-kiosk-signature", methods=["GET", "POST"])
 @role_required(0)
 def open_kiosk_signature():
     if request.method == "POST":
         try:
+            subprocess.run(
+                [
+                    "ssh",
+                    "kiosk@192.168.50.9",
+                    "echo Establish Route",
+                ]
+            )
+
             subprocess.run(
                 [
                     "ssh",
@@ -128,3 +176,32 @@ def open_kiosk_signature():
         except Exception as e:
             print(e)
     return jsonify({"status": "ok"})
+
+
+@bp.route(f"/pikepay/submit-kiosk-signature/{signatureToken}", methods=["GET", "POST"])
+@role_required(0, 1, 2)
+def submit_kiosk_signature():
+    global createdSignature
+    if request.method == "POST":
+        data = request.get_json()
+
+        base64Signature = data.get("image")
+
+        createdSignature = base64Signature
+    return jsonify({"status": "ok"})
+
+
+@bp.route("/pikepay/check-kiosk-signature")
+@role_required(0)
+def check_kiosk_signature():
+    loanId = request.args.get("loanid")
+    global createdSignature
+    if createdSignature:
+        sendSignature = createdSignature
+        print(f" got signature for {loanId}")
+        createdSignature = ""
+
+        updateCustomerSignature(loanId, sendSignature)
+        return jsonify({"signature": sendSignature})
+    else:
+        return jsonify({"signature": "WAITING"})

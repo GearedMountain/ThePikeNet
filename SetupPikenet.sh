@@ -136,10 +136,12 @@ CREATE TABLE IF NOT EXISTS pikepay_loans (
     expected_income NUMERIC NOT NULL,
     amount_requested NUMERIC NOT NULL,
     amount_owed NUMERIC,
+    balance NUMERIC,
     start_date DATE DEFAULT CURRENT_DATE,
     repayment_length INT,
     payment_cycle INT,
     requester_signature TEXT,
+    note VARCHAR(255),
     
     PRIMARY KEY (loan_id),
     

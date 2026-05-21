@@ -30,7 +30,6 @@ def login():
         # fake login example
         username = request.form.get("username")
         password = request.form.get("password")
-        email = request.form.get("email")
         response = checkLoginCredentials(username, password)
         if response == None:
             return render_template("login.html", error="Invalid credentials")
@@ -40,9 +39,33 @@ def login():
             session["username"] = username
             session["auth_value"] = authValue
             activeAccounts.add(userId)
-        return redirect(url_for("main.index"))
+        return redirect(url_for("main.index", username=authValue))
     if session.get("user_id"):
-        return redirect(url_for("main.index"))
+        return redirect(url_for("main.index", username=authValue))
+    return render_template("login.html")
+
+
+# Specifically designed to give the pikepay kiosk the ability to request login automatically
+@bp.route(
+    "/login-parameters",
+)
+def loginParameter():
+    if request.method == "GET":
+
+        username = request.args.get("username")
+        password = request.args.get("password")
+        response = checkLoginCredentials(username, password)
+        if response == None:
+            return render_template("login.html", error="Invalid credentials")
+        else:
+            userId, authValue = response
+            session["user_id"] = userId
+            session["username"] = username
+            session["auth_value"] = authValue
+            activeAccounts.add(userId)
+        return redirect(url_for("main.index", username=authValue))
+    if session.get("user_id"):
+        return redirect(url_for("main.index", username=authValue))
     return render_template("login.html")
 
 
@@ -51,7 +74,6 @@ def guestLogin():
     if request.method == "POST":
         i = 0
         print(f"All active: {activeAccounts}")
-
         while True:
 
             candidate = f"g{i}"
