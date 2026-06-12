@@ -210,29 +210,37 @@
 
       <div class="">
         <h2 class="text-xl font-semibold">Active Loans</h2>
+            {% if recentLoanHistory %}
+            {% for loan in recentLoanHistory %}
+               {% if loan.user_id == userId %}
+                  {% if loan.state == "Open" %}
+                  <p>this loan is Active</p>
+                  <div class="bg-[#0D0D0D] rounded-2xl p-6 shadow-xl">
+                    <p class="text-zinc-400 text-lg mb-2">
+                      Loan <span class="text-[#5898ad]">13</span>
+                    </p>
 
+                    <h2 class="text-2xl font-bold text-[#5898ad]">
+                      <span class="text-white">Balance:</span> $165
+                    </h2>
+                    <p class="text-white mt-3 text-sm">Due March 17, 2026</p>
+                    <p class="text-white mt-3 text-sm">Next Payment March 17, 2026</p>
+                    <p class="text-white mt-3 text-sm">Payment Amount $165</p>
+                  </div>
+                  {% endif %}
+               {% endif %}
+            {% endfor %}
+            {% endif %}
         <h2 class="text-l text-zinc-400 font-semibold">
           You do not have any active loans
         </h2>
       </div>
       <br />
-      <div class="bg-[#0D0D0D] rounded-2xl p-6 shadow-xl">
-        <p class="text-zinc-400 text-lg mb-2">
-          Loan <span class="text-[#5898ad]">13</span>
-        </p>
-
-        <h2 class="text-2xl font-bold text-[#5898ad]">
-          <span class="text-white">Balance:</span> $165
-        </h2>
-        <p class="text-white mt-3 text-sm">Due March 17, 2026</p>
-        <p class="text-white mt-3 text-sm">Next Payment March 17, 2026</p>
-        <p class="text-white mt-3 text-sm">Payment Amount $165</p>
-      </div>
+      
     </div>
 
     {% if auth == 0 %}
     <div id="employee-section" class="hidden">
-      <p>Employee section here</p>
       <div class="card w-full p-6">
         <h3 class="text-2xl mb-4">Loan Requests</h3>
 

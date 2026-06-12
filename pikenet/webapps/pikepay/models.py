@@ -35,9 +35,16 @@ def getMyRecentLoanHistory(userId):
         return None
 
 
-def showAllLoans():
-    sql = text("SELECT loan_id, state FROM pikepay_loans;")
-    result = db.session.execute(sql)
+def showAllLoans(userId):
+    if userId:
+        # Theyre not an admin so only give their loans
+        sql = text(
+            "SELECT loan_id, state, user_id FROM pikepay_loans WHERE user_id = :userId;"
+        )
+        result = db.session.execute(sql, {"userId": userId})
+    else:
+        sql = text("SELECT loan_id, state, user_id FROM pikepay_loans;")
+        result = db.session.execute(sql)
     rows = result.fetchall()
     if rows:
         return rows

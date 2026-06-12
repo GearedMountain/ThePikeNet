@@ -97,7 +97,12 @@
       }
 
       .submit {
-        background: #2ecc71;
+        background: #28a745;
+        color: white;
+      }
+
+      .utility {
+        background: #b0940b;
         color: white;
       }
     </style>
@@ -108,14 +113,125 @@
       <button class="clear" onclick="window.location.href = '/pikepay'">
         Go Back
       </button>
-      {% if state == "Open" %}
+      {% if state == "SignatureNeeded" %}
+      <button class="utility" onclick="EditTerms()">Edit Terms</button>
+
+      <script>
+        function EditTerms() {
+          const editButton = document.querySelector(".utility");
+
+          // If the button is already in save mode, route to the save function instead
+          if (editButton && editButton.innerText === "Save Terms") {
+            SaveTermEdits();
+            return;
+          }
+
+          const h3Elements = document.querySelectorAll(
+            ".form-container h3:not(#firstName, #creditScore)",
+          );
+
+          h3Elements.forEach((h3) => {
+            // Skip placeholder elements inside conditional rows
+            if (h3.id === "interestRate" && h3.closest(".row")) return;
+            if (h3.id === "dueDate" || h3.id === "paymentCount") return;
+
+            const input = document.createElement("input");
+            input.addEventListener("input", (event) => {
+              calculateInterest();
+            });
+            input.id = h3.id;
+            input.type = "text";
+
+            // Strip symbols for clean editing
+            let cleanValue = h3.innerText.replace(/[$%]/g, "").trim();
+            input.value = cleanValue;
+            input.className = "edit-mode-input";
+
+            h3.parentNode.replaceChild(input, h3);
+          });
+
+          // Switch the button state to "Save Terms"
+          if (editButton) {
+            editButton.innerText = "Save Terms";
+            editButton.style.backgroundColor = "#28a745"; // Optional: turn it green to signal "Save"
+            editButton.style.color = "white";
+          }
+        }
+
+        async function SaveTermEdits() {
+          const inputs = document.querySelectorAll(
+            ".form-container .edit-mode-input",
+          );
+          const updatedData = {};
+
+          // 1. Gather all the values into an object for the POST request
+          inputs.forEach((input) => {
+            updatedData[input.id] = input.value;
+          });
+
+          // Include the loanId from your existing global variable
+          if (typeof loanId !== "undefined") {
+            updatedData["loanId"] = loanId;
+          }
+
+          try {
+            // 2. Send the POST request to your backend
+            const response = await fetch("/pikepay/update-terms", {
+              // Adjust this URL path to match your backend route
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(updatedData),
+            });
+
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+
+            console.log("Terms updated successfully");
+
+            // 3. Revert inputs back to h3 elements upon successful save
+            inputs.forEach((input) => {
+              const h3 = document.createElement("h3");
+              h3.id = input.id;
+
+              // Re-apply formatting symbols to financial/rate fields visually
+              if (
+                input.id === "loanAmount" ||
+                input.id === "weeklyIncome" ||
+                input.id === "totalRepaymentAmount"
+              ) {
+                h3.innerText = `$${input.value}`;
+              } else if (input.id === "interestRate") {
+                h3.innerText = `${input.value}%`;
+              } else {
+                h3.innerText = input.value;
+              }
+
+              input.parentNode.replaceChild(h3, input);
+            });
+
+            // 4. Reset the button back to its original state
+            const editButton = document.querySelector(".utility");
+            if (editButton) {
+              editButton.innerText = "Edit Terms";
+              editButton.style.backgroundColor = ""; // Resets to original CSS
+              editButton.style.color = "";
+            }
+          } catch (error) {
+            alert("Failed to save changes. Please try again.");
+          }
+        }
+      </script>
+
+      {% endif %} {% if state == "Open" %}
       <h1>PikePay Personal Loan Contract</h1>
       {% else %}
       <h1>PikePay Personal Loan Request Review</h1>
       {% endif %}
       <label>Name of Requester</label>
-      <h3 id="firstName">{{firstName}}</h3>
-      <h3 id="lastName">{{lastName}}</h3>
+      <h3 id="firstName">{{firstName}} {{lastName}}</h3>
 
       <label>Requester Credit Score</label>
       <h3 id="creditScore">{{creditScore}}</h3>
@@ -163,7 +279,15 @@
         <h3 id="paymentCount">1 Payment(s)</h3>
       </div>
       {% endif %} {% if state == "SignatureNeeded" %}
+      <h2>Loan Terms:</h2>
+      <label>Loan Length</label>
+      <h3 id="loanLength">{{loanLength}}</h3>
 
+      <label>Total Repayment Amount</label>
+      <h3 id="repaymentAmount">${{totalRepaymentAmount}}</h3>
+      <h3 id="paymentCycle">{{paymentCycle}}</h3>
+      <p id="interestRate">0.0%</p>
+      <p id="dueDate"></p>
       <div
         style="background-color: white; border-radius: 16px; display: none"
         id="kiosk-signature-container"
@@ -269,12 +393,24 @@
     </div>
 
     <script>
-      function calculateInterest() {
-        repaymentAmount = Number(
-          document.getElementById("repaymentAmount").value,
-        );
-        loanLength = Number(document.getElementById("loanLength").value);
-        paymentCycle = Number(document.getElementById("paymentCycle").value);
+      function calculateInterest(amount = 0, loanLength = 0, payCycle = 0) {
+        if (amount != 0 && loanLength != 0 && payCycle != 0) {
+          repaymentAmount = Number(amount);
+          loanLength = Number(loanLength);
+          paymentCycle = Number(payCycle);
+        } else {
+          repaymentAmount = Number(
+            document.getElementById("repaymentAmount").value,
+          );
+          loanLength = Number(
+            document
+              .getElementById("loanLength")
+              .value.replace("Days", "")
+              .trim(),
+          );
+          paymentCycle = Number(document.getElementById("paymentCycle").value);
+        }
+
         if (repaymentAmount != "" && loanLength != "" && paymentCycle != "") {
           numberOfPayments = Math.ceil(loanLength / paymentCycle);
           duePerPayment = Math.round(repaymentAmount / numberOfPayments);
@@ -321,6 +457,16 @@
         return `${month} ${day}, ${year}`;
       }
     </script>
+
+    {% if state == "SignatureNeeded" %}
+    <script>
+      calculateInterest(
+        "{{ totalRepaymentAmount }}",
+        "{{ loanLength }}",
+        "{{ paymentCycle }}",
+      );
+    </script>
+    {% endif %}
     <!-- Agreement
       <label>Expected check Income *</label>
       <div class="checkbox-group">

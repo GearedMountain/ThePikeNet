@@ -24,6 +24,8 @@ def index():
     if session.get("auth_value") == 0:
         # This person is an employee, go grab all loan ids that are "Requested"
         requestedLoans = showAllLoans()
+    else:
+        requestedLoans = showAllLoans(session.get("user_id"))
 
     return render_template(
         "pikepay-index.html",
@@ -32,6 +34,7 @@ def index():
         creditScore=creditScore,
         recentLoanHistory=recentLoanHistory,
         requestedLoans=requestedLoans,
+        userId=session.get("user_id"),
     )
 
 
@@ -62,6 +65,9 @@ def loan_request_review():
     ) = getLoanInfoToReview(loanId)
 
     print(f"An employee is reviewing loan number {loanId}")
+
+    if not amountOwed:
+        amountOwed = 0
     return render_template(
         "loan-request-review.html",
         creditScore=creditScore,
@@ -73,6 +79,9 @@ def loan_request_review():
         loanId=loanId,
         state=state,
         signature=signature,
+        totalRepaymentAmount=f"{amountOwed:.2f}",
+        paymentCycle=paymentCycle,
+        loanLength=loanLength,
     )
 
 
@@ -115,6 +124,22 @@ def submit_initial_request():
                     weeklyIncome,
                     session.get("user_id"),
                 )
+                import http.client, urllib, sys
+
+                conn = http.client.HTTPSConnection("api.pushover.net:443")
+                conn.request(
+                    "POST",
+                    "/1/messages.json",
+                    urllib.parse.urlencode(
+                        {
+                            "token": "anb67so33wfdxij6emn2qtxyyi159c",
+                            "user": "udp7bfw23bhhnfzcuedsb4o8yzyuoz",
+                            "message": f"{firstName} {lastName} just requested a loan for ${loanAmount}",
+                        }
+                    ),
+                    {"Content-type": "application/x-www-form-urlencoded"},
+                )
+                conn.getresponse()
             else:
                 print("MISSING INFO")
 
